@@ -4,12 +4,15 @@
 
         {{>ironTableNav}}
 
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover table-condensed">
             <thead>
                 <tr>
                     {{#each headers}}
                         {{> ironTableHeader}}
                     {{/each}}
+                    <th class="controls-header">
+
+                    </th>
                 </tr>
             </thead>
 
@@ -53,5 +56,17 @@
     {{#each colData}}
         <td>{{value}}</td>
     {{/each}}
+    <td class="controls">
+        {{#if editOk}}
+            <a class="btn btn-link iron-table-edit-record">
+                <i class="fa fa-pencil-square-o"></i>
+            </a>            
+        {{/if}}
+        {{#if deleteOk}}
+            <a class="btn btn-link iron-table-delete-record">
+                <i class="fa fa-trash-o"></i>
+            </a>            
+        {{/if}}
+    </td>
 </template>
 

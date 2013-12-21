@@ -14,7 +14,6 @@ class @IronTableController extends RouteController
                 console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
     unload: ->
-        console.log('unload')
         Session.set("_ironTable_sortOn", null)
         Session.set("_ironTable_sortDirection", 1)
 
@@ -27,6 +26,13 @@ class @IronTableController extends RouteController
 
     _tableTitle: ->
         @tableTitle or @_collectionName() #.capitalize()
+
+    _editOk: ->
+        console.log('editOk', @editOk)
+        @editOk or false
+
+    _deleteOk: ->
+        @deleteOk or false
 
     template: 'ironTable'
 
@@ -76,6 +82,8 @@ class @IronTableController extends RouteController
                     value: value
             recordData.push
                 colData: colData
+                editOk: @_editOk()
+                deleteOk: @_deleteOk()
 
         rtn =
             tableTitle: @_tableTitle()
