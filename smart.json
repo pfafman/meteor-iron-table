@@ -1,0 +1,9 @@
+{
+  "name": "iron-table",
+  "description": "Paging Table for IronRouter and Meteor",
+  "homepage": "https://github.com/pfafman/meteor-iron-table",
+  "author": "Tim Pfafman (https://github.com/pfafman)",
+  "version": "0.0.2",
+  "git": "https://github.com/pfafman/meteor-iron-table.git",
+  "packages": {}
+}
