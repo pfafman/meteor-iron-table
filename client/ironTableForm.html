@@ -1,0 +1,27 @@
+
+<template name='ironTableForm'>
+  {{#doForm columns}}
+      <div class="control-group">
+        <label class="control-label" for="{{key}}">{{header}}</label>
+        <div class="controls">
+          {{#if col.static}}
+            <label class="uneditable-input">{{col.value}}</label>
+         {{else}}
+          <input type="{{col.displayType}}" id="{{key}}" name="{{key}}"
+          {{#if col.checkbox}} 
+            {{col.checked}}
+          {{else}}
+            {{#if col.value}}value="{{col.value}}"{{/if}}
+          {{/if}}
+          {{#if col.required}}required{{/if}}
+          {{#if col.autofocus}}autofocus='on'{{/if}}
+          {{#if col.placeholder}}placeholder='{{col.placeholder}}'{{/if}}
+          {{#if col.tooltip}}
+            title='{{col.tooltip}}' rel='tooltip' data-placement="right"
+          {{/if}}
+          >
+          {{/if}}
+        </div>
+      </div>
+  {{/doForm}}
+</template>

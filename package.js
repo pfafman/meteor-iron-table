@@ -26,13 +26,15 @@ Package.on_use(function (api, where) {
     [
     'client/ironTable.html',
     'client/ironTable.less',
-    'client/ironTable.coffee'
+    'client/ironTable.coffee',
+    'client/ironTableForm.html',
     ]
     , 'client');
 
   api.add_files(
     [
     'shared/ironTableController.coffee',
+    'shared/ironTableCollection.coffee',
     'shared/ironTableSetup.coffee'
     ]
     , ['client','server']);

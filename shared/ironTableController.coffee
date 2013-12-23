@@ -55,7 +55,6 @@ class @IronTableController extends RouteController
         #@_sess("sortDirection", 1)
 
     
-
     _tableTitle: ->
         @tableTitle or @_collectionName() #.capitalize()
 
@@ -65,11 +64,23 @@ class @IronTableController extends RouteController
     _recordName: ->
         @recordName or @collection()._name
 
+    _cols: ->
+        theCol = @cols or @collection()?.getColumns?()
+        if theCol instanceof Array
+            colObj = {}
+            for col in theCol
+                colObj[col] = {}
+        else
+            colObj = theCol
+        colObj
+
+
     headers: =>
         rtn = []
-        for colName in @cols
+        for colName, colObj of @_cols()
             rtn.push 
                 colName: colName
+                col: colObj
                 sort: @_sessEquals("sortOn", colName)
                 desc: @_sessEquals("sortDirection", -1)
         rtn
@@ -99,13 +110,14 @@ class @IronTableController extends RouteController
         recordData = []
         for record in records
             colData = []
-            for col in @cols
-                if @colFunc?[col]?  # Check that it is a function
-                    value = @colFunc?[col](record[col])
+            for col, colObj of @_cols()
+                if colObj.func?  # Check that it is a function
+                    value = olObj.func(record[col])
                 else
                     value = record[col]
                 colData.push
                     value: value
+                    #aLink: "http://nowhere.com"
             recordData.push
                 colData: colData
                 _id: record._id
@@ -127,6 +139,7 @@ class @IronTableController extends RouteController
             increment: @increment
             recordCount: @_sess("recordCount")
 
+
     nextPath: ->
         Router.current().route.path
             skip: @skip() + @increment
@@ -135,19 +148,63 @@ class @IronTableController extends RouteController
         Router.current().route.path
             skip: @skip() - @increment
 
-    removeRecord: (_id) ->
+    removeRecord: (_id, name) ->
         console.log("removeRecord", @collection(), _id)
-        @collection().remove(_id)
+        @collection().remove _id, (err) ->
+            if err
+                CoffeeAlerts.error("Error deleting record #{name}")
+            else
+                CoffeeAlerts.success("Deleted #{name}")
+
+
+    # Mod THIS !!!
+    doForm: (columns, options) =>
+        if @formType == 'edit' and @recordID
+            record = @model.findOne(@recordID)
+        rtn = ''
+        for key, column of columns
+            col = jQuery.extend(true, {}, column)
+            if col[@formType] or col["staticOn_#{@formType}"]
+                col.displayType = col.type
+                col.checkbox = false
+                col.checked = ''
+                if col.type is 'boolean'
+                    col.displayType = 'checkbox'
+                    col.checkbox = true
+                    if record?[key]?
+                        if record[key]
+                            col.checked = 'checked'
+                    else if col.default
+                        col.checked = 'checked'
+                else if record?[key]?
+                    col.value = record[key]
+                else if col.default?
+                    col.value = col.default
+                
+                if col["staticOn_#{@formType}"]
+                    col.static = true
+                    if col.displayFunc?
+                        col.value = col.displayFunc(col.value, columns)
+
+                rtn += options.fn
+                    'header': (col.header || key).capitalize()
+                    'key': key
+                    'col': col
+
+        rtn
+
+    editRecord: (_id) ->
+        console.log("editRecord", _id)
+        CoffeeModal.form "", =>
+ 
 
     setupEvents: ->
-        
         Template[@headerTemplate].events
 
             "click .table-col-head": (e, tmpl) =>
                 e.preventDefault()
-                console.log('click')
+                console.log('click', tmpl.data.colName)
                 if @_sessEquals("sortOn", tmpl.data.colName)
-                    console.log('invert')
                     @_sess("sortDirection", - (@_sess("sortDirection")))
                 else
                     @_sess("sortDirection", 1)
@@ -159,13 +216,16 @@ class @IronTableController extends RouteController
             "click .iron-table-delete-record": (e, tmpl) =>
                 console.log("delete record", e, tmpl, @)
                 data = tmpl.data
-                CoffeeModal.confirm "Are you sure you want to delete #{data.recordDisplayName}?", =>
-                    console.log('delete', @)
-                    @removeRecord(data._id)
+                CoffeeModal.confirm "Are you sure you want to delete #{data.recordDisplayName}?", (yesNo) =>
+                    if yesNo
+                        console.log('delete', @)
+                        @removeRecord(data._id, data.recordDisplayName)
                 , "Delete"
                 
             "click .iron-table-edit-record": (e, tmpl) =>
-                console.log("edit record", e, tmpl)
+                console.log("edit record", e, tmpl, @)
+                data = tmpl.data
+                @editRecord(data._id)
 
 
 

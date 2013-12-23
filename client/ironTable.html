@@ -54,7 +54,14 @@
 
 <template name="ironTableRow">
     {{#each colData}}
-        <td>{{value}}</td>
+        <td>
+            {{#if aLink}}
+                <a href="{{aLink}}" {{#if title}}title='{{title}}' rel='tooltip'{{/if}}>     {{value}}
+                </a>
+            {{else}}
+                {{value}}
+            {{/if}}
+        </td>
     {{/each}}
     <td class="controls">
         {{#if editOk}}
@@ -69,4 +76,8 @@
         {{/if}}
     </td>
 </template>
+
+
+
+
 
