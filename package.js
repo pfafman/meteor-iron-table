@@ -16,7 +16,9 @@ Package.on_use(function (api, where) {
     'jquery',
     'session',
     'spin',
-    'less'
+    'less',
+    'coffee-alerts',
+    'coffee-modal'
     ]
     , 'client');
 
@@ -35,25 +37,18 @@ Package.on_use(function (api, where) {
     ]
     , ['client','server']);
 
-  // Server
-  /*
-  api.add_files([
-    'server/ironTableMethods.coffee'
-  ], 'server');
-  */
-
   // Server and Client
   api.use([
     'underscore',
     'coffeescript',
     'iron-router'
     ], ['client', 'server']);
-  
+    
   if (api.export) {
     //api.export('IronTableController', ['client','server']);
     api.export('ironTableSetup', ['client','server']);  
   }
-    
+
 });
 
 

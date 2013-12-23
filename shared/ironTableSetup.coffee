@@ -5,7 +5,7 @@ ironTableSetup = (collection) ->
         @meths = {}
         
         @meths["ironTable_" + collection._name + "_recordCount"] = ->
+            console.log("recordCount", collection._name)
             collection.find().count()
         
         Meteor.methods @meths
-        

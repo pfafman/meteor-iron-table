@@ -1,62 +1,88 @@
 
 class @IronTableController extends RouteController
 
+    constructor: ->
+        console.log("IronTableController constuct", @collection()._name)
+        super
+        
+        Meteor.defer =>
+            @setupEvents()
+
+    increment       : 20
+    defaultSort     : '_id'
+    colToUseForName : '_id'
+
+    template        : 'ironTable'
+    rowTemplate     : 'ironTableRow'
+    headerTemplate  : 'ironTableHeader'
+    
+    _sess: (id, value) ->
+        key = "_ironTable_" + @_collectionName() + id
+        if value?
+            Session.set(key, value)
+        else
+            Session.get(key)
+
+    _sessEquals: (id, value) ->
+        Session.equals("_ironTable_" + @_collectionName() + id, value)
+
+    _sessNull: (id) ->
+        Session.set("_ironTable_" + @_collectionName() + id, null)
+
+    editOk: (record) ->
+        false
+    deleteOk: (record) ->
+        false
+
     before: ->
-        if not Session.get("_ironTable_sortOn")
-            Session.set("_ironTable_sortOn", @_defaultSort())
-        if not Session.get("_ironTable_sortDirection")
-            Session.set("_ironTable_sortDirection", 1)
+        if not @_sess("sortOn")
+            @_sess("sortOn", @defaultSort)
+        if not @_sess("sortDirection")
+            @_sess("sortDirection", 1)
 
         Meteor.call 'ironTable_' +  @_collectionName() + '_recordCount', (error, number) =>
-            if not error and not Session.equals("_ironTable_recordCount", number)
-                Session.set("_ironTable_recordCount", number)
+            if not error and not @_sessEquals("recordCount", number)
+                @_sess("recordCount", number)
             else if error 
                 console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
+    #after: ->
+    #    @setEvents()
+
     unload: ->
-        Session.set("_ironTable_sortOn", null)
-        Session.set("_ironTable_sortDirection", 1)
+        console.log("unload")
+        #@_sessNull("sortOn")
+        #@_sess("sortDirection", 1)
 
-
-    _increment: ->
-        @increment or 20
-
-    _defaultSort: ->
-        @defaultSort or '_id'
+    
 
     _tableTitle: ->
         @tableTitle or @_collectionName() #.capitalize()
 
-    _editOk: ->
-        console.log('editOk', @editOk)
-        @editOk or false
-
-    _deleteOk: ->
-        @deleteOk or false
-
-    template: 'ironTable'
-
     _collectionName: ->
         @collectionName or @collection()._name
+
+    _recordName: ->
+        @recordName or @collection()._name
 
     headers: =>
         rtn = []
         for colName in @cols
             rtn.push 
                 colName: colName
-                sort: Session.equals("_ironTable_sortOn", colName)
-                desc: Session.equals("_ironTable_sortDirection", -1)
+                sort: @_sessEquals("sortOn", colName)
+                desc: @_sessEquals("sortDirection", -1)
         rtn
 
     limit: ->
-        @_increment()
+        @increment
 
     skip: ->
         parseInt(@params.skip) or 0
     
     sort: ->
-        sortOn = Session.get("_ironTable_sortOn") or @_defaultSort()
-        direction = Session.get("_ironTable_sortDirection") or 1
+        sortOn = @_sess("sortOn") or @defaultSort
+        direction = @_sess("sortDirection") or 1
         rtn = {}
         rtn["#{sortOn}"] = direction
         rtn
@@ -82,30 +108,64 @@ class @IronTableController extends RouteController
                     value: value
             recordData.push
                 colData: colData
-                editOk: @_editOk()
-                deleteOk: @_deleteOk()
+                _id: record._id
+                recordDisplayName: @_recordName() + ' ' + record[@colToUseForName]
+                editOk: @editOk(record)
+                deleteOk: @deleteOk(record)
 
         rtn =
             tableTitle: @_tableTitle()
             recordDisplayStart: @skip() + 1
-            recordDisplayStop: @skip() + @_increment()
+            recordDisplayStop: @skip() + @increment
+            recordName: @_recordName()
             records: recordData
             headers: @headers
             nextPath: @nextPath()
-            nextPathClass: if (@skip() + @_increment() >= Session.get("_ironTable_recordCount")) then "disabled" else ""
+            nextPathClass: if (@skip() + @increment >= @_sess("recordCount")) then "disabled" else ""
             previousPath: @previousPath()
             previousPathClass: if (@skip() <= 0) then "disabled" else ""
-            increment: @_increment()
-            recordCount: Session.get("_ironTable_recordCount")
+            increment: @increment
+            recordCount: @_sess("recordCount")
 
     nextPath: ->
         Router.current().route.path
-            skip: @skip() + @_increment()
+            skip: @skip() + @increment
 
     previousPath: ->
         Router.current().route.path
-            skip: @skip() - @_increment()
+            skip: @skip() - @increment
 
+    removeRecord: (_id) ->
+        console.log("removeRecord", @collection(), _id)
+        @collection().remove(_id)
+
+    setupEvents: ->
+        
+        Template[@headerTemplate].events
+
+            "click .table-col-head": (e, tmpl) =>
+                e.preventDefault()
+                console.log('click')
+                if @_sessEquals("sortOn", tmpl.data.colName)
+                    console.log('invert')
+                    @_sess("sortDirection", - (@_sess("sortDirection")))
+                else
+                    @_sess("sortDirection", 1)
+                    @_sess("sortOn", tmpl.data.colName)  
+
+
+        Template[@rowTemplate].events
+
+            "click .iron-table-delete-record": (e, tmpl) =>
+                console.log("delete record", e, tmpl, @)
+                data = tmpl.data
+                CoffeeModal.confirm "Are you sure you want to delete #{data.recordDisplayName}?", =>
+                    console.log('delete', @)
+                    @removeRecord(data._id)
+                , "Delete"
+                
+            "click .iron-table-edit-record": (e, tmpl) =>
+                console.log("edit record", e, tmpl)
 
 
 
