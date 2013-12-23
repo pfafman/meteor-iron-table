@@ -8,6 +8,7 @@ class @IronTableController extends RouteController
     template        : 'ironTable'
     rowTemplate     : 'ironTableRow'
     headerTemplate  : 'ironTableHeader'
+    formTemplate    : 'ironTableForm'
 
     constructor: ->
         console.log("IronTableController constuct", @collection()._name)
@@ -179,14 +180,14 @@ class @IronTableController extends RouteController
                 CoffeeAlerts.success("Deleted #{name}")
 
 
-    # Mod THIS !!!
-    doForm: (columns, options) =>
-        if @formType == 'edit' and @recordID
-            record = @model.findOne(@recordID)
-        rtn = ''
-        for key, column of columns
-            col = jQuery.extend(true, {}, column)
-            if col[@formType] or col["staticOn_#{@formType}"]
+    formData: (type, id = null) ->
+        console.log("do form", @_cols())
+        if type == 'edit' and id
+            record = @collection().findOne(id)
+        recordData = []
+        for key, col of @_cols()
+            
+            if col[type] or col["staticOn_#{@type}"]
                 col.displayType = col.type
                 col.checkbox = false
                 col.checked = ''
@@ -203,21 +204,32 @@ class @IronTableController extends RouteController
                 else if col.default?
                     col.value = col.default
                 
-                if col["staticOn_#{@formType}"]
+                if col["staticOn_#{@type}"]
                     col.static = true
-                    if col.displayFunc?
-                        col.value = col.displayFunc(col.value, columns)
+                    col.value = col.func?(record) or record[key]
+                    
+                col.header = (col.header || key).capitalize()
+                col.key = key
 
-                rtn += options.fn
-                    'header': (col.header || key).capitalize()
-                    'key': key
-                    'col': col
+                recordData.push col
+        console.log('formData', recordData)
+        columns: recordData
 
-        rtn
+    saveRecord: (yesNo, rec) =>
+        if yesNo
+            @collection().update @_sess("currentRecordId"), 
+                $set: rec
+            , (error, rec) =>
+                console.log('update', rec)
+                if error
+                    console.log("Error updating " + @_recordName(), error)
+                    CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
+                else
+                    CoffeeAlerts.success(@_recordName() + " updated")
 
-    editRecord: (_id) ->
-        console.log("editRecord", _id)
-        CoffeeModal.form "ironTableForm",  =>
+    editRecord: (_id) =>
+        @_sess("currentRecordId", _id)
+        CoffeeModal.form(@formTemplate,  @formData('edit', _id), @saveRecord)
  
 
     setupEvents: ->
@@ -237,6 +249,5 @@ class @IronTableController extends RouteController
                 console.log("edit record", e, tmpl, @)
                 data = tmpl.data
                 @editRecord(data._id)
-
 
 
