@@ -1,4 +1,8 @@
 
+Template.ironTable.rendered = ->
+    $('[rel="tooltip"]').tooltip()
+    $('[rel="popover"]').popover()
+
 ###
 Template.ironTableHeader.events
 

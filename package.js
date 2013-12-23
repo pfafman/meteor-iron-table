@@ -34,8 +34,8 @@ Package.on_use(function (api, where) {
   api.add_files(
     [
     'shared/ironTableController.coffee',
-    'shared/ironTableCollection.coffee',
-    'shared/ironTableSetup.coffee'
+    'shared/ironTableCollection.coffee'
+    //'shared/ironTableSetup.coffee'
     ]
     , ['client','server']);
 

@@ -1,20 +1,34 @@
 
 class @IronTableController extends RouteController
 
+    increment       : 20
+    sortColumn      : '_id'
+    sortDirection   : 1
+    
+    template        : 'ironTable'
+    rowTemplate     : 'ironTableRow'
+    headerTemplate  : 'ironTableHeader'
+
     constructor: ->
         console.log("IronTableController constuct", @collection()._name)
         super
         
+        #@setupEditRoute()
+
         Meteor.defer =>
             @setupEvents()
 
-    increment       : 20
-    defaultSort     : '_id'
-    colToUseForName : '_id'
+        @_sess("recordCount", "...")
 
-    template        : 'ironTable'
-    rowTemplate     : 'ironTableRow'
-    headerTemplate  : 'ironTableHeader'
+    setupEditRoute: ->
+        # Set Up Edit Path
+        editRoutePath = @route.originalPath.replace(/\/[^\/]+$/ , '') + "/edit/:_id"
+        editRouteName = @collection()._name + 'Edit'
+        console.log("editPath", editRoutePath)
+
+        Router.map ->
+            @route editRouteName,
+                path: editRoutePath
     
     _sess: (id, value) ->
         key = "_ironTable_" + @_collectionName() + id
@@ -35,25 +49,17 @@ class @IronTableController extends RouteController
         false
 
     before: ->
-        if not @_sess("sortOn")
-            @_sess("sortOn", @defaultSort)
-        if not @_sess("sortDirection")
-            @_sess("sortDirection", 1)
-
-        Meteor.call 'ironTable_' +  @_collectionName() + '_recordCount', (error, number) =>
-            if not error and not @_sessEquals("recordCount", number)
-                @_sess("recordCount", number)
-            else if error 
-                console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
-
-    #after: ->
-    #    @setEvents()
+        if not @fetchingCount
+            @fetchingCount = true
+            Meteor.call 'ironTable_' +  @_collectionName() + '_recordCount', (error, number) =>
+                @fetchingCount = false
+                if not error and not @_sessEquals("recordCount", number)
+                    @_sess("recordCount", number)
+                else if error 
+                    console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
     unload: ->
         console.log("unload")
-        #@_sessNull("sortOn")
-        #@_sess("sortDirection", 1)
-
     
     _tableTitle: ->
         @tableTitle or @_collectionName() #.capitalize()
@@ -62,10 +68,14 @@ class @IronTableController extends RouteController
         @collectionName or @collection()._name
 
     _recordName: ->
-        @recordName or @collection()._name
+        @recordName or @collection().recordName or @collection()._name
+
+    _colToUseForName: ->
+        @colToUseForName or @collection().colToUseForName or '_id'
+
 
     _cols: ->
-        theCol = @cols or @collection()?.getColumns?()
+        theCol = @cols or @collection()?.schema
         if theCol instanceof Array
             colObj = {}
             for col in theCol
@@ -74,15 +84,16 @@ class @IronTableController extends RouteController
             colObj = theCol
         colObj
 
-
     headers: =>
         rtn = []
         for colName, colObj of @_cols()
-            rtn.push 
-                colName: colName
-                col: colObj
-                sort: @_sessEquals("sortOn", colName)
-                desc: @_sessEquals("sortDirection", -1)
+            if not colObj.hide
+                rtn.push 
+                    colName: colObj.header or colName
+                    col: colObj
+                    sort: colName is @sortColumn
+                    desc: @sortDirection is -1
+                    sortDirection: if colName is @sortColumn then -@sortDirection else @sortDirection
         rtn
 
     limit: ->
@@ -92,13 +103,16 @@ class @IronTableController extends RouteController
         parseInt(@params.skip) or 0
     
     sort: ->
-        sortOn = @_sess("sortOn") or @defaultSort
-        direction = @_sess("sortDirection") or 1
         rtn = {}
-        rtn["#{sortOn}"] = direction
+        rtn[@sortColumn] = @sortDirection
         rtn
 
     waitOn: ->
+        if @params.sort_on?
+            @sortColumn = @params.sort_on
+        if @params.sort_direction?
+            @sortDirection = parseInt(@params.sort_direction)
+
         Meteor.subscribe @_collectionName(), @sort(), @limit(), @skip()
     
     data: ->
@@ -111,21 +125,20 @@ class @IronTableController extends RouteController
         for record in records
             colData = []
             for col, colObj of @_cols()
-                if colObj.func?  # Check that it is a function
-                    value = olObj.func(record[col])
-                else
-                    value = record[col]
-                colData.push
-                    value: value
-                    #aLink: "http://nowhere.com"
+                if not colObj.hide
+                    colData.push
+                        value : colObj.func?(record) or record[col]
+                        aLink : colObj.link?(record)
+                        title : colObj.title?(record) or colObj.title
+                    
             recordData.push
                 colData: colData
                 _id: record._id
-                recordDisplayName: @_recordName() + ' ' + record[@colToUseForName]
-                editOk: @editOk(record)
-                deleteOk: @deleteOk(record)
+                recordDisplayName: @_recordName() + ' ' + record[@_colToUseForName()]
+                editOk: @collection().editOk(record)
+                deleteOk: @collection().deleteOk(record)
 
-        rtn =
+        theData =
             tableTitle: @_tableTitle()
             recordDisplayStart: @skip() + 1
             recordDisplayStop: @skip() + @increment
@@ -143,16 +156,25 @@ class @IronTableController extends RouteController
     nextPath: ->
         Router.current().route.path
             skip: @skip() + @increment
+        ,
+            query: 
+                sort_on: @sortColumn
+                sort_direction: @sortDirection
 
     previousPath: ->
         Router.current().route.path
             skip: @skip() - @increment
+        ,
+            query: 
+                sort_on: @sortColumn
+                sort_direction: @sortDirection
 
     removeRecord: (_id, name) ->
         console.log("removeRecord", @collection(), _id)
-        @collection().remove _id, (err) ->
-            if err
-                CoffeeAlerts.error("Error deleting record #{name}")
+        @collection().remove _id, (error) ->
+            if error
+                console.log("Error deleting #{name}", error)
+                CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
             else
                 CoffeeAlerts.success("Deleted #{name}")
 
@@ -195,21 +217,10 @@ class @IronTableController extends RouteController
 
     editRecord: (_id) ->
         console.log("editRecord", _id)
-        CoffeeModal.form "", =>
+        CoffeeModal.form "ironTableForm",  =>
  
 
     setupEvents: ->
-        Template[@headerTemplate].events
-
-            "click .table-col-head": (e, tmpl) =>
-                e.preventDefault()
-                console.log('click', tmpl.data.colName)
-                if @_sessEquals("sortOn", tmpl.data.colName)
-                    @_sess("sortDirection", - (@_sess("sortDirection")))
-                else
-                    @_sess("sortDirection", 1)
-                    @_sess("sortOn", tmpl.data.colName)  
-
 
         Template[@rowTemplate].events
 
