@@ -11,7 +11,7 @@ class @IronTableController extends RouteController
     formTemplate    : 'ironTableForm'
 
     constructor: ->
-        console.log("IronTableController constuct", @collection()._name)
+        #console.log("IronTableController constuct", @collection()._name)
         super
         
         #@setupEditRoute()
@@ -59,8 +59,8 @@ class @IronTableController extends RouteController
                 else if error 
                     console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
-    unload: ->
-        console.log("unload")
+    #unload: ->
+    #    console.log("unload")
     
     _tableTitle: ->
         @tableTitle or @_collectionName() #.capitalize()
@@ -114,6 +114,7 @@ class @IronTableController extends RouteController
         if @params.sort_direction?
             @sortDirection = parseInt(@params.sort_direction)
 
+        console.log("waitOn", @_collectionName(), @sort(), @limit(), @skip())
         Meteor.subscribe @_collectionName(), @sort(), @limit(), @skip()
     
     data: ->
@@ -136,8 +137,8 @@ class @IronTableController extends RouteController
                 colData: colData
                 _id: record._id
                 recordDisplayName: @_recordName() + ' ' + record[@_colToUseForName()]
-                editOk: @collection().editOk(record)
-                deleteOk: @collection().deleteOk(record)
+                editOk: @collection().editOk?(record)
+                deleteOk: @collection().deleteOk?(record)
 
         theData =
             tableTitle: @_tableTitle()
@@ -187,7 +188,7 @@ class @IronTableController extends RouteController
         recordData = []
         for key, col of @_cols()
             
-            if col[type] or col["staticOn_#{@type}"]
+            if col[type] or col["staticOn_#{type}"]
                 col.displayType = col.type
                 col.checkbox = false
                 col.checked = ''
@@ -204,7 +205,7 @@ class @IronTableController extends RouteController
                 else if col.default?
                     col.value = col.default
                 
-                if col["staticOn_#{@type}"]
+                if col["staticOn_#{type}"]
                     col.static = true
                     col.value = col.func?(record) or record[key]
                     
