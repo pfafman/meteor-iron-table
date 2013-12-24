@@ -141,7 +141,7 @@ class @IronTableController extends RouteController
                 deleteOk: @collection().deleteOk?(record)
 
         theData =
-            haveData: records? and @_sess("recordCount") > 0
+            haveData: records? and (records.length > 0 or @_sess("recordCount") > 0)
             tableTitle: @_tableTitle()
             recordDisplayStart: @skip() + 1
             recordDisplayStop: @skip() + @increment
