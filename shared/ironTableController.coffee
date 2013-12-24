@@ -208,7 +208,7 @@ class @IronTableController extends RouteController
                 
                 if col["staticOn_#{type}"]
                     col.static = true
-                    col.value = col.func?(record) or record[key]
+                    col.value = col.func?(record) or record?[key]
                     
                 col.header = (col.header || key).capitalize()
                 col.key = key
