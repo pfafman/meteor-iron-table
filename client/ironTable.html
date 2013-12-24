@@ -2,29 +2,35 @@
     <div class="container iron-table-container">
         <h3>{{tableTitle}}</h3>
 
-        {{> ironTableNav}}
+        {{#if haveData}}
 
-        <table class="table table-striped table-hover table-condensed">
-            <thead>
-                <tr>
-                    {{#each headers}}
-                        {{> ironTableHeader}}
-                    {{/each}}
-                    <th class="controls-header">
+            {{> ironTableNav}}
 
-                    </th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {{#each records}}
+            <table class="table table-striped table-hover table-condensed">
+                <thead>
                     <tr>
-                        {{> ironTableRow}}
-                    </tr>
-                {{/each}}
-            </tbody>
+                        {{#each headers}}
+                            {{> ironTableHeader}}
+                        {{/each}}
+                        <th class="controls-header">
 
-        </table>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{#each records}}
+                        <tr>
+                            {{> ironTableRow}}
+                        </tr>
+                    {{/each}}
+                </tbody>
+
+            </table>
+
+        {{else}}
+            <div class="alert alert-warning">No {{capitalize recordName}}s !</div>
+        {{/if}}
     
     </div>
 </template>

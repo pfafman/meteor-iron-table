@@ -115,11 +115,10 @@ class @IronTableController extends RouteController
         if @params.sort_direction?
             @sortDirection = parseInt(@params.sort_direction)
 
-        console.log("waitOn", @_collectionName(), @sort(), @limit(), @skip())
         Meteor.subscribe @_collectionName(), @sort(), @limit(), @skip()
-    
+
     data: ->
-        records = @collection().find( {},
+        records = @collection()?.find({},
             sort: @sort()
             limit: @limit()
         ).fetch()
@@ -142,6 +141,7 @@ class @IronTableController extends RouteController
                 deleteOk: @collection().deleteOk?(record)
 
         theData =
+            haveData: records? and @_sess("recordCount") > 0
             tableTitle: @_tableTitle()
             recordDisplayStart: @skip() + 1
             recordDisplayStop: @skip() + @increment

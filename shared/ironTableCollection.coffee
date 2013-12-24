@@ -12,8 +12,8 @@ class @IronTableCollection extends Meteor.Collection
             # Meteor Method to get all the records in collection
             meths = {}
             meths["ironTable_" + @_name + "_recordCount"] = =>
-                console.log("recordCount", @_name, @find().count())
-                @find().count()
+                console.log("recordCount", @_name, @find?()?.count?())
+                @find?()?.count?()
             
             Meteor.methods meths
 
