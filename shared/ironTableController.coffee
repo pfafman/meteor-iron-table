@@ -90,6 +90,7 @@ class @IronTableController extends RouteController
         for colName, colObj of @_cols()
             if not colObj.hide
                 rtn.push 
+                    key: colName
                     colName: colObj.header or colName
                     col: colObj
                     sort: colName is @sortColumn
