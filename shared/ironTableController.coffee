@@ -129,9 +129,9 @@ class @IronTableController extends RouteController
             for col, colObj of @_cols()
                 if not colObj.hide
                     colData.push
-                        value : colObj.display?(col, record) or record[col]
-                        aLink : colObj.link?(col, record)
-                        title : colObj.title?(col, record) or colObj.title
+                        value : colObj.display?(record[col], record) or record[col]
+                        aLink : colObj.link?(record[col], record)
+                        title : colObj.title?(record[col], record) or colObj.title
                     
             recordData.push
                 colData: colData
@@ -208,7 +208,7 @@ class @IronTableController extends RouteController
                 
                 if col["staticOn_#{type}"]
                     col.static = true
-                    col.value = col.display?(record) or record?[key]
+                    col.value = col.display?(record[col], record) or record?[key]
                     
                 col.header = (col.header || key).capitalize()
                 col.key = key
