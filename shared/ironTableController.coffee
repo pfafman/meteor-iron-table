@@ -174,18 +174,17 @@ class @IronTableController extends RouteController
 
 
     nextPath: ->
-        console.log('nextPath', Router.current().route)
-        Router.current().route.path
-            skip: @skip() + @increment
-        ,
-            query: 
-                sort_on: @sortColumn
-                sort_direction: @sortDirection
+        params = _.clone(@select())
+        params.skip = @skip() + @increment
+        @_pathFromParams(params)
 
     previousPath: ->
-        Router.current().route.path
-            skip: @skip() - @increment
-        ,
+        params = _.clone(@select())
+        params.skip = @skip() - @increment
+        @_pathFromParams(params)
+
+    _pathFromParams: (params) ->
+        Router.current().route.path params,
             query: 
                 sort_on: @sortColumn
                 sort_direction: @sortDirection
