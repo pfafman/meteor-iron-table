@@ -130,6 +130,16 @@ class @IronTableController extends RouteController
     select: ->
         @defaultSelect
 
+    valueFromRecord: (key, col, record) ->
+        if col.dataKey
+            subElements = col.dataKey.split('.')
+            value = record
+            for subElement in subElements
+                value = value?[subElement]
+            value
+        else
+            record[key]
+
     data: ->
         records = @collection()?.find(@select(),
             sort: @sort()
@@ -139,12 +149,14 @@ class @IronTableController extends RouteController
         recordData = []
         for record in records
             colData = []
-            for col, colObj of @_cols()
-                if not (colObj.hide?() or colObj.hide)
+            for key, col of @_cols()
+                dataKey = col.dataKey or key
+                if not (col.hide?() or col.hide)
+                    value = @valueFromRecord(key, col, record)
                     colData.push
-                        value : colObj.display?(record[col], record) or record[col]
-                        aLink : colObj.link?(record[col], record)
-                        title : colObj.title?(record[col], record) or colObj.title
+                        value : col.display?(value, record) or value
+                        aLink : col.link?(value, record)
+                        title : col.title?(value, record) or col.title
                     
             recordData.push
                 colData: colData
@@ -154,9 +166,7 @@ class @IronTableController extends RouteController
                 deleteOk: @collection().deleteOk?(record)
 
         recordDisplayStop = @skip() + recordData.length
-        #if recordDisplayStop > @_sess("recordCount")
-        #    recordDisplayStop = @_sess("recordCount")
-
+        
         theData =
             haveData: records? and (records.length > 0 or @_sess("recordCount") > 0)
             tableTitle: @_tableTitle()
@@ -210,6 +220,7 @@ class @IronTableController extends RouteController
                 col.displayType = col.type
                 col.checkbox = false
                 col.checked = ''
+                value = @valueFromRecord(key, col, record)
                 if col.type is 'boolean'
                     col.displayType = 'checkbox'
                     col.checkbox = true
@@ -218,8 +229,8 @@ class @IronTableController extends RouteController
                             col.checked = 'checked'
                     else if col.default
                         col.checked = 'checked'
-                else if record?[dataKey]?
-                    col.value = col.display?(record[dataKey], record) or record[dataKey]
+                else if value?
+                    col.value = col.display?(value, record) or value
                 else if col.default?
                     col.value = col.default
                 
