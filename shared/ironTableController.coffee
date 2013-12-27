@@ -153,11 +153,15 @@ class @IronTableController extends RouteController
                 editOk: @collection().editOk?(record)
                 deleteOk: @collection().deleteOk?(record)
 
+        recordDisplayStop = @skip() + @increment
+        if recordDisplayStop > @_sess("recordCount")
+            recordDisplayStop = @_sess("recordCount")
+
         theData =
             haveData: records? and (records.length > 0 or @_sess("recordCount") > 0)
             tableTitle: @_tableTitle()
             recordDisplayStart: @skip() + 1
-            recordDisplayStop: @skip() + @increment
+            recordDisplayStop: recordDisplayStop
             recordName: @_recordName()
             records: recordData
             headers: @headers
