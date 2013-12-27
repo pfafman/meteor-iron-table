@@ -11,6 +11,8 @@ class @IronTableController extends RouteController
     formTemplate    : 'ironTableForm'
     defaultSelect   : {}
 
+    _subscriptionComplete = false
+    
     constructor: ->
         #console.log("IronTableController constuct", @collection()._name)
         super
@@ -115,11 +117,18 @@ class @IronTableController extends RouteController
             @sortColumn = @params.sort_on
         if @params.sort_direction?
             @sortDirection = parseInt(@params.sort_direction)
-
         @subscribe()
 
     subscribe: ->
-        Meteor.subscribe @_collectionName(), @sort(), @limit(), @skip()
+        @_subscribe(@_collectionName(), @sort(), @limit(), @skip())
+
+    _subscribe: (args...) =>
+        @subscriptionId = Meteor.subscribe @_collectionName(), args..., =>
+            @_subscriptionComplete = true
+
+    unsubscribe: ->
+        @_subscriptionId?.stop?()
+        @_subscriptionId = null
 
     select: ->
         @defaultSelect
