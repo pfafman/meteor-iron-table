@@ -183,6 +183,9 @@ class @IronTableController extends RouteController
             increment: @increment
             recordCount: @_sess("recordCount")
 
+        _.extend(theData, @select())
+        
+
 
     nextPath: ->
         params = _.clone(@select())
