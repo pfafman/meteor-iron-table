@@ -188,7 +188,7 @@ class @IronTableController extends RouteController
             record = @collection().findOne(id)
         recordData = []
         for key, col of @_cols()
-            
+            dataKey = col.dataKey or key
             if col[type] or col["staticOn_#{type}"]
                 col.displayType = col.type
                 col.checkbox = false
@@ -196,19 +196,19 @@ class @IronTableController extends RouteController
                 if col.type is 'boolean'
                     col.displayType = 'checkbox'
                     col.checkbox = true
-                    if record?[key]?
-                        if record[key]
+                    if record?[dataKey]?
+                        if record[dataKey]
                             col.checked = 'checked'
                     else if col.default
                         col.checked = 'checked'
-                else if record?[key]?
-                    col.value = col.display?(record[key], record) or record[key]
+                else if record?[dataKey]?
+                    col.value = col.display?(record[dataKey], record) or record[dataKey]
                 else if col.default?
                     col.value = col.default
                 
                 if col["staticOn_#{type}"]
                     col.static = true
-                    col.value = col.display?(record[key], record) or record?[key]
+                    col.value = col.display?(record[dataKey], record) or record?[dataKey]
                     
                 col.header = (col.header || key).capitalize()
                 col.key = key
