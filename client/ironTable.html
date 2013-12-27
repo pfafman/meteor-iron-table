@@ -59,7 +59,7 @@
 </template>
 
 <template name="ironTableHeader">
-    <th>
+    <th class="{{column.class}}">
         <a class="table-col-head" href="?sort_on={{key}}&sort_direction={{sortDirection}}"
             {{#if sort}}
                 title="Reverse sort order"
@@ -75,7 +75,7 @@
 
 <template name="ironTableRow">
     {{#each colData}}
-        <td>
+        <td class="{{column.class}}">
             {{#if aLink}}
                 <a href="{{aLink}}" {{#if title}}title='{{title}}' rel='tooltip'{{/if}}>     {{value}}
                 </a>

@@ -95,7 +95,7 @@ class @IronTableController extends RouteController
                 rtn.push 
                     key: colName
                     colName: colObj.header or colName
-                    col: colObj
+                    column: colObj
                     sort: colName is @sortColumn
                     desc: @sortDirection is -1
                     sortDirection: if colName is @sortColumn then -@sortDirection else @sortDirection
@@ -160,6 +160,7 @@ class @IronTableController extends RouteController
                         value : col.display?(value, record, @params) or value
                         aLink : col.link?(value, record)
                         title : col.title?(value, record) or col.title
+                        column : col
                     
             recordData.push
                 colData: colData
