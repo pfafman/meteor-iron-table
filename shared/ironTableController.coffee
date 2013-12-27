@@ -132,7 +132,7 @@ class @IronTableController extends RouteController
 
     valueFromRecord: (key, col, record) ->
         if record?
-            if col.dataKey?
+            if col?.dataKey?
                 subElements = col.dataKey.split('.')
                 value = record
                 for subElement in subElements
@@ -155,7 +155,7 @@ class @IronTableController extends RouteController
                 if not (col.hide?() or col.hide)
                     value = @valueFromRecord(key, col, record)
                     colData.push
-                        value : col.display?(value, record) or value
+                        value : col.display?(value, record, @params) or value
                         aLink : col.link?(value, record)
                         title : col.title?(value, record) or col.title
                     
