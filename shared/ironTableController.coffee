@@ -120,7 +120,7 @@ class @IronTableController extends RouteController
         @subscribe()
 
     subscribe: ->
-        @_subscribe(@_collectionName(), @sort(), @limit(), @skip())
+        @_subscribe(@sort(), @limit(), @skip())
 
     _subscribe: (args...) =>
         @subscriptionId = Meteor.subscribe @_collectionName(), args..., =>
