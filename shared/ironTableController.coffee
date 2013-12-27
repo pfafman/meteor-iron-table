@@ -104,8 +104,10 @@ class @IronTableController extends RouteController
     limit: ->
         @increment
 
+    skipParamName: 'skip'
+
     skip: ->
-        parseInt(@params.skip) or 0
+        parseInt(@params[@skipParamName]) or 0
     
     sort: ->
         rtn = {}
@@ -190,12 +192,12 @@ class @IronTableController extends RouteController
 
     nextPath: ->
         params = _.clone(@select())
-        params.skip = @skip() + @increment
+        params[@skipParamName] = @skip() + @increment
         @_pathFromParams(params)
 
     previousPath: ->
         params = _.clone(@select())
-        params.skip = @skip() - @increment
+        params[@skipParamName] = @skip() - @increment
         @_pathFromParams(params)
 
     _pathFromParams: (params) ->
