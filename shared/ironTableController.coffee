@@ -88,7 +88,7 @@ class @IronTableController extends RouteController
     headers: =>
         rtn = []
         for colName, colObj of @_cols()
-            if not colObj.hide
+            if not (colObj.hide?() or colObj.hide)
                 rtn.push 
                     key: colName
                     colName: colObj.header or colName
@@ -127,7 +127,7 @@ class @IronTableController extends RouteController
         for record in records
             colData = []
             for col, colObj of @_cols()
-                if not colObj.hide
+                if not (colObj.hide?() or colObj.hide)
                     colData.push
                         value : colObj.display?(record[col], record) or record[col]
                         aLink : colObj.link?(record[col], record)
