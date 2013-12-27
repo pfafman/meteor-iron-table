@@ -1,8 +1,8 @@
 <template name="ironTable">
     <div class="container iron-table-container">
-        {{#if goBackPath}}
+        {{#if showBackButton}}
            <span class="back-button">
-                <a class="btn btn-link" href={{pathFor goBackPath}}>
+                <a class="btn btn-link" onclick="window.history.back()">
                     <i class="fa fa-chevron-circle-left fa-lg"></i>
                 </a>
             </span>
