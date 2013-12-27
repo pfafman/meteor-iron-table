@@ -116,6 +116,9 @@ class @IronTableController extends RouteController
         if @params.sort_direction?
             @sortDirection = parseInt(@params.sort_direction)
 
+        @subscribe()
+
+    subscribe: ->
         Meteor.subscribe @_collectionName(), @sort(), @limit(), @skip()
 
     select: ->
