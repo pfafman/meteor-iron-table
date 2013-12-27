@@ -193,12 +193,12 @@ class @IronTableController extends RouteController
     nextPath: ->
         params = _.clone(@select())
         params[@skipParamName] = @skip() + @increment
-        @_pathFromParams(params)
+        @_pathFromParams(_.extend(@params,params))
 
     previousPath: ->
         params = _.clone(@select())
         params[@skipParamName] = @skip() - @increment
-        @_pathFromParams(params)
+        @_pathFromParams(_.extend(@params,params))
 
     _pathFromParams: (params) ->
         Router.current().route.path params,
