@@ -170,6 +170,7 @@ class @IronTableController extends RouteController
 
 
     nextPath: ->
+        console.log('nextPath', Router.current().route)
         Router.current().route.path
             skip: @skip() + @increment
         ,

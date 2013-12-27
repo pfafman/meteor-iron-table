@@ -13,7 +13,7 @@ class @IronTableCollection extends Meteor.Collection
             meths = {}
             meths["ironTable_" + @_name + "_recordCount"] = (select = {})=>
                 console.log("recordCount", @_name, @find?(select)?.count?())
-                @find?()?.count?()
+                @find?(select)?.count?()
             
             Meteor.methods meths
 
