@@ -131,14 +131,15 @@ class @IronTableController extends RouteController
         @defaultSelect
 
     valueFromRecord: (key, col, record) ->
-        if col.dataKey
-            subElements = col.dataKey.split('.')
-            value = record
-            for subElement in subElements
-                value = value?[subElement]
-            value
-        else
-            record[key]
+        if record?
+            if col.dataKey?
+                subElements = col.dataKey.split('.')
+                value = record
+                for subElement in subElements
+                    value = value?[subElement]
+                value
+            else if record[key]?
+                record[key]
 
     data: ->
         records = @collection()?.find(@select(),
