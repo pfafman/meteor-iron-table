@@ -202,13 +202,13 @@ class @IronTableController extends RouteController
                     else if col.default
                         col.checked = 'checked'
                 else if record?[key]?
-                    col.value = record[key]
+                    col.value = col.display?(record[key], record) or record[key]
                 else if col.default?
                     col.value = col.default
                 
                 if col["staticOn_#{type}"]
                     col.static = true
-                    col.value = col.display?(record[col], record) or record?[key]
+                    col.value = col.display?(record[key], record) or record?[key]
                     
                 col.header = (col.header || key).capitalize()
                 col.key = key
