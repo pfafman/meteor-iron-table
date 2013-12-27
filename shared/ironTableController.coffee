@@ -9,6 +9,7 @@ class @IronTableController extends RouteController
     rowTemplate     : 'ironTableRow'
     headerTemplate  : 'ironTableHeader'
     formTemplate    : 'ironTableForm'
+    defaultSelect   : {}
 
     constructor: ->
         #console.log("IronTableController constuct", @collection()._name)
@@ -117,8 +118,11 @@ class @IronTableController extends RouteController
 
         Meteor.subscribe @_collectionName(), @sort(), @limit(), @skip()
 
+    select: ->
+        @defaultSelect
+
     data: ->
-        records = @collection()?.find({},
+        records = @collection()?.find(@select(),
             sort: @sort()
             limit: @limit()
         ).fetch()
