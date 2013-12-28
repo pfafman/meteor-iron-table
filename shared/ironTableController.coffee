@@ -1,5 +1,6 @@
 
 class @IronTableController extends RouteController
+    classID: 'IronTableController'
 
     increment       : 20
     sortColumn      : '_id'
@@ -14,15 +15,10 @@ class @IronTableController extends RouteController
     _subscriptionComplete = false
     
     constructor: ->
-        #console.log("IronTableController constuct", @collection()._name)
+        console.log("IronTableController constuct", @collection()._name)
         super
-        
-        #@setupEditRoute()
-
-        Meteor.defer =>
-            @setupEvents()
-
         @_sess("recordCount", "...")
+        #@setupEditRoute()
 
     setupEditRoute: ->
         # Set Up Edit Path
@@ -62,11 +58,14 @@ class @IronTableController extends RouteController
                 else if error 
                     console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
-    #unload: ->
-    #    console.log("unload")
+    load: ->
+        console.log("load", @_collectionName())
+
+    unload: ->
+        console.log("unload", @_collectionName())
     
     _tableTitle: ->
-        @tableTitle or @_collectionName() #.capitalize()
+        @tableTitle or @_collectionName()
 
     _collectionName: ->
         @collectionName or @collection()._name
@@ -197,12 +196,12 @@ class @IronTableController extends RouteController
     nextPath: ->
         params = _.clone(@select())
         params[@skipParamName] = @skip() + @increment
-        @_pathFromParams(_.extend(@params,params))
+        @_pathFromParams(_.extend({}, @params, params))
 
     previousPath: ->
         params = _.clone(@select())
         params[@skipParamName] = @skip() - @increment
-        @_pathFromParams(_.extend(@params,params))
+        @_pathFromParams(_.extend({}, @params, params))
 
     _pathFromParams: (params) ->
         Router.current().route.path params,
@@ -210,15 +209,27 @@ class @IronTableController extends RouteController
                 sort_on: @sortColumn
                 sort_direction: @sortDirection
 
-    removeRecord: (_id, name) ->
-        console.log("removeRecord", @collection(), _id)
-        @collection().remove _id, (error) ->
+    removeRecord: (rec) ->
+        console.log("removeRecord", @collection(), rec._id)
+        
+        name = rec.recordDisplayName
+
+        @collection().remove rec._id, (error) ->
             if error
                 console.log("Error deleting #{name}", error)
                 CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
             else
                 CoffeeAlerts.success("Deleted #{name}")
-
+        
+        #Meteor.call "ironTable_" + @collection()._name + "_remove", _id, (error) ->
+        #    if error
+        #        console.log("Error deleting #{name}", error)
+        #        Meteor.defer ->
+        #            CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
+        #    else
+        #        Meteor.defer ->
+        #            CoffeeAlerts.success("Deleted #{name}")
+        
 
     formData: (type, id = null) ->
         console.log("do form", @_cols())
@@ -260,8 +271,8 @@ class @IronTableController extends RouteController
         if yesNo
             @collection().update @_sess("currentRecordId"), 
                 $set: rec
-            , (error, rec) =>
-                console.log('update', rec)
+            , (error, effectedCount) =>
+                console.log('update', error, effectedCount)
                 if error
                     console.log("Error updating " + @_recordName(), error)
                     CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
@@ -269,30 +280,9 @@ class @IronTableController extends RouteController
                     CoffeeAlerts.success(@_recordName() + " updated")
 
     editRecord: (_id) =>
+        console.log("editRecord", @_collectionName(), _id)
         @_sess("currentRecordId", _id)
         CoffeeModal.form(@formTemplate,  @formData('edit', _id), @saveRecord)
  
-
-    setupEvents: ->
-
-        Template[@rowTemplate].events
-
-            "click .iron-table-delete-record": (e, tmpl) =>
-                e.preventDefault()
-                e.stopImmediatePropagation()
-                console.log("delete record", e, tmpl, @)
-                data = tmpl.data
-                CoffeeModal.confirm "Are you sure you want to delete #{data.recordDisplayName}?", (yesNo) =>
-                    if yesNo
-                        console.log('delete', @)
-                        @removeRecord(data._id, data.recordDisplayName)
-                , "Delete"
-                
-            "click .iron-table-edit-record": (e, tmpl) =>
-                e.preventDefault()
-                e.stopImmediatePropagation()
-                console.log("edit record", e, tmpl, @)
-                data = tmpl.data
-                @editRecord(data._id)
 
 

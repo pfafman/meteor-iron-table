@@ -11,8 +11,12 @@ class @IronTableCollection extends Meteor.Collection
         if Meteor.isServer
             # Meteor Method to get all the records in collection
             meths = {}
-            meths["ironTable_" + @_name + "_recordCount"] = (select = {})=>
+            meths["ironTable_" + @_name + "_recordCount"] = (select = {}) =>
                 @find?(select)?.count?()
+
+            #meths["ironTable_" + @_name + "_remove"] = (select = {}) =>
+            #    console.log("Remove Records", @_name, @isSimulation)
+            #    @remove(select)
             
             Meteor.methods meths
 
