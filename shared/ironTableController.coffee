@@ -176,6 +176,7 @@ class @IronTableController extends RouteController
             tableTitle: @_tableTitle()
             newRecordPath: @newRecordPath
             newRecordTitle: @newRecordTitle
+            newRecordTooltip: @newRecordTooltip
             showBackButton: @showBackButton
             recordDisplayStart: @skip() + 1
             recordDisplayStop: recordDisplayStop
