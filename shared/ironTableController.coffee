@@ -278,6 +278,8 @@ class @IronTableController extends RouteController
         Template[@rowTemplate].events
 
             "click .iron-table-delete-record": (e, tmpl) =>
+                e.preventDefault()
+                e.stopImmediatePropagation()
                 console.log("delete record", e, tmpl, @)
                 data = tmpl.data
                 CoffeeModal.confirm "Are you sure you want to delete #{data.recordDisplayName}?", (yesNo) =>
@@ -287,6 +289,8 @@ class @IronTableController extends RouteController
                 , "Delete"
                 
             "click .iron-table-edit-record": (e, tmpl) =>
+                e.preventDefault()
+                e.stopImmediatePropagation()
                 console.log("edit record", e, tmpl, @)
                 data = tmpl.data
                 @editRecord(data._id)
