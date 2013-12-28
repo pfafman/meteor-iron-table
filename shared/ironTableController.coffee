@@ -174,6 +174,8 @@ class @IronTableController extends RouteController
         theData =
             haveData: records? and (records.length > 0 or @_sess("recordCount") > 0)
             tableTitle: @_tableTitle()
+            newRecordPath: @newRecordPath
+            newRecordTitle: @newRecordTitle
             showBackButton: @showBackButton
             recordDisplayStart: @skip() + 1
             recordDisplayStop: recordDisplayStop
