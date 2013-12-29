@@ -59,10 +59,10 @@ class @IronTableController extends RouteController
                     console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
     load: ->
-        console.log("load", @_collectionName())
+        #console.log("load", @_collectionName())
 
     unload: ->
-        console.log("unload", @_collectionName())
+        #console.log("unload", @_collectionName())
     
     _tableTitle: ->
         @tableTitle or @_collectionName()
