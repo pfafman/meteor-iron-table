@@ -165,7 +165,7 @@ class @IronTableController extends RouteController
             recordData.push
                 colData: colData
                 _id: record._id
-                recordName: record[@_colToUseForName()
+                recordName: record[@_colToUseForName()]
                 recordDisplayName: @_recordName() + ' ' + record[@_colToUseForName()]
                 editOk: @collection().editOk?(record)
                 deleteOk: @collection().deleteOk?(record)
