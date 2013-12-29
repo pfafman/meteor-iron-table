@@ -7,18 +7,18 @@ getCurrentIronTableController = ->
         null
 
 
-Template.ironTable.created = ->
-    console.log("ironTable created")
+#Template.ironTable.created = ->
+#    console.log("ironTable created")
 
 
 Template.ironTable.rendered = ->
-    console.log("ironTable rendered")
+    #console.log("ironTable rendered")
     $('[rel="tooltip"]').tooltip()
     $('[rel="popover"]').popover()
 
 
-Template.ironTable.destroyed = ->
-    console.log("ironTable destroyed")
+#Template.ironTable.destroyed = ->
+    #console.log("ironTable destroyed")
 
 
 Template.ironTable.events

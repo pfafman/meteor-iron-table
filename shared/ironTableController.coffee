@@ -15,7 +15,7 @@ class @IronTableController extends RouteController
     _subscriptionComplete = false
     
     constructor: ->
-        console.log("IronTableController constuct", @collection()._name)
+        #console.log("IronTableController constuct", @collection()._name)
         super
         @_sess("recordCount", "...")
         #@setupEditRoute()
