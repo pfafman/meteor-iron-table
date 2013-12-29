@@ -28,6 +28,7 @@ Package.on_use(function (api, where) {
     'client/ironTable.less',
     'client/ironTable.coffee',
     'client/ironTableForm.html',
+    'client/ironTableForm.coffee'
     ]
     , 'client');
 

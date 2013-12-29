@@ -156,10 +156,11 @@ class @IronTableController extends RouteController
                 if not (col.hide?() or col.hide)
                     value = @valueFromRecord(key, col, record)
                     colData.push
-                        value : col.display?(value, record, @params) or value
-                        aLink : col.link?(value, record)
-                        title : col.title?(value, record) or col.title
+                        value  : col.display?(value, record, @params) or value
+                        aLink  : col.link?(value, record)
+                        title  : col.title?(value, record) or col.title
                         column : col
+                        key    : key
                     
             recordData.push
                 colData: colData
@@ -241,16 +242,16 @@ class @IronTableController extends RouteController
             if col[type] or col["staticOn_#{type}"]
                 col.displayType = col.type
                 col.checkbox = false
-                col.checked = ''
+                col.checked = false
                 value = @valueFromRecord(key, col, record)
                 if col.type is 'boolean'
                     col.displayType = 'checkbox'
                     col.checkbox = true
                     if record?[dataKey]?
                         if record[dataKey]
-                            col.checked = 'checked'
+                            col.checked = true
                     else if col.default
-                        col.checked = 'checked'
+                        col.checked = true
                 else if value?
                     col.value = col.display?(value, record) or value
                 else if col.default?
@@ -264,7 +265,6 @@ class @IronTableController extends RouteController
                 col.key = key
 
                 recordData.push col
-        console.log('formData', recordData)
         columns: recordData
 
     saveRecord: (yesNo, rec) =>
