@@ -134,7 +134,7 @@ class @IronTableController extends RouteController
     valueFromRecord: (key, col, record) ->
         if record?
             if col?.value?
-                value = col.value?(value, record) or col.value
+                value = col.value?(record[key], record) or col.value
             else if col?.dataKey?
                 subElements = col.dataKey.split('.')
                 value = record
