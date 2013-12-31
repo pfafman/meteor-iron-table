@@ -72,7 +72,7 @@
 
 <template name="ironTableHeader">
     <th class="{{column.class}}">
-        <a class="table-col-head" href="?sort_on={{key}}&sort_direction={{sortDirection}}"
+        <a class="table-col-head" href="?sort_on={{dataKey}}&sort_direction={{sortDirection}}"
             {{#if sort}}
                 title="Reverse sort order"
             {{else}}

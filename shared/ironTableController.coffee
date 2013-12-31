@@ -89,15 +89,16 @@ class @IronTableController extends RouteController
 
     headers: =>
         rtn = []
-        for colName, colObj of @_cols()
-            if not (colObj.hide?() or colObj.hide)
+        for key, col of @_cols()
+            if not (col.hide?() or col.hide)
+                dataKey = col.dataKey or key
                 rtn.push 
-                    key: colName
-                    colName: colObj.header or colName
-                    column: colObj
-                    sort: colName is @sortColumn
+                    dataKey: dataKey
+                    colName: col.header or key
+                    column: col
+                    sort: dataKey is @sortColumn
                     desc: @sortDirection is -1
-                    sortDirection: if colName is @sortColumn then -@sortDirection else @sortDirection
+                    sortDirection: if dataKey is @sortColumn then -@sortDirection else @sortDirection
         rtn
 
     limit: ->
@@ -133,8 +134,8 @@ class @IronTableController extends RouteController
 
     valueFromRecord: (key, col, record) ->
         if record?
-            if col?.value?
-                value = col.value?(record[key], record) or col.value
+            if col?.valueFunc?
+                value = col.valueFunc?(record[key], record)
             else if col?.dataKey?
                 subElements = col.dataKey.split('.')
                 value = record
@@ -158,11 +159,12 @@ class @IronTableController extends RouteController
                 if not (col.hide?() or col.hide)
                     value = @valueFromRecord(key, col, record)
                     colData.push
-                        value  : col.display?(value, record, @params) or value
-                        aLink  : col.link?(value, record)
-                        title  : col.title?(value, record) or col.title
-                        column : col
-                        key    : key
+                        value   : col.display?(value, record, @params) or value
+                        aLink   : col.link?(value, record)
+                        title   : col.title?(value, record) or col.title
+                        column  : col
+                        dataKey : dataKey
+
                     
             recordData.push
                 colData: colData
@@ -237,7 +239,7 @@ class @IronTableController extends RouteController
 
     formData: (type, id = null) ->
         console.log("do form", @_cols())
-        if type == 'edit' and id
+        if type is 'edit' and id?
             record = @collection().findOne(id)
         recordData = []
         for key, col of @_cols()
@@ -247,6 +249,7 @@ class @IronTableController extends RouteController
                 col.checkbox = false
                 col.checked = false
                 value = @valueFromRecord(key, col, record)
+                console.log("formData value", value, record)
                 if col.type is 'boolean'
                     col.displayType = 'checkbox'
                     col.checkbox = true
@@ -266,6 +269,7 @@ class @IronTableController extends RouteController
                     
                 col.header = (col.header || key).capitalize()
                 col.key = key
+                col.dataKey = dataKey
 
                 recordData.push col
         columns: recordData
@@ -285,7 +289,7 @@ class @IronTableController extends RouteController
     editRecord: (_id) =>
         console.log("editRecord", @_collectionName(), _id)
         @_sess("currentRecordId", _id)
-        CoffeeModal.form(@formTemplate,  @formData('edit', _id), @saveRecord)
+        CoffeeModal.form(@formTemplate, @formData('edit', _id), @saveRecord)
  
 
 
