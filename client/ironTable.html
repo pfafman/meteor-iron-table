@@ -72,7 +72,7 @@
                         <option value="_none_">No Filter</option>
                         {{#each headers}}
                             {{#if canFilterOn}}
-                                <option value="{{dataKey}}" {{#if filterOnThisCol}}selected{{/if}}>
+                                <option value="{{colName}}" {{#if filterOnThisCol}}selected{{/if}}>
                                     {{capitalize colName}}
                                 </option>
                             {{/if}}
