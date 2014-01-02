@@ -107,6 +107,7 @@ class @IronTableController extends RouteController
             else
                 noFilterOn = false
             rtn.push 
+                key: key
                 dataKey: dataKey
                 colName: col.header or key
                 column: col
