@@ -69,11 +69,11 @@
                     <select class="form-control" id="filter-column">
                         <option value="_none_">No Filter</option>
                         {{#each headers}}
-                            {{#unless doNotFilterOn}}
+                            {{#if canFilterOn}}
                                 <option value="{{dataKey}}" {{#if filterOnThisCol}}selected{{/if}}>
                                     {{capitalize colName}}
                                 </option>
-                            {{/unless}}
+                            {{/if}}
                         {{/each}}
                     </select>
                 </div>
