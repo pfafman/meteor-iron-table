@@ -150,9 +150,11 @@ class @IronTableController extends RouteController
         select = _.extend({}, @select())
         filterColumn = @_sess('filterColumn')
         filterValue = @_sess('filterValue')
-        if filterColumn and filterColumn isnt "_none_" and filterColumn of @_cols() and filterValue isnt ''
-            console.log("have filter", filterColumn, filterValue)
-            select[filterColumn] = 
+        col = @_cols()[filterColumn]
+        if filterColumn and filterColumn isnt "_none_" and col and filterValue isnt ''
+            dataKey = col.dataKey or filterColumn
+            console.log("have filter", filterColumn, dataKey, filterValue)
+            select[dataKey] = 
                 $regex: ".*#{filterValue}.*"
                 $options: 'i'
         select
