@@ -97,7 +97,6 @@ class @IronTableController extends RouteController
 
     headers: =>
         rtn = []
-        filterOk = false
         for key, col of @_cols()
             if not (col.hide?() or col.hide)
                 dataKey = col.dataKey or key
@@ -107,8 +106,6 @@ class @IronTableController extends RouteController
                     noFilterOn = true
                 else
                     noFilterOn = false
-                if col.canFilterOn
-                    filterOk = true
                 rtn.push 
                     dataKey: dataKey
                     colName: col.header or key
@@ -118,8 +115,6 @@ class @IronTableController extends RouteController
                     sortDirection: if dataKey is @sortColumn then -@sortDirection else @sortDirection
                     filterOnThisCol: dataKey is @_sess('filterColumn')
                     canFilterOn: col.canFilterOn
-                if not filterOk and @showFilter
-                    @showFilter = false
         rtn
 
     limit: ->
