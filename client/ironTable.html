@@ -35,7 +35,9 @@
                 <thead>
                     <tr>
                         {{#each headers}}
-                            {{> ironTableHeader}}
+                            {{#unless hide}}
+                                {{> ironTableHeader}}
+                            {{/unless}}
                         {{/each}}
                         <th class="controls-header">
 

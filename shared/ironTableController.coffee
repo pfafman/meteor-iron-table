@@ -98,23 +98,24 @@ class @IronTableController extends RouteController
     headers: =>
         rtn = []
         for key, col of @_cols()
-            if not (col.hide?() or col.hide)
-                dataKey = col.dataKey or key
-                if col.noFilterOn?
-                    noFilterOn = col.noFilterOn
-                else if col.type in ['boolean']
-                    noFilterOn = true
-                else
-                    noFilterOn = false
-                rtn.push 
-                    dataKey: dataKey
-                    colName: col.header or key
-                    column: col
-                    sort: dataKey is @sortColumn
-                    desc: @sortDirection is -1
-                    sortDirection: if dataKey is @sortColumn then -@sortDirection else @sortDirection
-                    filterOnThisCol: dataKey is @_sess('filterColumn')
-                    canFilterOn: col.canFilterOn
+            #if not (col.hide?() or col.hide)
+            dataKey = col.dataKey or key
+            if col.noFilterOn?
+                noFilterOn = col.noFilterOn
+            else if col.type in ['boolean']
+                noFilterOn = true
+            else
+                noFilterOn = false
+            rtn.push 
+                dataKey: dataKey
+                colName: col.header or key
+                column: col
+                sort: dataKey is @sortColumn
+                desc: @sortDirection is -1
+                sortDirection: if dataKey is @sortColumn then -@sortDirection else @sortDirection
+                filterOnThisCol: dataKey is @_sess('filterColumn')
+                canFilterOn: col.canFilterOn
+                hide: col.hide?() or col.hide
         rtn
 
     limit: ->
