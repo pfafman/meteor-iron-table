@@ -21,7 +21,13 @@
             </span>
         {{/if}}
 
+        {{#if showFilter}}
+            {{> ironTableFilter}}
+        {{/if}}
+
         {{#if haveData}}
+
+            <div class="clearfix"></div>
 
             {{> ironTableNav}}
 
@@ -54,10 +60,41 @@
     </div>
 </template>
 
+<template name="ironTableFilter">
+    <div class="ironTableFilter pull-right">
+
+        <span class="filter">
+            <form class="form-inline" role="form">
+                <div class="form-group">
+                    <select class="form-control" id="filter-column">
+                        <option value="_none_">No Filter</option>
+                        {{#each headers}}
+                            {{#unless doNotFilterOn}}
+                                <option value="{{dataKey}}" {{#if filterOnThisCol}}selected{{/if}}>
+                                    {{capitalize colName}}
+                                </option>
+                            {{/unless}}
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="filter-value" class="form-control" 
+                        placeholder="Text to filter on" value="{{filterValue}}" />
+                </div>
+                <div class="form-group">
+
+                </div>
+            </form>
+        </span>
+    </div>
+</template>
+
+
 <template name="ironTableNav">
     <div class="pull-left">
         <strong>Displaying {{recordDisplayStart}} - {{recordDisplayStop}} out of {{recordCount}} {{recordName}}s</strong>
     </div>
+
     <div class="pull-right">
         <a class="btn btn-default btn-sm {{previousPathClass}}" href="{{previousPath}}"
             title="previous record set" rel='tooltip'>
@@ -68,6 +105,8 @@
             <i class="fa fa-chevron-right"></i>
         </a>
     </div>
+
+
 </template>
 
 <template name="ironTableHeader">

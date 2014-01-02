@@ -11,6 +11,7 @@ class @IronTableController extends RouteController
     headerTemplate  : 'ironTableHeader'
     formTemplate    : 'ironTableForm'
     defaultSelect   : {}
+    showFilter      : false
 
     _subscriptionComplete = false
     
@@ -49,9 +50,12 @@ class @IronTableController extends RouteController
         false
 
     before: ->
+        @fetchRecordCount()
+
+    fetchRecordCount: ->
         if not @fetchingCount
             @fetchingCount = true
-            Meteor.call 'ironTable_' +  @_collectionName() + '_recordCount', @select(), (error, number) =>
+            Meteor.call 'ironTable_' +  @_collectionName() + '_recordCount', @_select(), (error, number) =>
                 @fetchingCount = false
                 if not error and not @_sessEquals("recordCount", number)
                     @_sess("recordCount", number)
@@ -59,10 +63,14 @@ class @IronTableController extends RouteController
                     console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
     load: ->
-        #console.log("load", @_collectionName())
+        console.log("load", @_collectionName())
+        @_sessNull('filterColumn')
+        @_sess('filterValue', '')
 
     unload: ->
-        #console.log("unload", @_collectionName())
+        console.log("unload", @_collectionName())
+        @_sessNull('filterColumn')
+        @_sess('filterValue', '')
     
     _tableTitle: ->
         @tableTitle or @_collectionName()
@@ -92,6 +100,12 @@ class @IronTableController extends RouteController
         for key, col of @_cols()
             if not (col.hide?() or col.hide)
                 dataKey = col.dataKey or key
+                if col.noFilterOn?
+                    noFilterOn = col.noFilterOn
+                else if col.type in ['boolean']
+                    noFilterOn = true
+                else
+                    noFilterOn = false
                 rtn.push 
                     dataKey: dataKey
                     colName: col.header or key
@@ -99,6 +113,8 @@ class @IronTableController extends RouteController
                     sort: dataKey is @sortColumn
                     desc: @sortDirection is -1
                     sortDirection: if dataKey is @sortColumn then -@sortDirection else @sortDirection
+                    filterOnThisCol: dataKey is @_sess('filterColumn')
+                    noFilterOn: noFilterOn
         rtn
 
     limit: ->
@@ -122,16 +138,27 @@ class @IronTableController extends RouteController
         @subscribe()
 
     subscribe: ->
-        @subscriptionId = Meteor.subscribe @_collectionName(), @select(), @sort(), @limit(), @skip(), =>
+        @subscriptionId = Meteor.subscribe @_collectionName(), @_select(), @sort(), @limit(), @skip(), =>
             @_subscriptionComplete = true
 
     unsubscribe: ->
         @_subscriptionId?.stop?()
         @_subscriptionId = null
 
+    _select: ->
+        select = _.extend({}, @select())
+        filterColumn = @_sess('filterColumn')
+        filterValue = @_sess('filterValue')
+        if filterColumn and filterColumn isnt "_none_" and filterColumn of @_cols() and filterValue isnt ''
+            console.log("have filter", filterColumn, filterValue)
+            select[filterColumn] = 
+                $regex: ".*#{filterValue}.*"
+                $options: 'i'
+        select
+
     select: ->
         @defaultSelect
-
+        
     valueFromRecord: (key, col, record) ->
         if record?
             if col?.valueFunc?
@@ -146,7 +173,7 @@ class @IronTableController extends RouteController
                 record[key]
 
     data: ->
-        records = @collection()?.find(@select(),
+        records = @collection()?.find(@_select(),
             sort: @sort()
             limit: @limit()
         ).fetch()
@@ -194,18 +221,19 @@ class @IronTableController extends RouteController
             previousPathClass: if (@skip() <= 0) then "disabled" else ""
             increment: @increment
             recordCount: @_sess("recordCount")
+            showFilter: @showFilter
+            filterValue: @_sess("filterValue")
 
         _.extend(theData, @params)
         
 
-
     nextPath: ->
-        params = _.clone(@select())
+        params = _.clone(@_select())
         params[@skipParamName] = @skip() + @increment
         @_pathFromParams(_.extend({}, @params, params))
 
     previousPath: ->
-        params = _.clone(@select())
+        params = _.clone(@_select())
         params[@skipParamName] = @skip() - @increment
         @_pathFromParams(_.extend({}, @params, params))
 
@@ -291,5 +319,14 @@ class @IronTableController extends RouteController
         @_sess("currentRecordId", _id)
         CoffeeModal.form(@formTemplate, @formData('edit', _id), @saveRecord)
  
+
+    setFilterColumn: (col) ->
+        @_sess('filterColumn', col)
+
+
+    setFilterValue: (value) ->
+        @_sess('filterValue', value)
+
+
 
 

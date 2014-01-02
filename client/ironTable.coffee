@@ -20,6 +20,8 @@ Template.ironTable.rendered = ->
 #Template.ironTable.destroyed = ->
     #console.log("ironTable destroyed")
 
+#Template.ironTable.helpers
+
 
 Template.ironTable.events
 
@@ -47,4 +49,27 @@ Template.ironTable.events
         currentController.editRecord(@_id)
 
 
+Template.ironTableFilter.events
+
+    "change #filter-column": (e, tmpl) ->
+        #e.preventDefault()
+        if not currentController = getCurrentIronTableController()
+            CoffeeAlerts.error("Internal Error: Could not get controller")
+            return false
+
+        currentController.setFilterColumn(e.target.value)
+
+
+    "keypress, change #filter-value": (e, tmpl) ->
+        #e.preventDefault()
+        console.log("filter-value", e.target.value, $("#filter-value").val())
+        if not currentController = getCurrentIronTableController()
+            CoffeeAlerts.error("Internal Error: Could not get controller")
+            return false
+        Meteor.defer ->
+            currentController.setFilterValue(e.target.value)
+
+    "submit form": (e) ->
+        e.preventDefault()
+        console.log("submit", $("#filter-value").val())
 
