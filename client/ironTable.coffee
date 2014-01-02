@@ -62,7 +62,7 @@ Template.ironTableFilter.events
 
     "keypress, change #filter-value": (e, tmpl) ->
         #e.preventDefault()
-        console.log("filter-value", e.target.value, $("#filter-value").val())
+        #console.log("filter-value", e.target.value, $("#filter-value").val())
         if not currentController = getCurrentIronTableController()
             CoffeeAlerts.error("Internal Error: Could not get controller")
             return false
