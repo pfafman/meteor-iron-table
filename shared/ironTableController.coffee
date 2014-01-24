@@ -81,6 +81,9 @@ class @IronTableController extends RouteController
     _recordName: ->
         @recordName or @collection().recordName or @collection()._name
 
+    _recordsName: ->
+        @recordsName or @collection().recordsName or @_recordName()+'s'
+
     _colToUseForName: ->
         @colToUseForName or @collection().colToUseForName or '_id'
 
@@ -217,6 +220,7 @@ class @IronTableController extends RouteController
             recordDisplayStart: @skip() + 1
             recordDisplayStop: recordDisplayStop
             recordName: @_recordName()
+            recordsName: @_recordsName()
             records: recordData
             headers: @headers
             nextPath: @nextPath()
