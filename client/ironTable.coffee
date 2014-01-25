@@ -12,15 +12,13 @@ getCurrentIronTableController = ->
 
 
 Template.ironTable.rendered = ->
-    #console.log("ironTable rendered")
+    console.log("ironTable rendered")
     $('[rel="tooltip"]').tooltip()
     $('[rel="popover"]').popover()
 
 
 #Template.ironTable.destroyed = ->
     #console.log("ironTable destroyed")
-
-#Template.ironTable.helpers
 
 
 Template.ironTable.events
@@ -49,6 +47,7 @@ Template.ironTable.events
         currentController.editRecord(@_id)
 
 
+
 Template.ironTableFilter.events
 
     "change #filter-column": (e, tmpl) ->
@@ -72,4 +71,12 @@ Template.ironTableFilter.events
     "submit form": (e) ->
         e.preventDefault()
         console.log("submit", $("#filter-value").val())
+
+
+Template.ironTableRow.helpers
+    extraControls: ->
+        if currentController = getCurrentIronTableController()
+            if currentController.extraControlsTemplate?
+                Template[currentController.extraControlsTemplate](@)
+
 
