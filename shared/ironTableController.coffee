@@ -46,6 +46,7 @@ class @IronTableController extends RouteController
 
     editOk: (record) ->
         false
+    
     deleteOk: (record) ->
         false
 
@@ -207,6 +208,7 @@ class @IronTableController extends RouteController
                 recordDisplayName: @_recordName() + ' ' + record[@_colToUseForName()]
                 editOk: @collection().editOk?(record)
                 deleteOk: @collection().deleteOk?(record)
+                extraControls: @collection().extraControls?(record)
 
         recordDisplayStop = @skip() + recordData.length
         
