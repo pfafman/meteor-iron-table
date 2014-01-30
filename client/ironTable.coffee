@@ -12,7 +12,6 @@ getCurrentIronTableController = ->
 
 
 Template.ironTable.rendered = ->
-    console.log("ironTable rendered")
     $('[rel="tooltip"]').tooltip()
     $('[rel="popover"]').popover()
 
