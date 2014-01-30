@@ -104,12 +104,10 @@ class @IronTableController extends RouteController
         for key, col of @_cols()
             #if not (col.hide?() or col.hide)
             dataKey = col.dataKey or key
-            if col.noFilterOn?
-                noFilterOn = col.noFilterOn
-            else if col.type in ['boolean']
-                noFilterOn = true
+            if col.canFilterOn? and not col.hide?()
+                canFilterOn= col.canFilterOn
             else
-                noFilterOn = false
+                canFilterOn = false
             rtn.push 
                 key: key
                 dataKey: dataKey
@@ -119,7 +117,7 @@ class @IronTableController extends RouteController
                 desc: @sortDirection is -1
                 sortDirection: if dataKey is @sortColumn then -@sortDirection else @sortDirection
                 filterOnThisCol: dataKey is @_sess('filterColumn')
-                canFilterOn: col.canFilterOn
+                canFilterOn: canFilterOn
                 hide: col.hide?()
         rtn
 
