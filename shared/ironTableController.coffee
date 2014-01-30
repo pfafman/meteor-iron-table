@@ -64,12 +64,12 @@ class @IronTableController extends RouteController
                     console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
     load: ->
-        console.log("load", @_collectionName())
+        #console.log("load", @_collectionName())
         @_sessNull('filterColumn')
         @_sess('filterValue', '')
 
     unload: ->
-        console.log("unload", @_collectionName())
+        #console.log("unload", @_collectionName())
         @_sessNull('filterColumn')
         @_sess('filterValue', '')
     
@@ -120,7 +120,7 @@ class @IronTableController extends RouteController
                 sortDirection: if dataKey is @sortColumn then -@sortDirection else @sortDirection
                 filterOnThisCol: dataKey is @_sess('filterColumn')
                 canFilterOn: col.canFilterOn
-                hide: col.hide?() or col.hide
+                hide: col.hide?()
         rtn
 
     limit: ->
@@ -191,7 +191,7 @@ class @IronTableController extends RouteController
             colData = []
             for key, col of @_cols()
                 dataKey = col.dataKey or key
-                if not (col.hide?() or col.hide)
+                if not col.hide?()
                     value = @valueFromRecord(key, col, record)
                     colData.push
                         value   : col.display?(value, record, @params) or value
