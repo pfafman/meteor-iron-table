@@ -25,7 +25,7 @@ class @IronTableController extends RouteController
         # Set Up Edit Path
         editRoutePath = @route.originalPath.replace(/\/[^\/]+$/ , '') + "/edit/:_id"
         editRouteName = @collection()._name + 'Edit'
-        console.log("editPath", editRoutePath)
+        #console.log("editPath", editRoutePath)
 
         Router.map ->
             @route editRouteName,
@@ -156,7 +156,7 @@ class @IronTableController extends RouteController
         col = @_cols()[filterColumn]
         if filterColumn and filterColumn isnt "_none_" and col and filterValue isnt ''
             dataKey = col.dataKey or filterColumn
-            console.log("have filter", filterColumn, dataKey, filterValue)
+            #console.log("have filter", filterColumn, dataKey, filterValue)
             select[dataKey] = 
                 $regex: ".*#{filterValue}.*"
                 $options: 'i'
