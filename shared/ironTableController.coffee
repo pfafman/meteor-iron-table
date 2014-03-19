@@ -64,14 +64,15 @@ class @IronTableController extends RouteController
                     console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
     load: ->
-        #console.log("load", @_collectionName())
-        @_sessNull('filterColumn')
-        @_sess('filterValue', '')
+        console.log("load", @_collectionName())
+        if not @params?[@skipParamName]?
+            @_sessNull('filterColumn')
+            @_sess('filterValue', '')
 
     unload: ->
-        #console.log("unload", @_collectionName())
-        @_sessNull('filterColumn')
-        @_sess('filterValue', '')
+        console.log("unload", @_collectionName())
+        #@_sessNull('filterColumn')
+        #@_sess('filterValue', '')
     
     _tableTitle: ->
         @tableTitle or @_collectionName()
@@ -246,10 +247,15 @@ class @IronTableController extends RouteController
         @_pathFromParams(_.extend({}, @params, params))
 
     _pathFromParams: (params) ->
+        query = 
+            sort_on: @sortColumn
+            sort_direction: @sortDirection
+        #if @_sess("filterCol")?
+        #    query.filterCol = @_sess("filterCol")
+        #    query.filterValue = @_sess("filterValue")
         Router.current().route.path params,
-            query: 
-                sort_on: @sortColumn
-                sort_direction: @sortDirection
+            query: query
+                
 
     removeRecord: (rec) ->
         console.log("removeRecord", @collection(), rec._id)
