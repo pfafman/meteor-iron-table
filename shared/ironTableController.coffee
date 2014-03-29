@@ -50,7 +50,7 @@ class @IronTableController extends RouteController
     deleteOk: (record) ->
         false
 
-    before: ->
+    onBeforeAction: ->
         @fetchRecordCount()
 
     fetchRecordCount: ->
@@ -193,11 +193,12 @@ class @IronTableController extends RouteController
                 if not col.hide?()
                     value = @valueFromRecord(key, col, record)
                     colData.push
-                        value   : col.display?(value, record, @params) or value
-                        aLink   : col.link?(value, record)
-                        title   : col.title?(value, record) or col.title
-                        column  : col
-                        dataKey : dataKey
+                        template     : col.template
+                        value        : col.display?(value, record, @params) or value
+                        aLink        : col.link?(value, record)
+                        title        : col.title?(value, record) or col.title
+                        column       : col
+                        dataKey      : dataKey
 
                     
             recordData.push

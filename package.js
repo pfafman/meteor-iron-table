@@ -11,7 +11,6 @@ Package.on_use(function (api, where) {
     'minimongo', 
     'mongo-livedata',
     'templating',
-    'spark',
     'handlebars',
     'jquery',
     'session',

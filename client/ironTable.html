@@ -72,7 +72,7 @@
                         <option value="_none_">No Filter</option>
                         {{#each headers}}
                             {{#if canFilterOn}}
-                                <option value="{{key}}" {{#if filterOnThisCol}}selected{{/if}}>
+                                <option value="{{key}}" selected="{{#if filterOnThisCol}}selected{{/if}}">
                                     {{capitalize colName}}
                                 </option>
                             {{/if}}
@@ -114,11 +114,7 @@
 <template name="ironTableHeader">
     <th class="{{column.class}}">
         <a class="table-col-head" href="?sort_on={{dataKey}}&sort_direction={{sortDirection}}"
-            {{#if sort}}
-                title="Reverse sort order"
-            {{else}}
-                title="Sort on {{capitalize colName}}"
-            {{/if}} 
+            title="{{#if sort}}Reverse sort order{{else}}Sort on {{capitalize colName}}{{/if}}"
             rel='tooltip'>
             {{capitalize colName}} 
             {{#if sort}}<i class="fa fa-chevron-circle-{{#if desc}}down{{else}}up{{/if}}"></i>{{/if}}
@@ -130,15 +126,24 @@
     {{#each colData}}
         <td class="{{column.class}}">
             {{#if aLink}}
-                <a href="{{aLink}}" {{#if title}}title='{{title}}' rel='tooltip'{{/if}}>     {{{value}}}
+                <a href="{{aLink}}" title="{{#if title}}{{title}}{{/if}}" rel='tooltip'>
+                    {{#if template}}
+                        {{> templateRow}}
+                    {{else}}
+                        {{{value}}}
+                    {{/if}}
                 </a>
             {{else}}
-                {{{value}}}
+                {{#if template}}
+                    {{> templateRow}}
+                {{else}}
+                    {{{value}}}
+                {{/if}}
             {{/if}}
         </td>
     {{/each}}
     <td class="controls">
-        {{{ extraControls }}}
+        {{#if extraControls}}{{> extraControls }}{{/if}}
         {{#if editOk}}
             <a class="btn btn-link iron-table-edit-record" title='Edit Record' rel='tooltip'>
                 <i class="fa fa-pencil-square-o"></i>

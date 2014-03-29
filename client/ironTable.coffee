@@ -11,9 +11,9 @@ getCurrentIronTableController = ->
 #    console.log("ironTable created")
 
 
-Template.ironTable.rendered = ->
-    $('[rel="tooltip"]').tooltip()
-    $('[rel="popover"]').popover()
+#Template.ironTable.rendered = ->
+    #$('[rel="tooltip"]').tooltip()
+    #$('[rel="popover"]').popover()
 
 
 #Template.ironTable.destroyed = ->
@@ -76,6 +76,16 @@ Template.ironTableRow.helpers
     extraControls: ->
         if currentController = getCurrentIronTableController()
             if currentController.extraControlsTemplate?
-                Template[currentController.extraControlsTemplate](@)
+                Template[currentController.extraControlsTemplate] #(@)
 
+    templateRow: ->
+        Template[@template]
+
+
+Template.ironTableRow.rendered = ->
+    $('[rel="tooltip"]').tooltip()
+
+Template.ironTableHeader.rendered = ->
+    $('[rel="tooltip"]').tooltip()
+    
 
