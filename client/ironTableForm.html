@@ -9,15 +9,14 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="{{key}}">{{header}}</label>
     <div class="col-sm-10">
-        <input type="{{displayType}}" class="form-control" name="{{key}}"
-          checked="{{checked}}"
+        <input type="{{displayType}}" class="form-control hi" name="{{key}}"
           value="{{value}}"
-          required={{required}}
-          autofocus={{autofocus}}
-          placeholder='{{col.placeholder}}'
-          title='{{tooltip}}' rel='tooltip' data-placement="right"
-          disabled={{disabled}}
-        >
+          required="{{required}}"
+          autofocus="{{autofocus}}"
+          placeholder="{{placeholder}}"
+          checked="{{checked}}"
+          title="{{tooltip}}" rel='tooltip' data-placement="right"
+          disabled="{{static}}" />
     </div>
   </div>
 </template>

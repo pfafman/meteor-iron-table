@@ -281,7 +281,6 @@ class @IronTableController extends RouteController
         
 
     formData: (type, id = null) ->
-        console.log("do form", @_cols())
         if type is 'edit' and id?
             record = @collection().findOne(id)
         recordData = []
@@ -292,7 +291,6 @@ class @IronTableController extends RouteController
                 col.checkbox = false
                 col.checked = false
                 value = @valueFromRecord(key, col, record)
-                console.log("formData value", value, record)
                 if col.type is 'boolean'
                     col.displayType = 'checkbox'
                     col.checkbox = true
@@ -322,7 +320,6 @@ class @IronTableController extends RouteController
             @collection().update @_sess("currentRecordId"), 
                 $set: rec
             , (error, effectedCount) =>
-                console.log('update', error, effectedCount)
                 if error
                     console.log("Error updating " + @_recordName(), error)
                     CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
@@ -330,7 +327,6 @@ class @IronTableController extends RouteController
                     CoffeeAlerts.success(@_recordName() + " updated")
 
     editRecord: (_id) =>
-        console.log("editRecord", @_collectionName(), _id)
         @_sess("currentRecordId", _id)
         CoffeeModal.form(@formTemplate, @formData('edit', _id), @saveRecord)
  

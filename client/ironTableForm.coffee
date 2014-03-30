@@ -4,15 +4,20 @@ Template.ironTableForm.created = ->
     #console.log('ironTableForm created')
 ###
 
-Template.ironTableForm.rendered = ->
+#Template.ironTableForm.rendered = ->
+  #console.log("ironTableForm rendered")
   # Handle checkbox carry over....  THIS IS A HACK !!!
-  $('input:checkbox').removeAttr('checked')
-  for col in @data.columns
-      if col.checkbox and col.checked
-          $("[name=#{col.key}]").attr('checked','checked')
+  #$('input:checkbox').removeAttr('checked')
+  #for col in @data.columns
+    #if col.checkbox and col.checked
+      #$("[name=#{col.key}]").attr('checked','checked')
 
 
-Template.ironTableForm.helpers
-  disabled: ->
-    if @static
-      "disabled"
+#Template.ironTableFormItem.rendered = ->
+#  console.log("ironTableFormItem rendered")
+
+#Template.ironTableFormItem.helpers
+#  disabled: ->
+#    console.log("disabled", @)
+#    if @static
+#      "disabled"
