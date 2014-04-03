@@ -1,7 +1,10 @@
 <template name="ironTable">
     <div class="container iron-table-container">
-        
-        
+        {{#if loading}}
+            <div class="loading">
+                {{> spinner}}
+            </div>
+        {{else}}
         <h3>
             {{#if showBackButton}}
                 <a class="btn btn-link" onclick="window.history.back()">
@@ -58,7 +61,7 @@
         {{else}}
             <div class="alert alert-warning">No {{capitalize recordsName}} !</div>
         {{/if}}
-    
+        {{/if}}
     </div>
 </template>
 

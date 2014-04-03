@@ -19,6 +19,10 @@ getCurrentIronTableController = ->
 #Template.ironTable.destroyed = ->
     #console.log("ironTable destroyed")
 
+Template.ironTable.helpers
+
+    loading: ->
+        not getCurrentIronTableController().ready()
 
 Template.ironTable.events
 

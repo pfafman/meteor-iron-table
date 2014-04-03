@@ -26,7 +26,6 @@ class @IronTableController extends RouteController
         # Set Up Edit Path
         editRoutePath = @route.originalPath.replace(/\/[^\/]+$/ , '') + "/edit/:_id"
         editRouteName = @collection()._name + 'Edit'
-        #console.log("editPath", editRoutePath)
 
         Router.map ->
             @route editRouteName,
@@ -51,10 +50,8 @@ class @IronTableController extends RouteController
     deleteOk: (record) ->
         false
 
-    onBeforeAction: ->
+    onBeforeAction: (pause) ->
         @fetchRecordCount()
-        console.log("loading?")
-        "ironTableLoading"
 
     fetchRecordCount: ->
         if not @fetchingCount
@@ -146,8 +143,7 @@ class @IronTableController extends RouteController
         @subscribe()
 
     subscribe: ->
-        @subscriptionId = Meteor.subscribe @_collectionName(), @_select(), @sort(), @limit(), @skip(), =>
-            @_subscriptionComplete = true
+        @_subscriptionId = Meteor.subscribe(@_collectionName(), @_select(), @sort(), @limit(), @skip())
 
     unsubscribe: ->
         @_subscriptionId?.stop?()
