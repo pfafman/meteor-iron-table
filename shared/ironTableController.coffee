@@ -10,6 +10,7 @@ class @IronTableController extends RouteController
     rowTemplate     : 'ironTableRow'
     headerTemplate  : 'ironTableHeader'
     formTemplate    : 'ironTableForm'
+    loadingTemplate : 'ironTableLoading'
     defaultSelect   : {}
     showFilter      : false
 
@@ -52,6 +53,8 @@ class @IronTableController extends RouteController
 
     onBeforeAction: ->
         @fetchRecordCount()
+        console.log("loading?")
+        "ironTableLoading"
 
     fetchRecordCount: ->
         if not @fetchingCount
@@ -260,15 +263,14 @@ class @IronTableController extends RouteController
 
     removeRecord: (rec) ->
         console.log("removeRecord", @collection(), rec._id)
-        
         name = rec.recordDisplayName
-
-        @collection().remove rec._id, (error) ->
+        @collection().remove rec._id, (error) =>
             if error
                 console.log("Error deleting #{name}", error)
                 CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
             else
                 CoffeeAlerts.success("Deleted #{name}")
+            @fetchRecordCount()
         
         #Meteor.call "ironTable_" + @collection()._name + "_remove", _id, (error) ->
         #    if error
