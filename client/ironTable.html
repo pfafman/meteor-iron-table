@@ -1,10 +1,5 @@
 <template name="ironTable">
     <div class="container iron-table-container">
-        {{#if loading}}
-            <div class="loading">
-                {{> spinner}}
-            </div>
-        {{else}}
         <h3>
             {{#if showBackButton}}
                 <a class="btn btn-link" onclick="window.history.back()">
@@ -28,39 +23,44 @@
             {{> ironTableFilter}}
         {{/if}}
 
-        {{#if haveData}}
-
-            <div class="clearfix"></div>
-
-            {{> ironTableNav}}
-
-            <table class="table table-striped table-hover table-condensed">
-                <thead>
-                    <tr>
-                        {{#each headers}}
-                            {{#unless hide}}
-                                {{> ironTableHeader}}
-                            {{/unless}}
-                        {{/each}}
-                        <th class="controls-header">
-
-                        </th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {{#each records}}
-                        <tr>
-                            {{> ironTableRow}}
-                        </tr>
-                    {{/each}}
-                </tbody>
-
-            </table>
-
+        {{#if loading}}
+            <div class="loading">
+                {{> spinner}}
+            </div>
         {{else}}
-            <div class="alert alert-warning">No {{capitalize recordsName}} !</div>
-        {{/if}}
+            {{#if haveData}}
+
+                <div class="clearfix"></div>
+
+                {{> ironTableNav}}
+
+                <table class="table table-striped table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            {{#each headers}}
+                                {{#unless hide}}
+                                    {{> ironTableHeader}}
+                                {{/unless}}
+                            {{/each}}
+                            <th class="controls-header">
+
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {{#each records}}
+                            <tr>
+                                {{> ironTableRow}}
+                            </tr>
+                        {{/each}}
+                    </tbody>
+
+                </table>
+
+            {{else}}
+                <div class="alert alert-warning">No {{capitalize recordsName}} !</div>
+            {{/if}}
         {{/if}}
     </div>
 </template>

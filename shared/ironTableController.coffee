@@ -154,7 +154,7 @@ class @IronTableController extends RouteController
         filterColumn = @_sess('filterColumn')
         filterValue = @_sess('filterValue')
         col = @_cols()[filterColumn]
-        if filterColumn and filterColumn isnt "_none_" and col and filterValue isnt ''
+        if filterColumn and filterColumn isnt "_none_" and filterValue and col and filterValue isnt ''
             dataKey = col.dataKey or filterColumn
             #console.log("have filter", filterColumn, dataKey, filterValue)
             select[dataKey] = 

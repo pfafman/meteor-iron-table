@@ -22,7 +22,7 @@ getCurrentIronTableController = ->
 Template.ironTable.helpers
 
     loading: ->
-        not getCurrentIronTableController().ready()
+        not getCurrentIronTableController().ready() and not @haveData
 
 Template.ironTable.events
 
@@ -62,7 +62,7 @@ Template.ironTableFilter.events
         currentController.setFilterColumn(e.target.value)
 
 
-    "keypress, change #filter-value": (e, tmpl) ->
+    "keyup, change #filter-value": (e, tmpl) ->
         #e.preventDefault()
         #console.log("filter-value", e.target.value, $("#filter-value").val())
         if not currentController = getCurrentIronTableController()
