@@ -23,7 +23,7 @@ class @IronTableController extends RouteController
         #@setupEditRoute()
 
     reset: ->
-        console.log("reset")
+        #console.log("reset")
         @_sess("recordCount", "...")
         @_sess('skip', 0)
         @_sess('sortColumn', @sortColumn)
