@@ -1,4 +1,15 @@
 
+
+#
+# Iron Table Controller
+#
+
+
+# Capitalize first letter in string
+String::capitalize = ->
+    @charAt(0).toUpperCase() + @slice(1)
+
+
 class @IronTableController extends RouteController
     classID: 'IronTableController'
 
