@@ -11,7 +11,9 @@ getCurrentIronTableController = ->
 #    console.log("ironTable created")
 
 
-#Template.ironTable.rendered = ->
+Template.ironTable.rendered = ->
+    console.log("ironTable rendered")
+    getCurrentIronTableController().fetchRecordCount()
     #$('[rel="tooltip"]').tooltip()
     #$('[rel="popover"]').popover()
 
@@ -23,6 +25,17 @@ Template.ironTable.helpers
 
     loading: ->
         not getCurrentIronTableController().ready() and not @haveData
+
+    haveData: ->
+        getCurrentIronTableController().haveData()
+
+    headers: ->
+        getCurrentIronTableController().headers()
+
+    records: ->
+        getCurrentIronTableController().recordsData()
+
+
 
 Template.ironTable.events
 
@@ -50,6 +63,10 @@ Template.ironTable.events
         currentController.editRecord(@_id)
 
 
+Template.ironTableFilter.helpers
+    headers: ->
+        getCurrentIronTableController().headers()
+
 
 Template.ironTableFilter.events
 
@@ -73,7 +90,34 @@ Template.ironTableFilter.events
 
     "submit form": (e) ->
         e.preventDefault()
-        console.log("submit", $("#filter-value").val())
+
+
+Template.ironTableNav.helpers
+
+    recordDisplayStart: ->
+        getCurrentIronTableController().recordDisplayStart()
+
+    recordDisplayStop: ->
+        getCurrentIronTableController().recordDisplayStop()
+
+    recordCount: ->
+        getCurrentIronTableController().recordCount()
+
+    nextPathClass: ->
+        getCurrentIronTableController().nextPathClass()
+
+    previousPathClass: ->
+        getCurrentIronTableController().previousPathClass()
+
+Template.ironTableNav.events
+
+    "click #previous": (e, tmpl) ->
+        e.preventDefault()
+        getCurrentIronTableController().getPrevious()
+
+     "click #next": (e, tmpl) ->
+        e.preventDefault()
+        getCurrentIronTableController().getNext()
 
 
 Template.ironTableRow.helpers
@@ -92,4 +136,13 @@ Template.ironTableRow.rendered = ->
 Template.ironTableHeader.rendered = ->
     $('[rel="tooltip"]').tooltip()
     
+Template.ironTableHeader.events
+    "click .table-col-head": (e, tmpl) ->
+        e.preventDefault()
+        getCurrentIronTableController().setSort(@dataKey)
+
+
+
+
+
 

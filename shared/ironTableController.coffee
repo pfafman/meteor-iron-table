@@ -17,9 +17,13 @@ class @IronTableController extends RouteController
     _subscriptionComplete = false
     
     constructor: ->
-        #console.log("IronTableController constuct", @collection()._name)
+        console.log("IronTableController constuct", @collection()._name)
         super
         @_sess("recordCount", "...")
+        @_sess('skip', 0)
+        @_sess('sortColumn', @sortColumn)
+        @_sess('sortDirection', @sortDirection)
+        #@fetchRecordCount()
         #@setupEditRoute()
 
     setupEditRoute: ->
@@ -50,8 +54,9 @@ class @IronTableController extends RouteController
     deleteOk: (record) ->
         false
 
-    onBeforeAction: (pause) ->
-        @fetchRecordCount()
+    #onBeforeAction: (pause) ->
+    #    console.log("onBeforeAction")
+    #    #@fetchRecordCount()
 
     fetchRecordCount: ->
         if not @fetchingCount
@@ -63,14 +68,15 @@ class @IronTableController extends RouteController
                 else if error 
                     console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
-    load: ->
-        console.log("load", @_collectionName())
-        if not @params?[@skipParamName]?
+    onRun: ->
+        #console.log("onRun", @_collectionName())
+        if not @_sess('skip')?
             @_sessNull('filterColumn')
             @_sess('filterValue', '')
+        #@fetchRecordCount()
 
-    unload: ->
-        console.log("unload", @_collectionName())
+    onStop: ->
+        #console.log("onStop", @_collectionName())
         #@_sessNull('filterColumn')
         #@_sess('filterValue', '')
     
@@ -114,32 +120,35 @@ class @IronTableController extends RouteController
                 dataKey: dataKey
                 colName: col.header or key
                 column: col
-                sort: dataKey is @sortColumn
-                desc: @sortDirection is -1
-                sortDirection: if dataKey is @sortColumn then -@sortDirection else @sortDirection
+                sort: dataKey is @_sess('sortColumn')
+                desc: @_sess('sortDirection') is -1
+                #sortDirection: if dataKey is @_sess('sortColumn') then -@sortDirection else @sortDirection
                 filterOnThisCol: dataKey is @_sess('filterColumn')
                 canFilterOn: canFilterOn
                 hide: col.hide?()
         rtn
 
+
     limit: ->
         @increment
 
-    skipParamName: 'skip'
 
     skip: ->
-        parseInt(@params[@skipParamName]) or 0
-    
+        @_sess('skip')
+        
+    setSort: (dataKey) ->
+        if dataKey is @_sess('sortColumn')
+            @_sess('sortDirection',  -@_sess('sortDirection'))
+        else
+            @_sess('sortColumn', dataKey)
+            @_sess('sortDirection', @sortDirection)
+
     sort: ->
         rtn = {}
-        rtn[@sortColumn] = @sortDirection
+        rtn[@_sess('sortColumn')] = @_sess('sortDirection')
         rtn
 
     waitOn: ->
-        if @params.sort_on?
-            @sortColumn = @params.sort_on
-        if @params.sort_direction?
-            @sortDirection = parseInt(@params.sort_direction)
         @subscribe()
 
     subscribe: ->
@@ -156,7 +165,6 @@ class @IronTableController extends RouteController
         col = @_cols()[filterColumn]
         if filterColumn and filterColumn isnt "_none_" and filterValue and col and filterValue isnt ''
             dataKey = col.dataKey or filterColumn
-            #console.log("have filter", filterColumn, dataKey, filterValue)
             select[dataKey] = 
                 $regex: ".*#{filterValue}.*"
                 $options: 'i'
@@ -178,14 +186,15 @@ class @IronTableController extends RouteController
             else if record[key]?
                 record[key]
 
-    data: ->
-        records = @collection()?.find(@_select(),
+    records: ->
+        @collection()?.find @_select(),
             sort: @sort()
             limit: @limit()
-        ).fetch()
+        .fetch()
 
-        recordData = []
-        for record in records
+    recordsData: ->
+        recordsData = []
+        for record in @records()
             colData = []
             for key, col of @_cols()
                 dataKey = col.dataKey or key
@@ -200,7 +209,7 @@ class @IronTableController extends RouteController
                         dataKey      : dataKey
 
                     
-            recordData.push
+            recordsData.push
                 colData: colData
                 _id: record._id
                 recordName: record[@_colToUseForName()]
@@ -208,57 +217,54 @@ class @IronTableController extends RouteController
                 editOk: @collection().editOk?(record)
                 deleteOk: @collection().deleteOk?(record)
                 #extraControls: @extraControls?(record)
+        recordsData
 
-        recordDisplayStop = @skip() + recordData.length
+    haveData: ->
+        @records().length > 0 or @_sess("recordCount") > 0
+            
+    recordDisplayStop: ->
+        @skip() + @records().length
+
+    recordDisplayStart: ->
+        @skip() + 1
+
+    recordCount: ->
+        if @_sess("recordCount") is '...'
+            @fetchRecordCount()
+        @_sess("recordCount")
+
+    data: ->
+        #console.log("data")
         
         theData =
-            haveData: records? and (records.length > 0 or @_sess("recordCount") > 0)
             tableTitle: @_tableTitle()
             newRecordPath: @newRecordPath
             newRecordTitle: @newRecordTitle
             newRecordTooltip: @newRecordTooltip
             showBackButton: @showBackButton
-            recordDisplayStart: @skip() + 1
-            recordDisplayStop: recordDisplayStop
             recordName: @_recordName()
             recordsName: @_recordsName()
-            records: recordData
-            headers: @headers
-            nextPath: @nextPath()
-            nextPathClass: if (@skip() + @increment >= @_sess("recordCount")) then "disabled" else ""
-            previousPath: @previousPath()
-            previousPathClass: if (@skip() <= 0) then "disabled" else ""
             increment: @increment
-            recordCount: @_sess("recordCount")
             showFilter: @showFilter
-            filterValue: @_sess("filterValue")
 
         _.extend(theData, @params)
         
 
-    nextPath: ->
-        params = _.clone(@_select())
-        params[@skipParamName] = @skip() + @increment
-        @_pathFromParams(_.extend({}, @params, params))
+    getNext: ->
+        @_sess('skip', @skip() + @increment)
 
-    previousPath: ->
-        params = _.clone(@_select())
-        params[@skipParamName] = @skip() - @increment
-        @_pathFromParams(_.extend({}, @params, params))
+    nextPathClass: ->
+        if (@skip() + @increment >= @_sess("recordCount")) then "disabled" else ""
 
-    _pathFromParams: (params) ->
-        query = 
-            sort_on: @sortColumn
-            sort_direction: @sortDirection
-        #if @_sess("filterCol")?
-        #    query.filterCol = @_sess("filterCol")
-        #    query.filterValue = @_sess("filterValue")
-        Router.current().route.path params,
-            query: query
-                
+    getPrevious: ->
+        @_sess('skip', Math.max(@skip() - @increment, 0))
+
+
+    previousPathClass: ->
+        if (@skip() <= 0) then "disabled" else ""
+   
 
     removeRecord: (rec) ->
-        console.log("removeRecord", @collection(), rec._id)
         name = rec.recordDisplayName
         @collection().remove rec._id, (error) =>
             if error
@@ -267,20 +273,11 @@ class @IronTableController extends RouteController
             else
                 CoffeeAlerts.success("Deleted #{name}")
             @fetchRecordCount()
-        
-        #Meteor.call "ironTable_" + @collection()._name + "_remove", _id, (error) ->
-        #    if error
-        #        console.log("Error deleting #{name}", error)
-        #        Meteor.defer ->
-        #            CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
-        #    else
-        #        Meteor.defer ->
-        #            CoffeeAlerts.success("Deleted #{name}")
-        
+
 
     formData: (type, id = null) ->
         if type is 'edit' and id?
-            record = @collection().findOne(id)
+            record = @collection().findOneFaster(id)
         recordData = []
         for key, col of @_cols()
             dataKey = col.dataKey or key
@@ -330,11 +327,15 @@ class @IronTableController extends RouteController
  
 
     setFilterColumn: (col) ->
-        @_sess('filterColumn', col)
-
+        if @_sess('filterColumn') isnt col
+            @_sess('filterColumn', col)
+            @_sess('filterValue', '')
+            @fetchRecordCount()
 
     setFilterValue: (value) ->
-        @_sess('filterValue', value)
+        if @_sess('filterValue') isnt value
+            @_sess('filterValue', value)
+            @fetchRecordCount()
 
 
 

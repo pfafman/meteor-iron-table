@@ -28,9 +28,10 @@
                 {{> spinner}}
             </div>
         {{else}}
-            {{#if haveData}}
 
-                <div class="clearfix"></div>
+             <div class="clearfix"></div>
+
+            {{#if haveData}}
 
                 {{> ironTableNav}}
 
@@ -59,7 +60,7 @@
                 </table>
 
             {{else}}
-                <div class="alert alert-warning">No {{capitalize recordsName}} !</div>
+                <div class="alert alert-warning">No {{recordsName}} !</div>
             {{/if}}
         {{/if}}
     </div>
@@ -67,7 +68,6 @@
 
 <template name="ironTableFilter">
     <div class="ironTableFilter pull-right">
-
         <span class="filter">
             <form class="form-inline" role="form">
                 <div class="form-group">
@@ -86,9 +86,6 @@
                     <input type="text" id="filter-value" class="form-control" 
                         placeholder="Text to filter on" value="{{filterValue}}" />
                 </div>
-                <div class="form-group">
-
-                </div>
             </form>
         </span>
     </div>
@@ -101,14 +98,14 @@
     </div>
 
     <div class="pull-right">
-        <a class="btn btn-default btn-sm {{previousPathClass}}" href="{{previousPath}}"
+        <button id="previous" class="btn btn-default btn-sm {{previousPathClass}}"
             title="previous record set" rel='tooltip'>
             <i class="fa fa-chevron-left"></i>
-        </a> 
-        <a class="btn btn-default btn-sm {{nextPathClass}}" href="{{nextPath}}"
+        </button> 
+        <button id="next" class="btn btn-default btn-sm {{nextPathClass}}"
             title="next record set" rel='tooltip'>
             <i class="fa fa-chevron-right"></i>
-        </a>
+        </button>
     </div>
 
 
@@ -116,12 +113,14 @@
 
 <template name="ironTableHeader">
     <th class="{{column.class}}">
-        <a class="table-col-head" href="?sort_on={{dataKey}}&sort_direction={{sortDirection}}"
+        <button class="btn btn-link table-col-head" 
             title="{{#if sort}}Reverse sort order{{else}}Sort on {{capitalize colName}}{{/if}}"
             rel='tooltip'>
             {{capitalize colName}} 
-            {{#if sort}}<i class="fa fa-chevron-circle-{{#if desc}}down{{else}}up{{/if}}"></i>{{/if}}
-        </a>
+            {{#if sort}}
+                <i class="fa fa-chevron-circle-{{#if desc}}down{{else}}up{{/if}}"></i>
+            {{/if}}
+        </button>
     </th>
 </template>
 
