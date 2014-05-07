@@ -24,12 +24,24 @@ class @IronTableController extends RouteController
 
     reset: ->
         console.log("reset")
-        #@_sess("recordCount", "...")
+        @_sess("recordCount", "...")
         @_sess('skip', 0)
         @_sess('sortColumn', @sortColumn)
         @_sess('sortDirection', @sortDirection)
         @_sessNull('filterColumn')
         @_sess('filterValue', '')
+
+
+    fetchRecordCount: ->
+        if not @fetchingCount
+            console.log("fetchingCount")
+            @fetchingCount = true
+            Meteor.call 'ironTable_' +  @_collectionName() + '_recordCount', @_select(), (error, number) =>
+                @fetchingCount = false
+                if not error and not @_sessEquals("recordCount", number)
+                    @_sess("recordCount", number)
+                else if error 
+                    console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
 
     setupEditRoute: ->
@@ -225,7 +237,9 @@ class @IronTableController extends RouteController
         @skip() + 1
 
     recordCount: ->
-        Counts.get(@collection()._name + 'Count')
+        if @_sess("recordCount") is '...'
+            @fetchRecordCount()
+        @_sess("recordCount")
 
     data: ->
         #console.log("data")
@@ -266,6 +280,7 @@ class @IronTableController extends RouteController
                 CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
             else
                 CoffeeAlerts.success("Deleted #{name}")
+            @fetchRecordCount()
 
 
     formData: (type, id = null) ->
@@ -323,11 +338,13 @@ class @IronTableController extends RouteController
         if @_sess('filterColumn') isnt col
             @_sess('filterColumn', col)
             @_sess('filterValue', '')
+            @fetchRecordCount()
 
 
     setFilterValue: (value) ->
         if @_sess('filterValue') isnt value
             @_sess('filterValue', value)
+            @fetchRecordCount()
            
 
 
