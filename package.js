@@ -35,7 +35,6 @@ Package.on_use(function (api, where) {
     [
     'shared/ironTableController.coffee',
     'shared/ironTableCollection.coffee'
-    //'shared/ironTableSetup.coffee'
     ]
     , ['client','server']);
 
@@ -48,7 +47,7 @@ Package.on_use(function (api, where) {
     
   if (api.export) {
     //api.export('IronTableController', ['client','server']);
-    api.export('ironTableSetup', ['client','server']);  
+    //api.export('ironTableSetup', ['client','server']);  
   }
 
 });
