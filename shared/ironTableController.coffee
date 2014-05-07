@@ -20,12 +20,11 @@ class @IronTableController extends RouteController
         console.log("IronTableController constuct", @collection()._name)
         super
         @reset()
-        #@fetchRecordCount()
         #@setupEditRoute()
 
     reset: ->
         console.log("reset")
-        @_sess("recordCount", "...")
+        #@_sess("recordCount", "...")
         @_sess('skip', 0)
         @_sess('sortColumn', @sortColumn)
         @_sess('sortDirection', @sortDirection)
@@ -63,24 +62,14 @@ class @IronTableController extends RouteController
 
     #onBeforeAction: (pause) ->
     #    console.log("onBeforeAction")
-    #    #@fetchRecordCount()
 
-    fetchRecordCount: ->
-        if not @fetchingCount
-            @fetchingCount = true
-            Meteor.call 'ironTable_' +  @_collectionName() + '_recordCount', @_select(), (error, number) =>
-                @fetchingCount = false
-                if not error and not @_sessEquals("recordCount", number)
-                    @_sess("recordCount", number)
-                else if error 
-                    console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
     onRun: ->
         #console.log("onRun", @_collectionName())
         if not @_sess('skip')?
             @_sessNull('filterColumn')
             @_sess('filterValue', '')
-        #@fetchRecordCount()
+        
 
     onStop: ->
         #console.log("onStop", @_collectionName())
@@ -227,7 +216,7 @@ class @IronTableController extends RouteController
         recordsData
 
     haveData: ->
-        @records().length > 0 or @_sess("recordCount") > 0
+        @records().length > 0 or @recordCount() > 0
             
     recordDisplayStop: ->
         @skip() + @records().length
@@ -236,9 +225,7 @@ class @IronTableController extends RouteController
         @skip() + 1
 
     recordCount: ->
-        if @_sess("recordCount") is '...'
-            @fetchRecordCount()
-        @_sess("recordCount")
+        Counts.get(@collection()._name + 'Count')
 
     data: ->
         #console.log("data")
@@ -261,7 +248,7 @@ class @IronTableController extends RouteController
         @_sess('skip', @skip() + @increment)
 
     nextPathClass: ->
-        if (@skip() + @increment >= @_sess("recordCount")) then "disabled" else ""
+        if (@skip() + @increment >= @recordCount()) then "disabled" else ""
 
     getPrevious: ->
         @_sess('skip', Math.max(@skip() - @increment, 0))
@@ -279,7 +266,6 @@ class @IronTableController extends RouteController
                 CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
             else
                 CoffeeAlerts.success("Deleted #{name}")
-            @fetchRecordCount()
 
 
     formData: (type, id = null) ->
@@ -337,13 +323,12 @@ class @IronTableController extends RouteController
         if @_sess('filterColumn') isnt col
             @_sess('filterColumn', col)
             @_sess('filterValue', '')
-            @fetchRecordCount()
+
 
     setFilterValue: (value) ->
         if @_sess('filterValue') isnt value
             @_sess('filterValue', value)
-            @fetchRecordCount()
-
+           
 
 
 

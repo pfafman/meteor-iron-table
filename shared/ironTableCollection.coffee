@@ -4,22 +4,25 @@ class @IronTableCollection extends Meteor.Collection
     
     recordName: 'record'
     colToUseForName : '_id'
+    selfPublish: true
 
     constructor: (name, options = null) ->
         super
 
         if Meteor.isServer
-            # Meteor Method to get all the records in collection
-            meths = {}
-            meths["ironTable_" + @_name + "_recordCount"] = (select = {}) =>
-                console.log("ironTable_" + @_name + "_recordCount called")
-                @find?(select)?.count?()
-
-            #meths["ironTable_" + @_name + "_remove"] = (select = {}) =>
-            #    console.log("Remove Records", @_name, @isSimulation)
-            #    @remove(select)
+            if @selfPublish
+                collection = @
+                countName = @_name + 'Count'
+                Meteor.publish @_name, (select, sort, limit, skip) ->
+                    #console.log("Iron Router Publish", countName)
+                    publishCount @, countName, collection.find(select,{_id:1}), 
+                        noReady: true
+                      
+                    collection.find select, 
+                        sort: sort
+                        limit: limit
+                        skip: skip
             
-            Meteor.methods meths
 
     insertOk: ->
         false
