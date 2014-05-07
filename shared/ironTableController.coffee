@@ -285,7 +285,7 @@ class @IronTableController extends RouteController
 
     formData: (type, id = null) ->
         if type is 'edit' and id?
-            record = @collection().findOneFaster(id)
+            record = @collection().findOne(id)
         recordData = []
         for key, col of @_cols()
             dataKey = col.dataKey or key
