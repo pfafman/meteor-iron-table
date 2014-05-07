@@ -23,12 +23,12 @@ class @IronTableCollection extends Meteor.Collection
                         limit: limit
                         skip: skip
 
-                meths = {}
-                meths["ironTable_" + @_name + "_recordCount"] = (select = {}) =>
-                    console.log("ironTable_" + @_name + "_recordCount called")
-                    @find?(select)?.count?()
-                
-                Meteor.methods meths
+            meths = {}
+            meths["ironTable_" + @_name + "_recordCount"] = (select = {}) =>
+                console.log("ironTable_" + @_name + "_recordCount called")
+                @find?(select)?.count?()
+            
+            Meteor.methods meths
 
     insertOk: ->
         false
