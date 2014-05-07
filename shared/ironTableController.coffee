@@ -19,12 +19,19 @@ class @IronTableController extends RouteController
     constructor: ->
         console.log("IronTableController constuct", @collection()._name)
         super
+        @reset()
+        #@fetchRecordCount()
+        #@setupEditRoute()
+
+    reset: ->
+        console.log("reset")
         @_sess("recordCount", "...")
         @_sess('skip', 0)
         @_sess('sortColumn', @sortColumn)
         @_sess('sortDirection', @sortDirection)
-        #@fetchRecordCount()
-        #@setupEditRoute()
+        @_sessNull('filterColumn')
+        @_sess('filterValue', '')
+
 
     setupEditRoute: ->
         # Set Up Edit Path
