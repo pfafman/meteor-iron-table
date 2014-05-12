@@ -77,11 +77,11 @@ class @IronTableController extends RouteController
     _sessNull: (id) ->
         Session.set("_ironTable_" + @_collectionName() + id, null)
 
-    editOk: (record) ->
-        false
+    #editOk: (record) ->
+    #    false
     
-    deleteOk: (record) ->
-        false
+    #deleteOk: (record) ->
+    #    false
 
     #onBeforeAction: (pause) ->
     #    console.log("onBeforeAction")
