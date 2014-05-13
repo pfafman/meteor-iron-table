@@ -55,6 +55,20 @@ class @IronTableController extends RouteController
                     console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
 
+    downloadRecords: (callback) ->
+        
+        fields = {}
+        if @collection().downloadFields?
+            fields = @collection().downloadFields
+        else
+            downloadFields = @_cols()
+            for key, col of downloadFields
+                dataKey = col.dataKey or key
+                fields[dataKey] = 1
+
+        console.log("Call", "ironTable_" + @_collectionName() + "_getCSV")
+        Meteor.call "ironTable_" + @_collectionName() + "_getCSV", @_select(), fields, callback
+
     setupEditRoute: ->
         # Set Up Edit Path
         editRoutePath = @route.originalPath.replace(/\/[^\/]+$/ , '') + "/edit/:_id"
@@ -260,6 +274,7 @@ class @IronTableController extends RouteController
             newRecordPath: @newRecordPath
             newRecordTitle: @newRecordTitle
             newRecordTooltip: @newRecordTooltip
+            doDownloadLink: @doDownloadLink
             showBackButton: @showBackButton
             recordName: @_recordName()
             recordsName: @_recordsName()

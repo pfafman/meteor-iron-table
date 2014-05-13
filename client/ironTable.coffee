@@ -37,7 +37,6 @@ Template.ironTable.helpers
         getCurrentIronTableController().recordsData()
 
 
-
 Template.ironTable.events
 
     "click .iron-table-delete-record": (e, tmpl) ->
@@ -62,6 +61,29 @@ Template.ironTable.events
             return false
 
         currentController.editRecord(@_id)
+
+    "click #download-link": (e, tmpl) ->
+        console.log("Download Records", @tableTitle)
+
+        if not currentController = getCurrentIronTableController()
+            CoffeeAlerts.error("Internal Error: Could not get controller")
+            return false
+
+        filename = @tableTitle + '.csv'
+        currentController.downloadRecords (error, csv) ->
+            if error
+                CoffeeAlerts.error("Error getting CSV to download")
+                console.log("Error getting CSV", error)
+            else if csv
+                console.log("Doing saveAs for CSV")
+                blob = new Blob [csv],
+                    type: "text/csv"
+                saveAs?(blob, filename)
+                CoffeeAlerts.success("Records Downloaded")
+            else
+                CoffeeAlerts.alert("No data to download")
+                
+
 
 
 Template.ironTableFilter.helpers

@@ -17,7 +17,8 @@ Package.on_use(function (api, where) {
     'spin',
     'less',
     'coffee-alerts',
-    'coffee-modal'
+    'coffee-modal',
+    'filesaver'
     ]
     , 'client');
 

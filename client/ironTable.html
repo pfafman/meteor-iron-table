@@ -10,15 +10,21 @@
             {{tableTitle}}
         </h3>
 
-        {{#if newRecordPath}}
-            <span class="new-record">
+        <span class="links">
+            {{#if doDownloadLink}}
+                <button id="download-link" class="btn btn-primary btn-sm" 
+                    title="Download {{tableTitle}}" rel='tooltip' data-placement="bottom">
+                    <i class="fa fa-cloud-download fa-lg"></i> Download
+                </button>
+            {{/if}}
+
+            {{#if newRecordPath}}
                 <a class="btn btn-success btn-sm" title="{{newRecordTooltip}}" rel='tooltip' data-placement="bottom"
                     href="{{pathFor newRecordPath}}">
                     {{newRecordTitle}} <i class="fa fa-plus-square fa-lg"></i> 
                 </a>
-            </span>
-        {{/if}}
-
+            {{/if}}
+        </span>
         {{#if showFilter}}
             {{> ironTableFilter}}
         {{/if}}

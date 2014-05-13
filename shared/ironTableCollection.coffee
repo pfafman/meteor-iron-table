@@ -27,6 +27,22 @@ class @IronTableCollection extends Meteor.Collection
             meths["ironTable_" + @_name + "_recordCount"] = (select = {}) =>
                 @find?(select)?.count?()
             
+            #if true #@doDownloadLink
+            meths["ironTable_" + @_name + "_getCSV"] = (select = {}, fields = {}) =>
+                csv = []
+                fieldKeys = _.keys(fields)
+                csv.push fieldKeys.join(',')
+                cursor = @find? select,
+                    fields: fields
+                if cursor?.forEach?
+                    cursor.forEach (rec) ->
+                        row = []
+                        for fieldKey in fieldKeys
+                            row.push rec[fieldKey]
+                        csv.push row.join(',')
+                csv.join("\n")
+                    
+
             Meteor.methods meths
 
     insertOk: ->
