@@ -38,7 +38,11 @@ class @IronTableCollection extends Meteor.Collection
                     cursor.forEach (rec) ->
                         row = []
                         for fieldKey in fieldKeys
-                            row.push rec[fieldKey]
+                            subElements = fieldKey.split('.')
+                            value = rec
+                            for subElement in subElements
+                                value = value?[subElement]
+                            row.push value
                         csv.push row.join(',')
                 csv.join("\n")
                     
