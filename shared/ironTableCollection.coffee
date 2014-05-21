@@ -6,6 +6,9 @@ class @IronTableCollection extends Meteor.Collection
     colToUseForName : '_id'
     selfPublish: true
 
+    publicationName: ->
+        'ironTable_publish_'+ @_name
+
     constructor: (name, options = null) ->
         super
 
@@ -13,11 +16,7 @@ class @IronTableCollection extends Meteor.Collection
             if @selfPublish
                 collection = @
                 countName = @_name + 'Count'
-                Meteor.publish @_name, (select, sort, limit, skip) ->
-                    #console.log("Iron Router Publish", countName)
-                    #publishCount @, countName, collection.find(select,{_id:1}), 
-                    #    noReady: true
-                      
+                Meteor.publish @publicationName(), (select, sort, limit, skip) ->
                     collection.find select, 
                         sort: sort
                         limit: limit

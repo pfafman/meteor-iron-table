@@ -185,7 +185,7 @@ class @IronTableController extends RouteController
         @subscribe()
 
     subscribe: ->
-        @_subscriptionId = Meteor.subscribe(@_collectionName(), @_select(), @sort(), @limit(), @skip())
+        @_subscriptionId = Meteor.subscribe(@collection().publicationName(), @_select(), @sort(), @limit(), @skip())
 
     unsubscribe: ->
         @_subscriptionId?.stop?()
