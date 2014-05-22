@@ -52,7 +52,7 @@ class @IronTableController extends RouteController
                 if not error and not @_sessEquals("recordCount", number)
                     @_sess("recordCount", number)
                 else if error 
-                    console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
+                    console.log('ironTable_' +  @_collectionp() + '_recordCount error:', error)
 
 
     downloadRecords: (callback) ->
@@ -184,8 +184,12 @@ class @IronTableController extends RouteController
     waitOn: ->
         @subscribe()
 
+
+    publicationName: ->
+            @collection().publicationName?() or 'ironTable_publish_'+ @_collectionName()
+
     subscribe: ->
-        @_subscriptionId = Meteor.subscribe(@collection().publicationName(), @_select(), @sort(), @limit(), @skip())
+        @_subscriptionId = Meteor.subscribe(@publicationName(), @_select(), @sort(), @limit(), @skip())
 
     unsubscribe: ->
         @_subscriptionId?.stop?()
