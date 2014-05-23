@@ -29,7 +29,7 @@ class @IronTableController extends RouteController
     
 
     constructor: ->
-        console.log("IronTableController constuct", @collection()._name)
+        #console.log("IronTableController constuct", @collection()._name)
         super
         @reset()
         #@setupEditRoute()
@@ -48,7 +48,6 @@ class @IronTableController extends RouteController
 
     fetchRecordCount: ->
         if not @fetchingCount
-            console.log("fetchingCount")
             @fetchingCount = true
             Meteor.call 'ironTable_' +  @_collectionName() + '_recordCount', @_select(), (error, number) =>
                 @fetchingCount = false
