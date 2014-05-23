@@ -27,11 +27,13 @@ class @IronTableController extends RouteController
 
     _subscriptionComplete = false
     
+
     constructor: ->
         console.log("IronTableController constuct", @collection()._name)
         super
         @reset()
         #@setupEditRoute()
+
 
     reset: ->
         #console.log("reset")
@@ -41,6 +43,7 @@ class @IronTableController extends RouteController
         @_sess('sortDirection', @sortDirection)
         @_sessNull('filterColumn')
         @_sess('filterValue', '')
+        @fetchingCount = null
 
 
     fetchRecordCount: ->
@@ -56,18 +59,17 @@ class @IronTableController extends RouteController
 
 
     downloadRecords: (callback) ->
-        
         fields = {}
         if @collection().downloadFields?
             fields = @collection().downloadFields
         else
-            downloadFields = @_cols()
-            for key, col of downloadFields
+            for key, col of @_cols()
                 dataKey = col.dataKey or key
                 fields[dataKey] = 1
 
         console.log("Call", "ironTable_" + @_collectionName() + "_getCSV")
         Meteor.call "ironTable_" + @_collectionName() + "_getCSV", @_select(), fields, callback
+
 
     setupEditRoute: ->
         # Set Up Edit Path
@@ -78,6 +80,7 @@ class @IronTableController extends RouteController
             @route editRouteName,
                 path: editRoutePath
     
+
     _sess: (id, value) ->
         key = "_ironTable_" + @_collectionName() + id
         if value?
@@ -103,16 +106,20 @@ class @IronTableController extends RouteController
 
     onRun: ->
         #console.log("onRun", @_collectionName())
-        if not @_sess('skip')?
-            @_sessNull('filterColumn')
-            @_sess('filterValue', '')
+        @reset()
+        #if not @_sess('skip')?
+        #    @_sessNull('filterColumn')
+        #    @_sess('filterValue', '')
         
 
     onStop: ->
+        @unsubscribe()
+        @reset()
         #console.log("onStop", @_collectionName())
         #@_sessNull('filterColumn')
         #@_sess('filterValue', '')
     
+
     _tableTitle: ->
         @tableTitle or @_collectionName()
 
@@ -169,6 +176,7 @@ class @IronTableController extends RouteController
     skip: ->
         @_sess('skip')
         
+    
     setSort: (dataKey) ->
         if dataKey is @_sess('sortColumn')
             @_sess('sortDirection',  -@_sess('sortDirection'))
@@ -176,25 +184,30 @@ class @IronTableController extends RouteController
             @_sess('sortColumn', dataKey)
             @_sess('sortDirection', @sortDirection)
 
+    
     sort: ->
         rtn = {}
         rtn[@_sess('sortColumn')] = @_sess('sortDirection')
         rtn
 
+    
     waitOn: ->
         @subscribe()
 
 
     publicationName: ->
-            @collection().publicationName?() or 'ironTable_publish_'+ @_collectionName()
+        @collection().publicationName?() or 'ironTable_publish_'+ @_collectionName()
 
+    
     subscribe: ->
         @_subscriptionId = Meteor.subscribe(@publicationName(), @_select(), @sort(), @limit(), @skip())
 
+    
     unsubscribe: ->
         @_subscriptionId?.stop?()
         @_subscriptionId = null
 
+    
     _select: ->
         select = _.extend({}, @select())
         filterColumn = @_sess('filterColumn')
@@ -207,9 +220,11 @@ class @IronTableController extends RouteController
                 $options: 'i'
         select
 
+    
     select: ->
         @defaultSelect
-        
+    
+
     valueFromRecord: (key, col, record) ->
         if record?
             if col?.valueFunc?
@@ -223,17 +238,20 @@ class @IronTableController extends RouteController
             else if record[key]?
                 record[key]
 
+    
     records: ->
         @collection()?.find @_select(),
             sort: @sort()
             limit: @limit()
         .fetch()
 
+    
     recordsData: ->
         recordsData = []
+        cols = @_cols()
         for record in @records()
             colData = []
-            for key, col of @_cols()
+            for key, col of cols
                 dataKey = col.dataKey or key
                 if not col.hide?()
                     value = @valueFromRecord(key, col, record)
@@ -256,23 +274,27 @@ class @IronTableController extends RouteController
                 #extraControls: @extraControls?(record)
         recordsData
 
+
     haveData: ->
         @records().length > 0 or @recordCount() > 0
-            
+    
+
     recordDisplayStop: ->
         @skip() + @records().length
 
+
     recordDisplayStart: ->
         @skip() + 1
+
 
     recordCount: ->
         if @_sess("recordCount") is '...'
             @fetchRecordCount()
         @_sess("recordCount")
 
+    
     data: ->
         #console.log("data")
-        
         theData =
             tableTitle: @_tableTitle()
             newRecordPath: @newRecordPath
@@ -291,8 +313,10 @@ class @IronTableController extends RouteController
     getNext: ->
         @_sess('skip', @skip() + @increment)
 
+
     nextPathClass: ->
         if (@skip() + @increment >= @recordCount()) then "disabled" else ""
+
 
     getPrevious: ->
         @_sess('skip', Math.max(@skip() - @increment, 0))
@@ -348,6 +372,7 @@ class @IronTableController extends RouteController
                 recordData.push col
         columns: recordData
 
+
     saveRecord: (yesNo, rec) =>
         if yesNo
             @collection().update @_sess("currentRecordId"), 
@@ -358,6 +383,7 @@ class @IronTableController extends RouteController
                     CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
                 else
                     CoffeeAlerts.success(@_recordName() + " updated")
+
 
     editRecord: (_id) =>
         @_sess("currentRecordId", _id)

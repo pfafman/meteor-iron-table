@@ -11,8 +11,8 @@ getCurrentIronTableController = ->
 #    console.log("ironTable created")
 
 
-Template.ironTable.rendered = ->
-    console.log("ironTable rendered")
+#Template.ironTable.rendered = ->
+    #console.log("ironTable rendered")
     #getCurrentIronTableController().reset()
     #getCurrentIronTableController().fetchRecordCount()
     #$('[rel="tooltip"]').tooltip()
