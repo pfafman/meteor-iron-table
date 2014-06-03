@@ -11,11 +11,11 @@ getCurrentIronTableController = ->
 #    console.log("ironTable created")
 
 
-#Template.ironTable.rendered = ->
+Template.ironTable.rendered = ->
+    $('[rel="tooltip"]').tooltip()
     #console.log("ironTable rendered")
     #getCurrentIronTableController().reset()
     #getCurrentIronTableController().fetchRecordCount()
-    #$('[rel="tooltip"]').tooltip()
     #$('[rel="popover"]').popover()
 
 
