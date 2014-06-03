@@ -16,7 +16,10 @@ Template.ironTableForm.created = ->
 #Template.ironTableFormItem.rendered = ->
 #  console.log("ironTableFormItem rendered")
 
-#Template.ironTableFormItem.helpers
+Template.ironTableFormItem.helpers
+  textArea: ->
+    @displayType is 'textarea'
+
 #  disabled: ->
 #    console.log("disabled", @)
 #    if @static
