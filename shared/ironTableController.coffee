@@ -386,7 +386,7 @@ class @IronTableController extends RouteController
 
     editRecord: (_id) =>
         @_sess("currentRecordId", _id)
-        CoffeeModal.form(@formTemplate, @formData('edit', _id), @saveRecord)
+        CoffeeModal.form(@formTemplate, @formData('edit', _id), @saveRecord, 'Edit ' + @_recordName().capitalize())
  
 
     setFilterColumn: (col) ->
