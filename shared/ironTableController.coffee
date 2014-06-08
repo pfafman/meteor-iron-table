@@ -38,11 +38,11 @@ class @IronTableController extends RouteController
     reset: ->
         #console.log("reset")
         @_sess("recordCount", "...")
-        @_sess('skip', 0)
-        @_sess('sortColumn', @sortColumn)
-        @_sess('sortDirection', @sortDirection)
-        @_sessNull('filterColumn')
-        @_sess('filterValue', '')
+        @_sessDefault('skip', 0)
+        @_sessDefault('sortColumn', @sortColumn)
+        @_sessDefault('sortDirection', @sortDirection)
+        @_sessDefault('filterColumn', null)
+        @_sessDefault('filterValue', '')
         @fetchingCount = null
 
 
@@ -93,6 +93,9 @@ class @IronTableController extends RouteController
     _sessNull: (id) ->
         Session.set("_ironTable_" + @_collectionName() + id, null)
 
+    _sessDefault: (id, value) ->
+        Session.setDefault("_ironTable_" + @_collectionName() + id, value)
+
     #editOk: (record) ->
     #    false
     
@@ -106,17 +109,11 @@ class @IronTableController extends RouteController
     onRun: ->
         #console.log("onRun", @_collectionName())
         @reset()
-        #if not @_sess('skip')?
-        #    @_sessNull('filterColumn')
-        #    @_sess('filterValue', '')
         
 
     onStop: ->
         @unsubscribe()
         @reset()
-        #console.log("onStop", @_collectionName())
-        #@_sessNull('filterColumn')
-        #@_sess('filterValue', '')
     
 
     _tableTitle: ->
@@ -393,13 +390,18 @@ class @IronTableController extends RouteController
         if @_sess('filterColumn') isnt col
             @_sess('filterColumn', col)
             @_sess('filterValue', '')
+            @_sess('skip', 0)
             @fetchRecordCount()
 
 
     setFilterValue: (value) ->
         if @_sess('filterValue') isnt value
             @_sess('filterValue', value)
+            @_sess('skip', 0)
             @fetchRecordCount()
+
+    getFilterValue: ->
+        @_sess('filterValue')
            
 
 

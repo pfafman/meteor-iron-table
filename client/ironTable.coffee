@@ -2,9 +2,9 @@
 getCurrentIronTableController = ->
     if Router.current?()?.classID is "IronTableController"
         Router.current()
-    else
-        console.log("Bad controller", Router.current?())
-        null
+    #else
+    #    console.log("Bad controller", Router.current?())
+    #    null
 
 
 #Template.ironTable.created = ->
@@ -25,16 +25,16 @@ Template.ironTable.rendered = ->
 Template.ironTable.helpers
 
     loading: ->
-        not getCurrentIronTableController().ready() and not @haveData
+        not getCurrentIronTableController()?.ready() and not @haveData
 
     haveData: ->
-        getCurrentIronTableController().haveData()
+        getCurrentIronTableController()?.haveData()
 
     headers: ->
-        getCurrentIronTableController().headers()
+        getCurrentIronTableController()?.headers()
 
     records: ->
-        getCurrentIronTableController().recordsData()
+        getCurrentIronTableController()?.recordsData()
 
 
 Template.ironTable.events
@@ -88,7 +88,10 @@ Template.ironTable.events
 
 Template.ironTableFilter.helpers
     headers: ->
-        getCurrentIronTableController().headers()
+        getCurrentIronTableController()?.headers()
+
+    filterValue: ->
+        getCurrentIronTableController()?.getFilterValue()
 
 
 Template.ironTableFilter.events
@@ -118,29 +121,29 @@ Template.ironTableFilter.events
 Template.ironTableNav.helpers
 
     recordDisplayStart: ->
-        getCurrentIronTableController().recordDisplayStart()
+        getCurrentIronTableController()?.recordDisplayStart()
 
     recordDisplayStop: ->
-        getCurrentIronTableController().recordDisplayStop()
+        getCurrentIronTableController()?.recordDisplayStop()
 
     recordCount: ->
-        getCurrentIronTableController().recordCount()
+        getCurrentIronTableController()?.recordCount()
 
     nextPathClass: ->
-        getCurrentIronTableController().nextPathClass()
+        getCurrentIronTableController()?.nextPathClass()
 
     previousPathClass: ->
-        getCurrentIronTableController().previousPathClass()
+        getCurrentIronTableController()?.previousPathClass()
 
 Template.ironTableNav.events
 
     "click #previous": (e, tmpl) ->
         e.preventDefault()
-        getCurrentIronTableController().getPrevious()
+        getCurrentIronTableController()?.getPrevious()
 
      "click #next": (e, tmpl) ->
         e.preventDefault()
-        getCurrentIronTableController().getNext()
+        getCurrentIronTableController()?.getNext()
 
 
 Template.ironTableRow.helpers
@@ -162,7 +165,7 @@ Template.ironTableHeader.rendered = ->
 Template.ironTableHeader.events
     "click .table-col-head": (e, tmpl) ->
         e.preventDefault()
-        getCurrentIronTableController().setSort(@dataKey)
+        getCurrentIronTableController()?.setSort(@dataKey)
 
 
 
