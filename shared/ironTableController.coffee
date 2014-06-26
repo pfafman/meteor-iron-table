@@ -156,6 +156,7 @@ class @IronTableController extends RouteController
                 dataKey: dataKey
                 colName: col.header or key
                 column: col
+                noSort: col.noSort
                 sort: dataKey is @_sess('sortColumn')
                 desc: @_sess('sortDirection') is -1
                 #sortDirection: if dataKey is @_sess('sortColumn') then -@sortDirection else @sortDirection
