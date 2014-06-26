@@ -120,7 +120,9 @@
 <template name="ironTableHeader">
     <th class="{{column.class}}">
         {{#if noSort}}
-            {{capitalize colName}} 
+            <button class="btn btn-link table-col-head" disabled="disabled">
+                {{capitalize colName}} 
+            </button>
         {{else}}
         <button class="btn btn-link table-col-head" 
             title="{{#if sort}}Reverse sort order{{else}}Sort on {{capitalize colName}}{{/if}}"
