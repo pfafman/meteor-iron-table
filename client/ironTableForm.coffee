@@ -13,8 +13,9 @@ Template.ironTableForm.created = ->
       #$("[name=#{col.key}]").attr('checked','checked')
 
 
-#Template.ironTableFormItem.rendered = ->
-#  console.log("ironTableFormItem rendered")
+Template.ironTableFormItem.rendered = ->
+  #console.log("ironTableFormItem rendered")
+  $('[rel="tooltip"]').tooltip()
 
 Template.ironTableFormItem.helpers
   textArea: ->

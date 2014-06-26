@@ -339,7 +339,7 @@ class @IronTableController extends RouteController
         recordData = []
         for key, col of @_cols()
             dataKey = col.dataKey or key
-            if col[type] or col["staticOn_#{type}"]
+            if col[type]?() or (col[type] is true) or col["staticOn_#{type}"]
                 col.displayType = col.type
                 col.checkbox = false
                 col.checked = false
