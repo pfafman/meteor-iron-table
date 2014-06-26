@@ -176,9 +176,11 @@ class @IronTableController extends RouteController
     setSort: (dataKey) ->
         if dataKey is @_sess('sortColumn')
             @_sess('sortDirection',  -@_sess('sortDirection'))
+            @_sess('skip', 0)
         else
             @_sess('sortColumn', dataKey)
             @_sess('sortDirection', @sortDirection)
+            @_sess('skip', 0)
 
     
     sort: ->
