@@ -142,6 +142,7 @@ class @IronTableController extends RouteController
             colObj = theCol
         colObj
 
+
     headers: =>
         rtn = []
         for key, col of @_cols()
