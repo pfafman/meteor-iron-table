@@ -62,6 +62,9 @@ Template.ironTable.helpers
   newRecordTooltip: ->
     getCurrentIronTableController()?.newRecordTooltip
 
+  recordsName: ->
+    getCurrentIronTableController()?.getRecordsName()
+
 
 Template.ironTable.events
 

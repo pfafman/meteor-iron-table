@@ -48,7 +48,7 @@ class @IronTableController extends RouteController
   fetchRecordCount: ->
     if not @fetchingCount
       @fetchingCount = true
-      Meteor.call 'ironTable_' +  @_collectionName() + '_recordCount', @_select(), (error, number) =>
+      Meteor.call 'ironTable_' + @_collectionName() + '_recordCount', @_select(), (error, number) =>
         @fetchingCount = false
         if not error and not @_sessEquals("recordCount", number)
           @_sess("recordCount", number)
