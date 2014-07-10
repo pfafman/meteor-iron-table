@@ -53,7 +53,7 @@ class @IronTableController extends RouteController
         if not error and not @_sessEquals("recordCount", number)
           @_sess("recordCount", number)
         else if error 
-          console.log('ironTable_' +  @_collectionp() + '_recordCount error:', error)
+          console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
 
   downloadRecords: (callback) ->
