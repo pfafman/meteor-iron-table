@@ -48,7 +48,8 @@ class @IronTableCollection extends Meteor.Collection
 
             Meteor.methods meths
 
-    insertOk: ->
+    insertOk: (record)->
+        # Check Record Here on insert
         false
 
     deleteAllOk: ->
