@@ -436,7 +436,7 @@ class @IronTableController extends RouteController
           CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
         else
           CoffeeAlerts.success(@_recordName() + " updated")
-
+          @fetchRecordCount()
 
   newRecord: ->
     CoffeeModal.form(@formTemplate, @formData('insert'), @saveNewRecord, 'New ' + @_recordName().capitalize())
@@ -446,12 +446,13 @@ class @IronTableController extends RouteController
     if yesNo
       if @collection().insertOk(rec) and @checkRequiredFields(rec)
         if @collection.methodOnInsert
-          Meteor.call @collection.methodOnInsert, rec, (error, number) ->
+          Meteor.call @collection.methodOnInsert, rec, (error, number) =>
             if error
               console.log("Error saving " + @_recordName(), error)
               CoffeeAlerts.error("Error saving " + @_recordName() + " : #{error.reason}")
             else
               CoffeeAlerts.success(@_recordName() + " created")
+              @fetchRecordCount()
         else
           @collection().insert rec, (error, effectedCount) =>
             if error
@@ -459,6 +460,7 @@ class @IronTableController extends RouteController
               CoffeeAlerts.error("Error saving " + @_recordName() + " : #{error.reason}")
             else
               CoffeeAlerts.success(@_recordName() + " created")
+              @fetchRecordCount()
       else
         CoffeeAlerts.error("Error could not save new " + @_recordName())
 
