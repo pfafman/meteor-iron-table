@@ -448,17 +448,19 @@ class @IronTableController extends RouteController
         if @collection.methodOnInsert
           Meteor.call @collection.methodOnInsert, rec, (error, number) ->
             if error
-              console.log("Error updating " + @_recordName(), error)
-              CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
+              console.log("Error saving " + @_recordName(), error)
+              CoffeeAlerts.error("Error saving " + @_recordName() + " : #{error.reason}")
             else
               CoffeeAlerts.success(@_recordName() + " created")
         else
           @collection().insert rec, (error, effectedCount) =>
             if error
-              console.log("Error updating " + @_recordName(), error)
-              CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
+              console.log("Error saving " + @_recordName(), error)
+              CoffeeAlerts.error("Error saving " + @_recordName() + " : #{error.reason}")
             else
               CoffeeAlerts.success(@_recordName() + " created")
+      else
+        CoffeeAlerts.error("Error could not save new " + @_recordName())
 
 
   setFilterColumn: (col) ->
