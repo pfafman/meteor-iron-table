@@ -14,16 +14,12 @@ getCurrentIronTableController = ->
 
 Template.ironTable.rendered = ->
   $('[rel="tooltip"]').tooltip()
-  #console.log("ironTable rendered")
-  #getCurrentIronTableController().reset()
-  #getCurrentIronTableController().fetchRecordCount()
-  #$('[rel="popover"]').popover()
-
-
-#Template.ironTable.destroyed = ->
-  #console.log("ironTable destroyed")
+  
 
 Template.ironTable.helpers
+
+  inabox: ->
+    getCurrentIronTableController().inabox
 
   loading: ->
     loading = not getCurrentIronTableController()?.ready() and not getCurrentIronTableController()?.haveData()
@@ -40,27 +36,6 @@ Template.ironTable.helpers
   
   showFilter: ->
     getCurrentIronTableController()?.showFilter
-
-  tableTitle: ->
-    getCurrentIronTableController()?.getTableTitle()
-
-  doDownloadLink: ->
-    getCurrentIronTableController()?.doDownloadLink
-
-  showBackButton: ->
-    getCurrentIronTableController()?.showBackButton
-
-  showNewButton: ->
-    getCurrentIronTableController()?.showNewButton
-
-  newRecordPath: ->
-    getCurrentIronTableController()?.newRecordPath
-  
-  newRecordTitle: ->
-    getCurrentIronTableController()?.newRecordTitle
-
-  newRecordTooltip: ->
-    getCurrentIronTableController()?.newRecordTooltip
 
   recordsName: ->
     getCurrentIronTableController()?.getRecordsName()
@@ -92,6 +67,34 @@ Template.ironTable.events
       currentController.editRecord(@_id)
 
 
+Template.ironTableHeading.helpers
+  
+  tableTitle: ->
+    getCurrentIronTableController()?.getTableTitle()
+  
+  tableTitle: ->
+    getCurrentIronTableController()?.getTableTitle()
+
+  doDownloadLink: ->
+    getCurrentIronTableController()?.doDownloadLink
+
+  showBackButton: ->
+    getCurrentIronTableController()?.showBackButton
+
+  showNewButton: ->
+    getCurrentIronTableController()?.showNewButton
+
+  newRecordPath: ->
+    getCurrentIronTableController()?.newRecordPath
+  
+  newRecordTitle: ->
+    getCurrentIronTableController()?.newRecordTitle
+
+  newRecordTooltip: ->
+    getCurrentIronTableController()?.newRecordTooltip
+
+
+Template.ironTableHeading.events
   "click #iron-table-new-record": (e, tmpl) ->
     e.preventDefault()
     #e.stopImmediatePropagation()
@@ -120,7 +123,7 @@ Template.ironTable.events
         CoffeeAlerts.success("Records Downloaded")
       else
         CoffeeAlerts.alert("No data to download")
-              
+
 
 #Template.ironTableFilter.created = ->
 #  console.log("ironTableFilter created")
