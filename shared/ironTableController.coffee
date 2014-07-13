@@ -330,7 +330,7 @@ class @IronTableController extends RouteController
       #doDownloadLink: @doDownloadLink
       #headers: @headers()
       #records: @recordsData()
-
+    @fetchRecordCount()
     _.extend(theData, @params)
       
 
