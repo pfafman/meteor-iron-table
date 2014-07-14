@@ -428,8 +428,8 @@ class @IronTableController extends RouteController
   saveRecord: (yesNo, rec) =>
     if yesNo
       if @collection().editOk(rec) and @checkRequiredFields(rec)
-        if @collection.methodOnSave
-          Meteor.call @collection.methodOnSave, @_sess("currentRecordId"), rec, (error) =>
+        if @collection.methodOnUpdate
+          Meteor.call @collection.methodOnUpdate, @_sess("currentRecordId"), rec, (error) =>
             if error
               console.log("Error updating " + @_recordName(), error)
               CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
