@@ -427,16 +427,28 @@ class @IronTableController extends RouteController
 
   saveRecord: (yesNo, rec) =>
     if yesNo
-      # if @collection.editOk(rec) # Do we need to check again ???
-      @collection().update @_sess("currentRecordId"), 
-        $set: rec
-      , (error, effectedCount) =>
-        if error
-          console.log("Error updating " + @_recordName(), error)
-          CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
+      if @collection().editOk(rec) and @checkRequiredFields(rec)
+        if @collection.methodOnSave
+          Meteor.call @collection.methodOnSave, @_sess("currentRecordId"), rec, (error) =>
+            if error
+              console.log("Error updating " + @_recordName(), error)
+              CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
+            else
+              CoffeeAlerts.success(@_recordName() + " saved")
+              @fetchRecordCount()
         else
-          CoffeeAlerts.success(@_recordName() + " updated")
-          @fetchRecordCount()
+          @collection().update @_sess("currentRecordId"), 
+            $set: rec
+          , (error, effectedCount) =>
+            if error
+              console.log("Error updating " + @_recordName(), error)
+              CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
+            else
+              CoffeeAlerts.success(@_recordName() + " updated")
+              @fetchRecordCount()
+      else
+        CoffeeAlerts.error("Error could update " + @_recordName())
+
 
   newRecord: ->
     CoffeeModal.form(@formTemplate, @formData('insert'), @saveNewRecord, 'New ' + @_recordName().capitalize())
@@ -446,7 +458,7 @@ class @IronTableController extends RouteController
     if yesNo
       if @collection().insertOk(rec) and @checkRequiredFields(rec)
         if @collection.methodOnInsert
-          Meteor.call @collection.methodOnInsert, rec, (error, number) =>
+          Meteor.call @collection.methodOnInsert, rec, (error) =>
             if error
               console.log("Error saving " + @_recordName(), error)
               CoffeeAlerts.error("Error saving " + @_recordName() + " : #{error.reason}")
