@@ -112,7 +112,6 @@ class @IronTableController extends RouteController
   onStop: ->
     @unsubscribe()
     @reset()
-  
 
   getTableTitle: ->
     @tableTitle or @_collectionName()
@@ -428,8 +427,8 @@ class @IronTableController extends RouteController
   saveRecord: (yesNo, rec) =>
     if yesNo
       if @collection().editOk(rec) and @checkRequiredFields(rec)
-        if @collection.methodOnUpdate
-          Meteor.call @collection.methodOnUpdate, @_sess("currentRecordId"), rec, (error) =>
+        if @collection().methodOnUpdate
+          Meteor.call @collection().methodOnUpdate, @_sess("currentRecordId"), rec, (error) =>
             if error
               console.log("Error updating " + @_recordName(), error)
               CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
@@ -457,8 +456,8 @@ class @IronTableController extends RouteController
   saveNewRecord: (yesNo, rec) =>
     if yesNo
       if @collection().insertOk(rec) and @checkRequiredFields(rec)
-        if @collection.methodOnInsert
-          Meteor.call @collection.methodOnInsert, rec, (error) =>
+        if @collection().methodOnInsert
+          Meteor.call @collection().methodOnInsert, rec, (error) =>
             if error
               console.log("Error saving " + @_recordName(), error)
               CoffeeAlerts.error("Error saving " + @_recordName() + " : #{error.reason}")
