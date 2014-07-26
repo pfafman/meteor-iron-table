@@ -19,7 +19,7 @@ Template.ironTable.rendered = ->
 Template.ironTable.helpers
 
   inabox: ->
-    getCurrentIronTableController().inabox
+    getCurrentIronTableController()?.inabox
 
   loading: ->
     loading = not getCurrentIronTableController()?.ready() and not getCurrentIronTableController()?.haveData()
