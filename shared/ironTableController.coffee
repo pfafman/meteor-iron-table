@@ -23,6 +23,7 @@ class @IronTableController extends RouteController
   loadingTemplate : 'ironTableLoading'
   defaultSelect   : {}
   showFilter      : false
+  errorMessage    : ''
 
   _subscriptionComplete = false
   
@@ -43,6 +44,7 @@ class @IronTableController extends RouteController
     @_sessDefault('filterColumn', null)
     @_sessDefault('filterValue', '')
     @fetchingCount = null
+    @errorMessage = ''
 
 
   fetchRecordCount: ->
@@ -369,13 +371,18 @@ class @IronTableController extends RouteController
       @fetchRecordCount()
 
 
-  checkRequiredFields: (rec) ->
+  checkFields: (rec, type="insert") ->
+    @errorMessage = ''
     for key, col of @_cols()
       dataKey = col.dataKey or key
       if col.required and (not rec[dataKey]? or rec[dataKey] is '')
         col.header = (col.header || key).capitalize()
-        CoffeeAlerts.error("#{col.header} is required")
+        @errorMessage = "#{col.header} is required"
         return false
+      else if type is 'insert' and col.onInsert?
+        rec[dataKey] = col.onInsert()
+      else if type is 'update' and col.onUpdate?
+        rec[dataKey] = col.onUpdate()
     true
 
 
@@ -422,12 +429,13 @@ class @IronTableController extends RouteController
 
   editRecord: (_id) ->
     @_sess("currentRecordId", _id)
-    CoffeeModal.form(@formTemplate, @formData('edit', _id), @saveRecord, 'Edit ' + @_recordName().capitalize())
+    CoffeeModal.form(@formTemplate, @formData('edit', _id), @updateRecord, 'Edit ' + @_recordName().capitalize())
 
 
-  saveRecord: (yesNo, rec) =>
+  updateRecord: (yesNo, rec) =>
+    @errorMessage = ''
     if yesNo
-      if @collection().editOk(rec) and @checkRequiredFields(rec)
+      if @collection().editOk(rec) and @checkFields(rec, 'update')
         if @collection().methodOnUpdate
           Meteor.call @collection().methodOnUpdate, @_sess("currentRecordId"), rec, (error) =>
             if error
@@ -447,16 +455,17 @@ class @IronTableController extends RouteController
               CoffeeAlerts.success(@_recordName() + " updated")
               @fetchRecordCount()
       else
-        CoffeeAlerts.error("Error could update " + @_recordName())
+        CoffeeAlerts.error("Error could update " + @_recordName() + " " + @errorMessage)
 
 
   newRecord: ->
-    CoffeeModal.form(@formTemplate, @formData('insert'), @saveNewRecord, 'New ' + @_recordName().capitalize())
+    CoffeeModal.form(@formTemplate, @formData('insert'), @insertRecord, 'New ' + @_recordName().capitalize())
 
 
-  saveNewRecord: (yesNo, rec) =>
+  insertRecord: (yesNo, rec) =>
+    @errorMessage = ''
     if yesNo
-      if @collection().insertOk(rec) and @checkRequiredFields(rec)
+      if @collection().insertOk(rec) and @checkFields(rec, 'insert')
         if @collection().methodOnInsert
           Meteor.call @collection().methodOnInsert, rec, (error) =>
             if error
@@ -474,7 +483,7 @@ class @IronTableController extends RouteController
               CoffeeAlerts.success(@_recordName() + " created")
               @fetchRecordCount()
       else
-        CoffeeAlerts.error("Error could not save new " + @_recordName())
+        CoffeeAlerts.error("Error could not save new " + @_recordName() + " " + @errorMessage)
 
 
   setFilterColumn: (col) ->
