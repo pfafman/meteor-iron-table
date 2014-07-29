@@ -374,15 +374,20 @@ class @IronTableController extends RouteController
   checkFields: (rec, type="insert") ->
     @errorMessage = ''
     for key, col of @_cols()
-      dataKey = col.dataKey or key
-      if col.required and (not rec[dataKey]? or rec[dataKey] is '')
-        col.header = (col.header || key).capitalize()
-        @errorMessage = "#{col.header} is required"
+      try
+        dataKey = col.dataKey or key
+        if col.required and (not rec[dataKey]? or rec[dataKey] is '')
+          col.header = (col.header || key).capitalize()
+          @errorMessage = ':' + "#{col.header} is required"
+          return false
+        else if type is 'insert' and col.onInsert?
+          rec[dataKey] = col.onInsert()
+        else if type is 'update' and col.onUpdate?
+          rec[dataKey] = col.onUpdate()
+      catch error
+        console.log("checkFields error", error)
+        @errorMessage = ':' + error.reason or error
         return false
-      else if type is 'insert' and col.onInsert?
-        rec[dataKey] = col.onInsert()
-      else if type is 'update' and col.onUpdate?
-        rec[dataKey] = col.onUpdate()
     true
 
 
@@ -455,7 +460,7 @@ class @IronTableController extends RouteController
               CoffeeAlerts.success(@_recordName() + " updated")
               @fetchRecordCount()
       else
-        CoffeeAlerts.error("Error could update " + @_recordName() + " " + @errorMessage)
+        CoffeeAlerts.error("Error could not update " + @_recordName() + " " + @errorMessage)
 
 
   newRecord: ->
@@ -483,7 +488,7 @@ class @IronTableController extends RouteController
               CoffeeAlerts.success(@_recordName() + " created")
               @fetchRecordCount()
       else
-        CoffeeAlerts.error("Error could not save new " + @_recordName() + " " + @errorMessage)
+        CoffeeAlerts.error("Error could not save " + @_recordName() + " " + @errorMessage)
 
 
   setFilterColumn: (col) ->
