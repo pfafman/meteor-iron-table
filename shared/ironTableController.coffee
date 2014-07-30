@@ -314,14 +314,17 @@ class @IronTableController extends RouteController
     @_sess("recordCount")
 
   
-  data: ->
-    #console.log("ironTableController data")
+  #data: ->
+  #  console.log("ironTableController data")
+  #  {}
+  ###
     theData =
       increment: @increment
 
-      # NOTE: Iron Router 7.1 and Meteor 8.2 not playing well together !?!?!?
+      # NOTE: Iron Router 7.1 and Meteor 8.2+ not playing well together !?!?!?
       #       Moved from gettting in data to getting from controller in helpers
 
+      #tableTitle: @getTableTitle()
       #newRecordPath: @newRecordPath
       #newRecordTitle: @newRecordTitle
       #newRecordTooltip: @newRecordTooltip
@@ -332,9 +335,9 @@ class @IronTableController extends RouteController
       #doDownloadLink: @doDownloadLink
       #headers: @headers()
       #records: @recordsData()
-    @fetchRecordCount()
+    #@fetchRecordCount()
     _.extend(theData, @params)
-      
+  ###
 
   getRecordsName: ->
     @_recordsName()

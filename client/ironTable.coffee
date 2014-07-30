@@ -71,9 +71,6 @@ Template.ironTableHeading.helpers
   
   tableTitle: ->
     getCurrentIronTableController()?.getTableTitle()
-  
-  tableTitle: ->
-    getCurrentIronTableController()?.getTableTitle()
 
   doDownloadLink: ->
     getCurrentIronTableController()?.doDownloadLink
@@ -217,9 +214,6 @@ Template.ironTableHeader.rendered = ->
 Template.ironTableHeaders.helpers
   headers: ->
     getCurrentIronTableController()?.headers()
-
-  #records: ->
-  #    getCurrentIronTableController()?.recordsData()
 
     
 Template.ironTableHeader.events
