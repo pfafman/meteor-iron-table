@@ -212,6 +212,7 @@ class @IronTableController extends RouteController
 
   
   waitOn: ->
+    #console.log('waitOn')
     @subscribe()
 
 
@@ -388,7 +389,6 @@ class @IronTableController extends RouteController
         else if type is 'update' and col.onUpdate?
           rec[dataKey] = col.onUpdate()
       catch error
-        console.log("checkFields error", error)
         @errorMessage = ':' + error.reason or error
         return false
     true
