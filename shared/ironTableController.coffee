@@ -315,10 +315,9 @@ class @IronTableController extends RouteController
     @_sess("recordCount")
 
   
-  #data: ->
+  data: ->
   #  console.log("ironTableController data")
   #  {}
-  ###
     theData =
       increment: @increment
 
@@ -336,9 +335,8 @@ class @IronTableController extends RouteController
       #doDownloadLink: @doDownloadLink
       #headers: @headers()
       #records: @recordsData()
-    #@fetchRecordCount()
+      #@fetchRecordCount()
     _.extend(theData, @params)
-  ###
 
   getRecordsName: ->
     @_recordsName()
