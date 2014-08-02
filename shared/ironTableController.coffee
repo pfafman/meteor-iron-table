@@ -280,6 +280,7 @@ class @IronTableController extends RouteController
           value = @valueFromRecord(key, col, record)
           colData.push
             template     : col.template
+            record       : record  # Link to full record if we need it
             value        : col.display?(value, record, @params) or value
             aLink        : col.link?(value, record)
             title        : col.title?(value, record) or col.title
