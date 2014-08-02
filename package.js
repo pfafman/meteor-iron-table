@@ -43,7 +43,8 @@ Package.on_use(function (api, where) {
   api.use([
     'underscore',
     'coffeescript',
-    'iron-router'
+    'iron-router',
+    'publish-counts'
     ], ['client', 'server']);
     
   if (api.export) {

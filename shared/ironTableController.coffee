@@ -3,6 +3,7 @@
 # Iron Table Controller
 #
 
+DO_PUBLISH_COUNTS = true
 
 # Capitalize first letter in string
 String::capitalize = ->
@@ -48,7 +49,7 @@ class @IronTableController extends RouteController
 
 
   fetchRecordCount: ->
-    if not @fetchingCount
+    if not DO_PUBLISH_COUNTS and not @fetchingCount
       @fetchingCount = true
       # TODO: Set a timeout ?!?!
       Meteor.call 'ironTable_' + @_collectionName() + '_recordCount', @_select(), (error, number) =>
@@ -310,9 +311,12 @@ class @IronTableController extends RouteController
 
 
   recordCount: ->
-    if @_sess("recordCount") is '...'
-      @fetchRecordCount()
-    @_sess("recordCount")
+    if DO_PUBLISH_COUNTS
+      Counts.get(@collection().countName())
+    else
+      if @_sess("recordCount") is '...'
+        @fetchRecordCount()
+      @_sess("recordCount")
 
   
   data: ->
