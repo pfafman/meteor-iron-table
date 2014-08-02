@@ -7,6 +7,6 @@
   "git": "https://github.com/pfafman/meteor-iron-table.git",
   "packages": {
     "filesaver": {},
-    "publish-counts":{}
+    "publish-counts": {}
   }
 }
