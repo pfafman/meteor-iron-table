@@ -46,6 +46,7 @@ Template.ironTable.events
   "click .iron-table-delete-record": (e, tmpl) ->
     e.preventDefault()
     #e.stopImmediatePropagation()
+    $('.iron-table-delete-record').tooltip('hide')
     
     if not currentController = getCurrentIronTableController()
       CoffeeAlerts.error("Internal Error: Could not get controller")
@@ -59,6 +60,7 @@ Template.ironTable.events
   "click .iron-table-edit-record": (e, tmpl) ->
     e.preventDefault()
     #e.stopImmediatePropagation()
+    $('.iron-table-edit-record').tooltip('hide')
 
     if not currentController = getCurrentIronTableController()
       CoffeeAlerts.error("Internal Error: Could not get controller")
