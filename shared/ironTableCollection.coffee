@@ -1,5 +1,4 @@
 
-DO_PUBLISH_COUNTS = true
 
 class @IronTableCollection extends Meteor.Collection
   classID: 'IronTableCollection'
@@ -7,6 +6,7 @@ class @IronTableCollection extends Meteor.Collection
   recordName: 'record'
   colToUseForName : '_id'
   selfPublish: true
+  publishCounts: false
 
 
   publicationName: ->
@@ -22,12 +22,12 @@ class @IronTableCollection extends Meteor.Collection
       if @selfPublish
         collection = @
 
-        if DO_PUBLISH_COUNTS
+        if @publishCounts
           countName = @countName()
 
         Meteor.publish @publicationName(), (select, sort, limit, skip) ->
           
-          if DO_PUBLISH_COUNTS
+          if @publishCounts
             publishCount @, countName, collection.find(select),
               noReady: true 
 
@@ -38,7 +38,7 @@ class @IronTableCollection extends Meteor.Collection
 
 
       meths = {}
-      if not DO_PUBLISH_COUNTS
+      if not @publishCounts
         meths["ironTable_" + @_name + "_recordCount"] = (select = {}) =>
           @find?(select)?.count?()
       
