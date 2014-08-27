@@ -1,8 +1,11 @@
 Package.describe({
-  summary: 'Paging Table for IronRouter and Meteor'
+  summary: 'Paging Table for IronRouter and Meteor',
+  version: "0.3.0",
+  git: "https://github.com/pfafman/meteor-iron-table.git"
 });
 
 Package.on_use(function (api, where) {
+  api.versionsFrom("METEOR@0.9.0");
   
   // Client
   api.use(
@@ -14,11 +17,11 @@ Package.on_use(function (api, where) {
     'handlebars',
     'jquery',
     'session',
-    'spin',
+    'sacha:spin',
     'less',
-    'coffee-alerts',
-    'coffee-modal',
-    'filesaver'
+    'pfafman:coffee-alerts',
+    'pfafman:coffee-modal',
+    'mrt:filesaver'
     ]
     , 'client');
 
@@ -43,8 +46,7 @@ Package.on_use(function (api, where) {
   api.use([
     'underscore',
     'coffeescript',
-    'iron-router',
-    'publish-counts'
+    'iron:router'
     ], ['client', 'server']);
     
   if (api.export) {
