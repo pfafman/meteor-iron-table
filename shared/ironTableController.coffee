@@ -382,13 +382,13 @@ class @IronTableController extends RouteController
     for key, col of @_cols()
       try
         dataKey = col.dataKey or key
-        if col.required and (not rec[dataKey]? or rec[dataKey] is '')
+        if type isnt "inlineUpdate" and col.required and (not rec[dataKey]? or rec[dataKey] is '')
           col.header = (col.header || key).capitalize()
           @errorMessage = ':' + "#{col.header} is required"
           return false
         else if type is 'insert' and col.onInsert?
           rec[dataKey] = col.onInsert()
-        else if type is 'update' and col.onUpdate?
+        else if type in ['update', 'inlineUpdate'] and col.onUpdate?
           rec[dataKey] = col.onUpdate()
       catch error
         @errorMessage = ':' + error.reason or error
@@ -445,27 +445,32 @@ class @IronTableController extends RouteController
   updateRecord: (yesNo, rec) =>
     @errorMessage = ''
     if yesNo
-      if @collection().editOk(rec) and @checkFields(rec, 'update')
-        if @collection().methodOnUpdate
-          Meteor.call @collection().methodOnUpdate, @_sess("currentRecordId"), rec, (error) =>
-            if error
-              console.log("Error updating " + @_recordName(), error)
-              CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
-            else
-              CoffeeAlerts.success(@_recordName() + " saved")
-              @fetchRecordCount()
-        else
-          @collection().update @_sess("currentRecordId"), 
-            $set: rec
-          , (error, effectedCount) =>
-            if error
-              console.log("Error updating " + @_recordName(), error)
-              CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
-            else
-              CoffeeAlerts.success(@_recordName() + " updated")
-              @fetchRecordCount()
+      @updateThisRecord(@_sess("currentRecordId"), rec)
+
+
+  updateThisRecord: (recId, rec, type="update") =>
+    if @collection().editOk(rec) and @checkFields(rec, type)
+      if @collection().methodOnUpdate
+        Meteor.call @collection().methodOnUpdate, recId, rec, (error) =>
+          if error
+            console.log("Error updating " + @_recordName(), error)
+            CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
+          else if type isnt "inlineUpdate"
+            CoffeeAlerts.success(@_recordName() + " saved")
+            @fetchRecordCount()
       else
-        CoffeeAlerts.error("Error could not update " + @_recordName() + " " + @errorMessage)
+        @collection().update recId, 
+          $set: rec
+        , (error, effectedCount) =>
+          if error
+            console.log("Error updating " + @_recordName(), error)
+            CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
+          else
+            if type isnt "inlineUpdate"
+              CoffeeAlerts.success(@_recordName() + " updated")
+            @fetchRecordCount()
+    else
+      CoffeeAlerts.error("Error could not update " + @_recordName() + " " + @errorMessage)
 
 
   newRecord: ->

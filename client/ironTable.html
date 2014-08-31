@@ -210,14 +210,16 @@
                     {{#if template}}
                         {{> templateRow}}
                     {{else}}
-                        {{{value}}}
+                      <div class="iron-table-value" 
+                      contenteditable="{{column.contenteditable}}">{{{value}}}</div>
                     {{/if}}
                 </a>
             {{else}}
                 {{#if template}}
                     {{> templateRow}}
                 {{else}}
-                    {{{value}}}
+                  <div class="iron-table-value"
+                  contenteditable="{{column.contenteditable}}">{{{value}}}</div>
                 {{/if}}
             {{/if}}
         </td>

@@ -1,4 +1,5 @@
 
+DEBUG = false
 
 getCurrentIronTableController = ->
   if Router.current?()?.classID is "IronTableController"
@@ -22,17 +23,15 @@ Template.ironTable.helpers
     getCurrentIronTableController()?.inabox
 
   loading: ->
-    loading = not getCurrentIronTableController()?.ready() and not getCurrentIronTableController()?.haveData()
-    #console.log("loading", loading)
-    loading
+    not getCurrentIronTableController()?.ready() and not getCurrentIronTableController()?.haveData()
 
   haveData: ->
-    #console.log("haveData Template")
     getCurrentIronTableController()?.haveData()
 
 
   # NOTE: Iron Router 7.1 and Meteor 8.2 not playing well together !?!?!?
   #       Moved from gettting in data to getting from controller in helpers
+  #       TODO: Check if this is better in Meteor 0.9
   
   showFilter: ->
     getCurrentIronTableController()?.showFilter
@@ -194,6 +193,14 @@ Template.ironTableNav.events
     e.preventDefault()
     getCurrentIronTableController()?.getNext()
 
+Template.ironTableRecords.events
+  'mouseleave, mouseexit tr': ->
+    if DEBUG
+      console.log('mouse left row')
+    Session.set("ironTableActiveRecordId", null)
+
+Template.ironTableRow.rendered = ->
+  $('[rel="tooltip"]').tooltip()
 
 Template.ironTableRow.helpers
   extraControls: ->
@@ -204,10 +211,49 @@ Template.ironTableRow.helpers
   templateRow: ->
     Template[@template]
 
+Template.ironTableRow.events
 
-Template.ironTableRow.rendered = ->
-  $('[rel="tooltip"]').tooltip()
+  "click .iron-table-value": (e, tmpl) ->
+    if DEBUG
+      console.log("Click", @, e.target)
 
+  "input .iron-table-value": (e) ->
+    if DEBUG
+      console.log("html:'#{$(e.target).html()}'")
+    newValue = $(e.target).html().trim()
+    if DEBUG
+      console.log("input value", newValue)
+    if @column.type is 'number' and isNaN(newValue)
+      console.log("input Nan")
+      $(e.target).css('outline-color', 'red')
+    else
+      $(e.target).css('outline-color', '')
+
+
+  "blur .iron-table-value": (e) ->
+    if @column?.contenteditable? and @dataKey? and @record?._id?
+      #$(e.target).prop('contenteditable', false)
+      $(e.target).css('outline-color', '')
+      newValue = $(e.target).html().trim()
+      if @column.type is 'number'
+        newValue = Number(newValue)
+        if DEBUG
+          console.log('number', newValue)
+        if isNaN(newValue)
+          console.log("bad number")
+          $(e.target).html(@value)
+          return
+        #$(e.target).empty().html(newValue)
+      if @value isnt newValue
+        if not currentController = getCurrentIronTableController()
+          CoffeeAlerts.error("Internal Error: Could not get controller")
+        else
+          $(e.target).html('')
+          console.log("Submit Value Change", @dataKey, @value, '->', newValue)
+          data = {}
+          data[@dataKey] = newValue
+          currentController.updateThisRecord(@record._id, data, 'inlineUpdate')
+           
 
 Template.ironTableHeader.rendered = ->
   $('[rel="tooltip"]').tooltip()
