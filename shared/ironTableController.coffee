@@ -402,39 +402,44 @@ class @IronTableController extends RouteController
       record = @collection().findOne(id)
     else
       record = null
-    recordData = []
-    
-    for key, col of @_cols()
-      dataKey = col.dataKey or key
-      localCol = _.clone(col)
-      if col[type]?() or (col[type] is true) or col["staticOn_#{type}"]
-        localCol.displayType = col.type
-        localCol.checkbox = false
-        localCol.checked = false
-        value = @valueFromRecord(key, col, record)
-        if col.type is 'boolean'
-          localCol.displayType = 'checkbox'
-          localCol.checkbox = true
-          if record?[dataKey]?
-            if record[dataKey]
-              localCol.checked = true
-          else if col.default
-            localCol.checked = true
-        else if value?
-          localCol.value = value
-        else if col.default?
-          localCol.value = col.default
-        
-        if col["staticOn_#{type}"]
-          localCol.static = true
-          localCol.value = value
-            
-        localCol.header = (col.header || key).capitalize()
-        localCol.key = key
-        localCol.dataKey = dataKey
 
-        recordData.push localCol
-    columns: recordData
+
+    if @formTemplate is 'ironTableForm'
+      recordData = []
+      
+      for key, col of @_cols()
+        dataKey = col.dataKey or key
+        localCol = _.clone(col)
+        if col[type]?() or (col[type] is true) or col["staticOn_#{type}"]
+          localCol.displayType = col.type
+          localCol.checkbox = false
+          localCol.checked = false
+          value = @valueFromRecord(key, col, record)
+          if col.type is 'boolean'
+            localCol.displayType = 'checkbox'
+            localCol.checkbox = true
+            if record?[dataKey]?
+              if record[dataKey]
+                localCol.checked = true
+            else if col.default
+              localCol.checked = true
+          else if value?
+            localCol.value = value
+          else if col.default?
+            localCol.value = col.default
+          
+          if col["staticOn_#{type}"]
+            localCol.static = true
+            localCol.value = value
+              
+          localCol.header = (col.header || key).capitalize()
+          localCol.key = key
+          localCol.dataKey = dataKey
+
+          recordData.push localCol
+      columns: recordData
+    else
+      record
 
 
   editRecord: (_id) ->
