@@ -1,7 +1,7 @@
 Meteor-Iron-Table
 ====================
 
-Paging Table for IronRouter and Meteor.
+Paging Table for IronRouter and Meteor.  Only downloads the current page to the client and also is set up for inline editing and a light schema.
 
 ## Installation
 
@@ -16,7 +16,7 @@ Note this is not on Atmosphere yet.  You can add it if you want by editing your 
 ```
 {
     "packages": {
-        "iron-table": {
+        "pfafman:iron-table": {
             "git": "https://github.com/pfafman/meteor-iron-table.git"
         },
         ....
@@ -26,12 +26,12 @@ Note this is not on Atmosphere yet.  You can add it if you want by editing your 
 and then run meteorite to install.
 
 ```
-    mrt add iron-table
+    mrt add pfafman:iron-table
 ```
 
 ##Usage
 
-TODO:  Currently needs some TLC to get to work....
+TODO:  Currently needs some TLC to get to work and I have not documented all the steps.
 
 
 ## License
