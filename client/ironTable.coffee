@@ -57,15 +57,17 @@ Template.ironTable.events
     , "Delete"
       
   "click .iron-table-edit-record": (e, tmpl) ->
-    e.preventDefault()
-    #e.stopImmediatePropagation()
-    $('.iron-table-edit-record').tooltip('hide')
+    currentController = getCurrentIronTableController()
+    if not currentController?.getEditRoute(@_id)?
+      e.preventDefault()
+      #e.stopImmediatePropagation()
+      $('.iron-table-edit-record').tooltip('hide')
 
-    if not currentController = getCurrentIronTableController()
-      CoffeeAlerts.error("Internal Error: Could not get controller")
-      false
-    else
-      currentController.editRecord(@_id)
+      if not currentController
+        CoffeeAlerts.error("Internal Error: Could not get controller")
+        false
+      else
+        currentController.editRecord(@_id)
 
 
 Template.ironTableHeading.helpers
@@ -193,14 +195,17 @@ Template.ironTableNav.events
     e.preventDefault()
     getCurrentIronTableController()?.getNext()
 
+
 Template.ironTableRecords.events
   'mouseleave, mouseexit tr': ->
     if DEBUG
       console.log('mouse left row')
     Session.set("ironTableActiveRecordId", null)
 
+
 Template.ironTableRow.rendered = ->
   $('[rel="tooltip"]').tooltip()
+
 
 Template.ironTableRow.helpers
   extraControls: ->
@@ -210,6 +215,10 @@ Template.ironTableRow.helpers
 
   templateRow: ->
     Template[@template]
+
+  editRoute: ->
+    getCurrentIronTableController()?.getEditRoute(@_id)
+
 
 Template.ironTableRow.events
 

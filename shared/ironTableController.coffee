@@ -32,8 +32,13 @@ class @IronTableController extends RouteController
     #console.log("IronTableController constuct", @collection()._name)
     super
     @reset()
-    #@setupEditRoute()
-
+    ###
+    if @editRoute?
+      if @editRoute is 'auto'
+        @setupEditRoute()
+      else
+        @editRouteName = @editRoute
+    ###
 
   reset: ->
     #console.log("reset")
@@ -74,12 +79,25 @@ class @IronTableController extends RouteController
   setupEditRoute: ->
     # Set Up Edit Path
     editRoutePath = @route.originalPath.replace(/\/[^\/]+$/ , '') + "/edit/:_id"
-    editRouteName = @collection()._name + 'Edit'
-
+    editRouteName = 'edit' + @collection()._name.capitalize()
+    @editRouteName = editRouteName
+    console.log("setup edit route", @editRouteName)
     Router.map ->
       @route editRouteName,
         path: editRoutePath
-  
+        wait: ->
+          Meteor.subscribe(@collection()._name + 'OneRecord', @params._id)
+        data: ->
+          data = @collection()?.findOne
+            _id: @params._id
+          data.returnPath = @route.originalPath
+    
+
+  getEditRoute: (id) =>
+    if @editRoute?
+      Router.routes[@editRoute].path
+        _id: id
+      
 
   _sess: (id, value) ->
     key = "_ironTable_" + @_collectionName() + id
@@ -449,6 +467,7 @@ class @IronTableController extends RouteController
       columns: recordData
     else
       record
+
 
 
   editRecord: (_id) ->

@@ -203,40 +203,41 @@
 
 
 <template name="ironTableRow">
-    {{#each colData}}
-        <td class="{{column.class}}">
-            {{#if aLink}}
-                <a href="{{aLink}}" title="{{#if title}}{{title}}{{/if}}" rel='tooltip' target="{{column.target}}">
-                    {{#if template}}
-                        {{> templateRow}}
-                    {{else}}
-                      <div class="iron-table-value" 
-                      contenteditable="{{column.contenteditable}}">{{{value}}}</div>
-                    {{/if}}
-                </a>
-            {{else}}
+  {{#each colData}}
+    <td class="{{column.class}}">
+        {{#if aLink}}
+            <a href="{{aLink}}" title="{{#if title}}{{title}}{{/if}}" rel='tooltip' target="{{column.target}}">
                 {{#if template}}
                     {{> templateRow}}
                 {{else}}
-                  <div class="iron-table-value"
+                  <div class="iron-table-value" 
                   contenteditable="{{column.contenteditable}}">{{{value}}}</div>
                 {{/if}}
+            </a>
+        {{else}}
+            {{#if template}}
+                {{> templateRow}}
+            {{else}}
+              <div class="iron-table-value"
+              contenteditable="{{column.contenteditable}}">{{{value}}}</div>
             {{/if}}
-        </td>
-    {{/each}}
-    <td class="controls">
-        {{#if extraControls}}{{> extraControls }}{{/if}}
-        {{#if editOk}}
-            <a class="btn btn-link iron-table-edit-record" title='Edit Record' rel='tooltip'>
-                <i class="fa fa-pencil-square-o"></i>
-            </a>            
-        {{/if}}
-        {{#if deleteOk}}
-            <a class="btn btn-link iron-table-delete-record" title='Delete Record' rel='tooltip'>
-                <i class="fa fa-trash-o"></i>
-            </a>            
         {{/if}}
     </td>
+  {{/each}}
+  <td class="controls">
+    {{#if extraControls}}{{> extraControls }}{{/if}}
+    {{#if editOk}}
+        <a href="{{editRoute}}" class="btn btn-link iron-table-edit-record" 
+          title='Edit Record' rel='tooltip'>
+          <i class="fa fa-pencil-square-o"></i>
+        </a>            
+    {{/if}}
+    {{#if deleteOk}}
+        <a class="btn btn-link iron-table-delete-record" title='Delete Record' rel='tooltip'>
+            <i class="fa fa-trash-o"></i>
+        </a>            
+    {{/if}}
+  </td>
 </template>
 
 
