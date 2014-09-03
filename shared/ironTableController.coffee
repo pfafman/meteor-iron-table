@@ -368,13 +368,22 @@ class @IronTableController extends RouteController
 
   removeRecord: (rec) ->
     name = rec.recordDisplayName
-    @collection().remove rec._id, (error) =>
-      if error
-        console.log("Error deleting #{name}", error)
-        CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
-      else
-        CoffeeAlerts.success("Deleted #{name}")
-      @fetchRecordCount()
+    if @collection().methodOnRemove
+      Meteor.call @collection().methodOnRemove, rec._id, (error) =>
+        if error
+          console.log("Error deleting #{name}", error)
+          CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
+        else if type isnt "inlineUpdate"
+          CoffeeAlerts.success("Deleted #{name}")
+        @fetchRecordCount()
+    else
+      @collection().remove rec._id, (error) =>
+        if error
+          console.log("Error deleting #{name}", error)
+          CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
+        else
+          CoffeeAlerts.success("Deleted #{name}")
+        @fetchRecordCount()
 
 
   checkFields: (rec, type="insert") ->
