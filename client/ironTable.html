@@ -206,7 +206,7 @@
     {{#each colData}}
         <td class="{{column.class}}">
             {{#if aLink}}
-                <a href="{{aLink}}" title="{{#if title}}{{title}}{{/if}}" rel='tooltip'>
+                <a href="{{aLink}}" title="{{#if title}}{{title}}{{/if}}" rel='tooltip' target="{{column.target}}">
                     {{#if template}}
                         {{> templateRow}}
                     {{else}}
