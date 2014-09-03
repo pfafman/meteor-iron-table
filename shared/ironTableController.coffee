@@ -373,7 +373,7 @@ class @IronTableController extends RouteController
         if error
           console.log("Error deleting #{name}", error)
           CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
-        else if type isnt "inlineUpdate"
+        else
           CoffeeAlerts.success("Deleted #{name}")
         @fetchRecordCount()
     else
