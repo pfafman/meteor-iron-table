@@ -84,8 +84,8 @@ Template.ironTableHeading.helpers
   showNewButton: ->
     getCurrentIronTableController()?.showNewButton
 
-  newRecordPath: ->
-    getCurrentIronTableController()?.newRecordPath
+  newRecordRoute: ->
+    getCurrentIronTableController()?.newRecordRoute
   
   newRecordTitle: ->
     getCurrentIronTableController()?.newRecordTitle

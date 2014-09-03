@@ -29,16 +29,9 @@ class @IronTableController extends RouteController
   
 
   constructor: ->
-    #console.log("IronTableController constuct", @collection()._name)
     super
     @reset()
-    ###
-    if @editRoute?
-      if @editRoute is 'auto'
-        @setupEditRoute()
-      else
-        @editRouteName = @editRoute
-    ###
+
 
   reset: ->
     #console.log("reset")
@@ -76,6 +69,7 @@ class @IronTableController extends RouteController
     Meteor.call "ironTable_" + @_collectionName() + "_getCSV", @_select(), fields, callback
 
 
+  # Pain in the ass to set up....  Not using
   setupEditRoute: ->
     # Set Up Edit Path
     editRoutePath = @route.originalPath.replace(/\/[^\/]+$/ , '') + "/edit/:_id"
@@ -94,8 +88,8 @@ class @IronTableController extends RouteController
     
 
   getEditRoute: (id) =>
-    if @editRoute?
-      Router.routes[@editRoute].path
+    if @editRecordRoute?
+      Router.routes[@editRecordRoute].path
         _id: id
       
 
