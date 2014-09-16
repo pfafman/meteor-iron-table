@@ -1,6 +1,6 @@
 Package.describe({
   summary: 'Paging Table for IronRouter and Meteor',
-  version: "0.4.4",
+  version: "0.4.5",
   git: "https://github.com/pfafman/meteor-iron-table.git"
 });
 

@@ -354,6 +354,7 @@ class @IronTableController extends RouteController
       #@fetchRecordCount()
     _.extend(theData, @params)
 
+
   getRecordsName: ->
     @_recordsName()
 
