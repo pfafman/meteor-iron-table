@@ -15,7 +15,7 @@ class @IronTableController extends RouteController
   increment       : 20
   sortColumn      : '_id'
   sortDirection   : 1
-  
+
   template        : 'ironTable'
   rowTemplate     : 'ironTableRow'
   headerTemplate  : 'ironTableHeader'
@@ -26,7 +26,7 @@ class @IronTableController extends RouteController
   errorMessage    : ''
 
   _subscriptionComplete = false
-  
+
 
   constructor: ->
     super
@@ -53,7 +53,7 @@ class @IronTableController extends RouteController
         @fetchingCount = false
         if not error and not @_sessEquals("recordCount", number)
           @_sess("recordCount", number)
-        else if error 
+        else if error
           console.log('ironTable_' +  @_collectionName() + '_recordCount error:', error)
 
 
@@ -85,13 +85,13 @@ class @IronTableController extends RouteController
           data = @collection()?.findOne
             _id: @params._id
           data.returnPath = @route.originalPath
-    
+
 
   getEditRoute: (id) =>
     if @editRecordRoute?
       Router.routes[@editRecordRoute].path
         _id: id
-      
+
 
   _sess: (id, value) ->
     key = "_ironTable_" + @_collectionName() + id
@@ -111,7 +111,7 @@ class @IronTableController extends RouteController
 
   #editOk: (record) ->
   #    false
-  
+
   #deleteOk: (record) ->
   #    false
 
@@ -122,7 +122,7 @@ class @IronTableController extends RouteController
   onRun: ->
     #console.log("onRun", @_collectionName())
     @reset()
-      
+
 
   onStop: ->
     @unsubscribe()
@@ -164,7 +164,7 @@ class @IronTableController extends RouteController
         canFilterOn = col.canFilterOn
       else
         canFilterOn = false
-      rtn.push 
+      rtn.push
         key: key
         dataKey: dataKey
         colName: col.header or key
@@ -184,7 +184,7 @@ class @IronTableController extends RouteController
         canFilterOn = col.canFilterOn
       else
         canFilterOn = false
-      rtn.push 
+      rtn.push
         key: key
         dataKey: dataKey
         colName: col.header or key
@@ -205,8 +205,8 @@ class @IronTableController extends RouteController
 
   skip: ->
     @_sess('skip')
-      
-  
+
+
   setSort: (dataKey) ->
     if dataKey is @_sess('sortColumn')
       @_sess('sortDirection',  -@_sess('sortDirection'))
@@ -216,13 +216,13 @@ class @IronTableController extends RouteController
       @_sess('sortDirection', @sortDirection)
       @_sess('skip', 0)
 
-  
+
   sort: ->
     rtn = {}
     rtn[@_sess('sortColumn')] = @_sess('sortDirection')
     rtn
 
-  
+
   waitOn: ->
     #console.log('waitOn')
     @subscribe()
@@ -231,16 +231,16 @@ class @IronTableController extends RouteController
   publicationName: ->
     @collection().publicationName?() or 'ironTable_publish_'+ @_collectionName()
 
-  
+
   subscribe: ->
     @_subscriptionId = Meteor.subscribe(@publicationName(), @_select(), @sort(), @limit(), @skip())
 
-  
+
   unsubscribe: ->
     @_subscriptionId?.stop?()
     @_subscriptionId = null
 
-  
+
   _select: ->
     #console.log("_select")
     select = _.extend({}, @select())
@@ -249,15 +249,15 @@ class @IronTableController extends RouteController
     col = @_cols()[filterColumn]
     if filterColumn and filterColumn isnt "_none_" and filterValue and col and filterValue isnt ''
       dataKey = col.dataKey or filterColumn
-      select[dataKey] = 
+      select[dataKey] =
         $regex: ".*#{filterValue}.*"
         $options: 'i'
     select
 
-  
+
   select: ->
     @defaultSelect
-  
+
 
   valueFromRecord: (key, col, record) ->
     if record?
@@ -272,14 +272,14 @@ class @IronTableController extends RouteController
       else if record[key]?
         record[key]
 
-  
+
   records: ->
     @collection()?.find @_select(),
       sort: @sort()
       limit: @limit()
     .fetch()
 
-  
+
   recordsData: ->
     recordsData = []
     cols = @_cols()
@@ -298,7 +298,7 @@ class @IronTableController extends RouteController
             column       : col
             dataKey      : dataKey
 
-              
+
       recordsData.push
         colData: colData
         _id: record._id
@@ -312,7 +312,7 @@ class @IronTableController extends RouteController
 
   haveData: ->
     @recordCount() > 0 or @records().length > 0
-  
+
 
   recordDisplayStop: ->
     @skip() + @records().length
@@ -330,7 +330,7 @@ class @IronTableController extends RouteController
         @fetchRecordCount()
       @_sess("recordCount")
 
-  
+
   data: ->
   #  console.log("ironTableController data")
   #  {}
@@ -377,7 +377,7 @@ class @IronTableController extends RouteController
 
   previousPathClass: ->
     if (@skip() <= 0) then "disabled" else ""
- 
+
 
   removeRecord: (rec) ->
     name = rec.recordDisplayName
@@ -428,7 +428,7 @@ class @IronTableController extends RouteController
 
     if @formTemplate is 'ironTableForm'
       recordData = []
-      
+
       for key, col of @_cols()
         dataKey = col.dataKey or key
         localCol = _.clone(col)
@@ -449,11 +449,11 @@ class @IronTableController extends RouteController
             localCol.value = value
           else if col.default?
             localCol.value = col.default
-          
+
           if col["staticOn_#{type}"]
             localCol.static = true
             localCol.value = value
-              
+
           localCol.header = (col.header || key).capitalize()
           localCol.key = key
           localCol.dataKey = dataKey
@@ -487,7 +487,7 @@ class @IronTableController extends RouteController
             CoffeeAlerts.success(@_recordName() + " saved")
             @fetchRecordCount()
       else
-        @collection().update recId, 
+        @collection().update recId,
           $set: rec
         , (error, effectedCount) =>
           if error
@@ -517,6 +517,7 @@ class @IronTableController extends RouteController
             else
               CoffeeAlerts.success(@_recordName() + " created")
               @fetchRecordCount()
+              @newRecordCallback?(rec)
         else
           @collection().insert rec, (error, effectedCount) =>
             if error
@@ -525,6 +526,7 @@ class @IronTableController extends RouteController
             else
               CoffeeAlerts.success(@_recordName() + " created")
               @fetchRecordCount()
+              @newRecordCallback?(effectedCount)
       else
         CoffeeAlerts.error("Error could not save " + @_recordName() + " " + @errorMessage)
 
@@ -546,4 +548,3 @@ class @IronTableController extends RouteController
 
   getFilterValue: ->
     @_sess('filterValue')
-
