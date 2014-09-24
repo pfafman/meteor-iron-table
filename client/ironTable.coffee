@@ -15,7 +15,7 @@ getCurrentIronTableController = ->
 
 Template.ironTable.rendered = ->
   $('[rel="tooltip"]').tooltip()
-  
+
 
 Template.ironTable.helpers
 
@@ -32,12 +32,20 @@ Template.ironTable.helpers
   # NOTE: Iron Router 7.1 and Meteor 8.2 not playing well together !?!?!?
   #       Moved from gettting in data to getting from controller in helpers
   #       TODO: Check if this is better in Meteor 0.9
-  
+
   showFilter: ->
     getCurrentIronTableController()?.showFilter
 
   recordsName: ->
     getCurrentIronTableController()?.getRecordsName()
+
+  rowLink: ->
+    if getCurrentIronTableController()?.doRowLink()
+      "rowlink"
+
+  dataLink: ->
+    if getCurrentIronTableController()?.doRowLink()
+      "row"
 
 
 Template.ironTable.events
@@ -46,16 +54,16 @@ Template.ironTable.events
     e.preventDefault()
     #e.stopImmediatePropagation()
     $('.iron-table-delete-record').tooltip('hide')
-    
+
     if not currentController = getCurrentIronTableController()
       CoffeeAlerts.error("Internal Error: Could not get controller")
       return false
-    
+
     CoffeeModal.confirm "Are you sure you want to delete #{@recordDisplayName}?", (yesNo) =>
       if yesNo
         currentController.removeRecord(@)
     , "Delete"
-      
+
   "click .iron-table-edit-record": (e, tmpl) ->
     currentController = getCurrentIronTableController()
     if not currentController?.getEditRoute(@_id)?
@@ -71,7 +79,7 @@ Template.ironTable.events
 
 
 Template.ironTableHeading.helpers
-  
+
   tableTitle: ->
     getCurrentIronTableController()?.getTableTitle()
 
@@ -86,7 +94,7 @@ Template.ironTableHeading.helpers
 
   newRecordRoute: ->
     getCurrentIronTableController()?.newRecordRoute
-  
+
   newRecordTitle: ->
     getCurrentIronTableController()?.newRecordTitle
 
@@ -219,6 +227,13 @@ Template.ironTableRow.helpers
   editRoute: ->
     getCurrentIronTableController()?.getEditRoute(@_id)
 
+  rowLinkSkip: ->
+    if @column.contenteditable or (@aLink? and not @rowLink)
+      'rowlink-skip'
+
+  contenteditable: ->
+    @column.contenteditable and Template.parentData(1).editOk
+
 
 Template.ironTableRow.events
 
@@ -262,7 +277,7 @@ Template.ironTableRow.events
           data = {}
           data[@dataKey] = newValue
           currentController.updateThisRecord(@record._id, data, 'inlineUpdate')
-           
+
 
 Template.ironTableHeader.rendered = ->
   $('[rel="tooltip"]').tooltip()
@@ -272,7 +287,7 @@ Template.ironTableHeaders.helpers
   headers: ->
     getCurrentIronTableController()?.headers()
 
-    
+
 Template.ironTableHeader.events
   "click .table-col-head": (e, tmpl) ->
     e.preventDefault()
@@ -282,9 +297,3 @@ Template.ironTableHeader.events
 Template.ironTableRecords.helpers
   records: ->
     getCurrentIronTableController()?.recordsData()
-
-
-
-
-
-

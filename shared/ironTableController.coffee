@@ -143,6 +143,8 @@ class @IronTableController extends RouteController
   _colToUseForName: ->
     @colToUseForName or @collection().colToUseForName or '_id'
 
+  doRowLink: ->
+    @collection()?.doRowLink
 
   _cols: ->
     theCol = @cols or @collection()?.schema
