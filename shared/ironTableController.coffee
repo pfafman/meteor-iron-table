@@ -30,7 +30,7 @@ class @IronTableController extends RouteController
 
   constructor: ->
     super
-    @selectVar = new ReactiveVar({})
+    #@selectVar = new ReactiveVar({})
     @reset()
 
 
@@ -255,7 +255,7 @@ class @IronTableController extends RouteController
       select[dataKey] =
         $regex: ".*#{filterValue}.*"
         $options: 'i'
-    @selectVar.set(select)
+    #@selectVar.set(select)
     select
 
 
