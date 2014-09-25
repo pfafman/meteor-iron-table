@@ -199,7 +199,7 @@ Template.ironTableNav.events
     e.preventDefault()
     getCurrentIronTableController()?.getPrevious()
 
-   "click #next": (e, tmpl) ->
+  "click #next": (e, tmpl) ->
     e.preventDefault()
     getCurrentIronTableController()?.getNext()
 

@@ -1,6 +1,6 @@
 Package.describe({
   summary: 'Paging Table for IronRouter and Meteor',
-  version: "0.4.8",
+  version: "0.4.9",
   git: "https://github.com/pfafman/meteor-iron-table.git"
 });
 
@@ -21,6 +21,7 @@ Package.on_use(function (api, where) {
     'less',
     'pfafman:coffee-alerts',
     'pfafman:coffee-modal',
+    'reactive-var',
     'mrt:filesaver'
     ]
     , 'client');
