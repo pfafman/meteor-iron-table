@@ -63,7 +63,7 @@ class @IronTableController extends RouteController
       fields = @collection().downloadFields
     else
       for key, col of @_cols()
-        dataKey = col.dataKey or key
+        dataKey = col.dataKey or col.sortKey or key
         fields[dataKey] = 1
 
     Meteor.call "ironTable_" + @_collectionName() + "_getCSV", @_select(), fields, callback
@@ -161,7 +161,7 @@ class @IronTableController extends RouteController
     rtn = []
     for key, col of @_cols()
       #if not (col.hide?() or col.hide)
-      dataKey = col.dataKey or key
+      dataKey = col.dataKey or col.sortKey or key
       if col.canFilterOn? and not col.hide?()
         canFilterOn = col.canFilterOn
       else
@@ -181,7 +181,7 @@ class @IronTableController extends RouteController
     rtn = []
     for key, col of @_cols()
       #if not (col.hide?() or col.hide)
-      dataKey = col.dataKey or key
+      dataKey = col.dataKey or col.sortKey or key
       if col.canFilterOn? and not col.hide?()
         canFilterOn = col.canFilterOn
       else
@@ -250,7 +250,7 @@ class @IronTableController extends RouteController
     filterValue = @_sess('filterValue')
     col = @_cols()[filterColumn]
     if filterColumn and filterColumn isnt "_none_" and filterValue and col and filterValue isnt ''
-      dataKey = col.dataKey or filterColumn
+      dataKey = col.dataKey or col.sortKey or filterColumn
       select[dataKey] =
         $regex: ".*#{filterValue}.*"
         $options: 'i'
@@ -288,7 +288,7 @@ class @IronTableController extends RouteController
     for record in @records()
       colData = []
       for key, col of cols
-        dataKey = col.dataKey or key
+        dataKey = col.dataKey or col.sortKey or key
         if not col.hide?()
           value = @valueFromRecord(key, col, record)
           colData.push
@@ -405,7 +405,7 @@ class @IronTableController extends RouteController
     @errorMessage = ''
     for key, col of @_cols()
       try
-        dataKey = col.dataKey or key
+        dataKey = col.dataKey or col.sortKey or key
         if type isnt "inlineUpdate" and col.required and (not rec[dataKey]? or rec[dataKey] is '')
           col.header = (col.header || key).capitalize()
           @errorMessage = ':' + "#{col.header} is required"
@@ -432,7 +432,7 @@ class @IronTableController extends RouteController
       recordData = []
 
       for key, col of @_cols()
-        dataKey = col.dataKey or key
+        dataKey = col.dataKey or col.sortKey or key
         localCol = _.clone(col)
         if col[type]?() or (col[type] is true) or col["staticOn_#{type}"]
           localCol.displayType = col.type
