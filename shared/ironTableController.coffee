@@ -30,7 +30,6 @@ class @IronTableController extends RouteController
 
   constructor: ->
     super
-    #@selectVar = new ReactiveVar({})
     @reset()
 
 
@@ -245,7 +244,6 @@ class @IronTableController extends RouteController
 
 
   _select: ->
-    #console.log("_select")
     select = _.extend({}, @select())
     filterColumn = @_sess('filterColumn')
     filterValue = @_sess('filterValue')
@@ -255,7 +253,6 @@ class @IronTableController extends RouteController
       select[dataKey] =
         $regex: ".*#{filterValue}.*"
         $options: 'i'
-    #@selectVar.set(select)
     select
 
 
@@ -293,10 +290,12 @@ class @IronTableController extends RouteController
         dataKey = col.dataKey or col.sortKey or key
         if not col.hide?()
           value = @valueFromRecord(key, col, record)
+          if col.display?
+            value = col.display(value, record, @params)
           colData.push
             template     : col.template
             record       : record  # Link to full record if we need it
-            value        : col.display?(value, record, @params) or value
+            value        : value
             aLink        : col.link?(value, record)
             title        : col.title?(value, record) or col.title
             column       : col
