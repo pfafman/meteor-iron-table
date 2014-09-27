@@ -27,7 +27,7 @@ class @IronTableCollection extends Meteor.Collection
 
         Meteor.publish @publicationName(), (select, sort, limit, skip) ->
           
-          if @publishCounts
+          if countName
             publishCount @, countName, collection.find(select),
               noReady: true 
 
