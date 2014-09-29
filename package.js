@@ -1,6 +1,6 @@
 Package.describe({
   summary: 'Paging Table for IronRouter and Meteor',
-  version: "0.4.13",
+  version: "0.5.0",
   git: "https://github.com/pfafman/meteor-iron-table.git"
 });
 
@@ -32,7 +32,11 @@ Package.on_use(function (api, where) {
     'client/ironTable.less',
     'client/ironTable.coffee',
     'client/ironTableForm.html',
-    'client/ironTableForm.coffee'
+    'client/ironTableForm.coffee',
+    'client/helpers/ironTableCheckbox.html',
+    'client/helpers/ironTableCheckbox.coffee',
+    'client/helpers/ironTableSelect.html',
+    'client/helpers/ironTableSelect.coffee',
     ]
     , 'client');
 

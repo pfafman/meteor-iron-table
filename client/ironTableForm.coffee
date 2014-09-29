@@ -1,4 +1,8 @@
 
+capitalize = (string) ->
+   string.charAt(0).toUpperCase() + string.substring(1).toLowerCase()
+  
+
 Template.ironTableFormItem.rendered = ->
   #console.log("ironTableFormItem rendered")
   $('[rel="tooltip"]').tooltip()
@@ -8,3 +12,15 @@ Template.ironTableFormItem.helpers
   textArea: ->
     @displayType is 'textarea'
 
+
+  inputTemplate: ->
+    console.log("inputTemplate", @)
+    rtn = 'ironTableFormInput'
+    switch @displayType
+      when 'textarea', 'select'
+        type = capitalize(@displayType)
+        rtn = "ironTableForm#{type}"
+      else
+        rtn = 'ironTableFormInput'
+    console.log('inputTemplate', rtn)
+    rtn

@@ -1,7 +1,7 @@
 
 <template name='ironTableForm'>
   {{#each columns}}
-      {{> ironTableFormItem}}
+    {{> ironTableFormItem}}
   {{/each}}
 </template>
 
@@ -9,26 +9,59 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="{{key}}">{{header}}</label>
     <div class="col-sm-10">
-      {{#if textArea}}
-        <textarea class="form-control hi" name="{{key}}" rows="5"
-          required="{{required}}"
-          autofocus="{{autofocus}}"
-          placeholder="{{placeholder}}"
-          title="{{tooltip}}" rel='tooltip' data-placement="right"
-          disabled="{{static}}">{{{value}}}</textarea>
-      {{else}}
-        <input type="{{displayType}}" class="form-control hi" name="{{key}}"
-          value="{{value}}"
-          required="{{required}}"
-          autofocus="{{autofocus}}"
-          placeholder="{{placeholder}}"
-          checked="{{checked}}"
-          title="{{tooltip}}" rel='tooltip' data-placement="right"
-          disabled="{{static}}" />
-      {{/if}}
+      {{> UI.dynamic template=inputTemplate }}
       {{#if helpText}}
         <span class="help-block">{{helpText}}</span>
       {{/if}}
     </div>
   </div>
 </template>
+
+
+<template name="ironTableFormInput">
+  <input 
+    type="{{displayType}}" 
+    class="form-control hi" 
+    name="{{key}}"
+    value="{{value}}"
+    required="{{required}}"
+    autofocus="{{autofocus}}"
+    placeholder="{{placeholder}}"
+    checked="{{checked}}"
+    title="{{tooltip}}" 
+    rel='tooltip' 
+    data-placement="right"
+    disabled="{{static}}" />
+</template>
+
+
+<template name="ironTableFormTextarea">
+  <textarea 
+    class="form-control hi" 
+    name="{{key}}" 
+    rows="5"
+    required="{{required}}"
+    autofocus="{{autofocus}}"
+    placeholder="{{placeholder}}"
+    title="{{tooltip}}" 
+    rel='tooltip' 
+    data-placement="right"
+    disabled="{{static}}">{{{value}}}</textarea>
+</template>
+
+
+<template name="ironTableFormSelect">
+  <select 
+    class="form-control input-sm" 
+    name="{{key}}"
+    required="{{required}}"
+    autofocus="{{autofocus}}"
+    placeholder="{{placeholder}}"
+    title="{{tooltip}}" rel='tooltip' 
+    data-placement="right"
+    disabled="{{static}}" >
+    {{> ironTableOptions}}
+  </select>
+</template>
+
+

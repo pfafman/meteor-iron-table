@@ -292,7 +292,12 @@ class @IronTableController extends RouteController
           value = @valueFromRecord(key, col, record)
           if col.display?
             value = col.display(value, record, @params)
+          if col.type is 'boolean' and not col.template?
+            col.template = 'ironTableCheckbox'
+          else if col.type is 'select' and not col.template?
+            col.template = 'ironTableSelect'
           colData.push
+            type         : col.type
             template     : col.template
             record       : record  # Link to full record if we need it
             value        : value
@@ -300,6 +305,7 @@ class @IronTableController extends RouteController
             title        : col.title?(value, record) or col.title
             column       : col
             dataKey      : dataKey
+            select       : col.select
 
 
       recordsData.push

@@ -1,0 +1,24 @@
+
+<template name="ironTableSelect">
+  <div class="select">
+  {{#if doEdit}}
+    <select class="form-control input-sm">
+      {{> ironTableOptions}}
+    </select>
+  {{else}}
+    <div class="select-view">
+      {{getValue}}
+    </div>
+  {{/if}}
+  </div>
+</template>
+
+<template name="ironTableOptions">
+  {{#each options}}
+    {{> ironTableOption}}
+  {{/each}}
+</template>
+
+<template name="ironTableOption">
+  <option value="{{key}}" {{selected}}>{{val}}</option>
+</template>
