@@ -90,7 +90,7 @@ Template.ironTableHeading.helpers
     getCurrentIronTableController()?.showBackButton
 
   showNewButton: ->
-    getCurrentIronTableController()?.showNewButton
+    getCurrentIronTableController()?.showNewButton?() or getCurrentIronTableController()?.showNewButton is true
 
   newRecordRoute: ->
     getCurrentIronTableController()?.newRecordRoute
