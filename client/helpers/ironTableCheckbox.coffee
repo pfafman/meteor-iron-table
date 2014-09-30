@@ -23,7 +23,7 @@ Template.ironTableCheckbox.events
     #console.log('mouseleave')
     tmpl.active.set(false)
 
-  "mouseleave .check-mark-checkbox": (e) ->
+  "mouseleave .check-mark-checkbox": (e, tmpl) ->
     #console.log('mouseleave checkbox')
     tmpl.active.set(false)
 
