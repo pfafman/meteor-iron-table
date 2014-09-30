@@ -32,6 +32,13 @@
     rel='tooltip' 
     data-placement="right"
     disabled="{{static}}" />
+    {{#if static}}
+    <input 
+      type="hidden" 
+      name="{{key}}"
+      value="{{value}}"
+    />
+    {{/if}}
 </template>
 
 
