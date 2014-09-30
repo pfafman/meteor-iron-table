@@ -5,7 +5,8 @@ Template.ironTableSelect.rendered = ->
 
 Template.ironTableSelect.helpers
   doEdit: ->
-    @column?.contenteditable? and Template.instance().active?.get()
+    console.log('doEdit', @column?.contenteditable, Template.instance().active?.get())
+    @column?.contenteditable and Template.instance().active?.get()
 
   getValue: ->
     @select?[@value] or @value
@@ -34,22 +35,18 @@ Template.ironTableSelect.events
 
   "click .select-view": (e, tmpl) ->
     if Template.parentData(1).editOk
-      console.log('view clicked', @record._id, e, tmpl)
+      console.log('select clicked', @record._id, e, tmpl)
       tmpl.active.set(true)
-      #Session.set("ironTableActiveRecordId", @record._id)
-
+      
   "mouseenter .select": (e, tmpl) ->
     #console.log('mouseenter')
 
   "mouseleave .select": (e, tmpl) ->
-    #console.log('mouseleave')
-    Template.instance().active.set(false)
-    #Session.set("ironTableActiveRecordId", null)
-
+    tmpl.active.set(false)
+    
   "mouseleave .select-div": (e, tmpl) ->
     tmpl.active.set(false)
-    #Session.set("ironTableActiveRecordId", null)
-
+    
   "change select": (e, tmpl) ->
     e.preventDefault()
     e.stopImmediatePropagation()
