@@ -1,5 +1,5 @@
 
-Template.ironTableSelect.rendered = ->
+Template.ironTableSelect.created = ->
   @active = new ReactiveVar(false)
 
 
