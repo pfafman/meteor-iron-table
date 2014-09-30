@@ -14,7 +14,6 @@ Template.ironTableFormItem.helpers
 
 
   inputTemplate: ->
-    console.log("inputTemplate", @)
     rtn = 'ironTableFormInput'
     switch @displayType
       when 'textarea', 'select'

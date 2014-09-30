@@ -323,7 +323,7 @@ class @IronTableController extends RouteController
 
 
   haveData: ->
-    @recordCount() > 0 or @records().length > 0
+    @recordCount() > 0 or (not @collection().publishCounts and @records().length > 0)
 
 
   recordDisplayStop: ->
