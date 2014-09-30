@@ -481,12 +481,12 @@ class @IronTableController extends RouteController
 
   updateRecord: (yesNo, rec) =>
     @errorMessage = ''
-    if yesNo
+    if yesNo and @collection().editOk(rec)
       @updateThisRecord(@_sess("currentRecordId"), rec)
 
 
   updateThisRecord: (recId, rec, type="update") =>
-    if @collection().editOk(rec) and @checkFields(rec, type)
+    if @checkFields(rec, type)
       if @collection().methodOnUpdate
         Meteor.call @collection().methodOnUpdate, recId, rec, (error) =>
           if error

@@ -5,7 +5,6 @@ Template.ironTableSelect.created = ->
 
 Template.ironTableSelect.helpers
   doEdit: ->
-    console.log('doEdit', @column?.contenteditable, Template.instance().active?.get())
     @column?.contenteditable and Template.instance().active?.get()
 
   getValue: ->
@@ -50,14 +49,11 @@ Template.ironTableSelect.events
   "change select": (e, tmpl) ->
     e.preventDefault()
     e.stopImmediatePropagation()
-    if Template.parentData(1).editOk
-      console.log("change select value", @dataKey, @value, $(e.target).val())
-
-      if Router.current?()?.classID is "IronTableController"
-        console.log("Submit Value Change", @dataKey, @value, '->', $(e.target).val())
-        data = {}
-        data[@dataKey] = $(e.target).val()
-        Router.current().updateThisRecord?(@record._id, data, 'inlineUpdate')
+    if Template.parentData(1).editOk and Router.current?()?.classID is "IronTableController"
+      console.log("Submit Value Change", @dataKey, @value, '->', $(e.target).val())
+      data = {}
+      data[@dataKey] = $(e.target).val()
+      Router.current().updateThisRecord?(@record._id, data, 'inlineUpdate')
 
 
 
