@@ -445,6 +445,8 @@ class @IronTableController extends RouteController
         dataKey = col.dataKey or col.sortKey or key
         localCol = _.clone(col)
         if col[type]?(record) or (col[type] is true) or col["staticOn_#{type}"]
+          if not col.type?
+            col.type = 'text'
           localCol.displayType = col.type
           localCol.checkbox = false
           localCol.checked = false
@@ -484,12 +486,12 @@ class @IronTableController extends RouteController
 
   updateRecord: (yesNo, rec) =>
     @errorMessage = ''
-    if yesNo # and @collection().editOk(rec) # TODO: Fix this????
+    if yesNo
       @updateThisRecord(@_sess("currentRecordId"), rec)
 
 
   updateThisRecord: (recId, rec, type="update") =>
-    if @checkFields(rec, type)
+    if @checkFields(rec, type) and @collection().editOk(rec) 
       if @collection().methodOnUpdate
         Meteor.call @collection().methodOnUpdate, recId, rec, (error) =>
           if error

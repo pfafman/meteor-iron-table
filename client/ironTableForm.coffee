@@ -21,5 +21,4 @@ Template.ironTableFormItem.helpers
         rtn = "ironTableForm#{type}"
       else
         rtn = 'ironTableFormInput'
-    console.log('inputTemplate', rtn)
     rtn
