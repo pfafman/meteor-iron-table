@@ -131,6 +131,9 @@ class @IronTableController extends RouteController
   getTableTitle: ->
     @tableTitle or @_collectionName()
 
+  getSubTitle: ->
+    @subTitle
+
   _collectionName: ->
     @collectionName or @collection()._name
 

@@ -83,6 +83,9 @@ Template.ironTableHeading.helpers
   tableTitle: ->
     getCurrentIronTableController()?.getTableTitle()
 
+  subTitle: ->
+    getCurrentIronTableController()?.getSubTitle()
+
   doDownloadLink: ->
     getCurrentIronTableController()?.doDownloadLink
 
