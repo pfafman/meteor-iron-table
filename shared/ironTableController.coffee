@@ -444,7 +444,7 @@ class @IronTableController extends RouteController
       for key, col of @_cols()
         dataKey = col.dataKey or col.sortKey or key
         localCol = _.clone(col)
-        if col[type]?(record) or (col[type] is true) or col["staticOn_#{type}"]
+        if col[type]?(record) or (col[type] is true) or col["staticOn_#{type}"] or col["hiddenOn_#{type}"]
           if col["hiddenOn_#{type}"]
             col.type = 'hidden'
           if not col.type?
@@ -468,6 +468,10 @@ class @IronTableController extends RouteController
 
           if col["staticOn_#{type}"]
             localCol.static = true
+            localCol.value = value
+
+          if col["hiddenOn_#{type}"]
+            localCol.hidden = true
             localCol.value = value
 
           localCol.header = (col.header || key).capitalize()
