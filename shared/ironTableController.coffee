@@ -441,7 +441,7 @@ class @IronTableController extends RouteController
       for key, col of @_cols()
         dataKey = col.dataKey or col.sortKey or key
         localCol = _.clone(col)
-        if col[type]?() or (col[type] is true) or col["staticOn_#{type}"]
+        if col[type]?(record) or (col[type] is true) or col["staticOn_#{type}"]
           localCol.displayType = col.type
           localCol.checkbox = false
           localCol.checked = false
