@@ -216,13 +216,13 @@ Template.ironTableRecords.events
 
 Template.ironTableRow.rendered = ->
   $('[rel="tooltip"]').tooltip()
+  $('[rel="popover"]').popover()
 
 
 Template.ironTableRow.helpers
   extraControls: ->
-    if currentController = getCurrentIronTableController()
-      if currentController.extraControlsTemplate?
-        Template[currentController.extraControlsTemplate] #(@)
+    if getCurrentIronTableController()?.extraControlsTemplate?
+      Template[getCurrentIronTableController().extraControlsTemplate]
 
   templateRow: ->
     Template[@template]
@@ -237,6 +237,22 @@ Template.ironTableRow.helpers
   contenteditable: ->
     @column.contenteditable and Template.parentData(1).editOk
 
+  showJSON: ->
+    getCurrentIronTableController()?.showJSON and @colData?[0]?.record?
+
+  json: ->
+    if @colData?[0]?.record?
+      '<pre>' + JSON.stringify(@colData[0].record, null, 2) + '</pre>'
+
+
+  ironPopupTemplate: ->
+    """ 
+    <div class="popover iron-table-popover" role="tooltip">
+    <div class="arrow"></div>
+    <h3 class="popover-title"></h3>
+    <div class="popover-content"></div>
+    </div>
+    """
 
 Template.ironTableRow.events
 

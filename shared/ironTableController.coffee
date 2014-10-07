@@ -437,6 +437,8 @@ class @IronTableController extends RouteController
     else
       record = null
 
+    if @extraFormData?
+      _.extend(record, @extraFormData(type))
 
     if @formTemplate is 'ironTableForm'
       recordData = []
@@ -484,10 +486,13 @@ class @IronTableController extends RouteController
       record
 
 
+  editRecordTitle: ->
+    'Edit ' + @_recordName().capitalize()
+
 
   editRecord: (_id) ->
     @_sess("currentRecordId", _id)
-    CoffeeModal.form(@formTemplate, @formData('edit', _id), @updateRecord, 'Edit ' + @_recordName().capitalize())
+    CoffeeModal.form(@formTemplate, @formData('edit', _id), @updateRecord, @editRecordTitle())
 
 
   updateRecord: (yesNo, rec) =>
