@@ -17,6 +17,7 @@ Template.ironTable.rendered = ->
   $('[rel="tooltip"]').tooltip('destroy')
   $('[rel="popover"]').popover('destroy')
   $('[rel="tooltip"]').tooltip()
+  $('[rel="popover"]').popover()
 
 Template.ironTable.destroyed = ->
   $('[rel="tooltip"]').tooltip('destroy')
