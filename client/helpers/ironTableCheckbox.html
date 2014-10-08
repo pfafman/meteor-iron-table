@@ -1,14 +1,14 @@
 
 <template name="ironTableCheckbox">
   <div class="check-mark">
-  {{#if doEdit}}
-    <input class="check-mark-checkbox" type="checkbox" checked="{{value}}">
-  {{else}}
-    {{#if value}}
-      <i class="fa fa-check-square-o"></i>
+    {{#if doEdit}}
+      <input class="check-mark-checkbox" type="checkbox" checked="{{value}}">
     {{else}}
-      <i class="fa fa-square-o"></i>
+      {{#if value}}
+        <i class="fa {{checkedMark}}"></i>
+      {{else}}
+        <i class="fa {{notCheckMark}}"></i>
+      {{/if}}
     {{/if}}
-  {{/if}}
   </div>
 </template>

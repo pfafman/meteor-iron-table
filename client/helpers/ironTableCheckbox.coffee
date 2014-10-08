@@ -6,14 +6,21 @@ Template.ironTableCheckbox.rendered = ->
 
 Template.ironTableCheckbox.helpers
   doEdit: ->
-    @column?.contenteditable? and Template.instance().active?.get()
+    #console.log('doEdit', @column?.contenteditable, Template.instance().active?.get())
+    Template.instance().active?.get() and @column?.contenteditable
 
+  checkedMark: ->
+    @column?.checkedMark or 'fa-check-square-o'
+
+  notCheckMark: ->
+    if not @column?.blankOnNotChecked
+      @column?.notCheckMark or 'fa-square-o'
 
 Template.ironTableCheckbox.events
 
   "click .check-mark": (e, tmpl) ->
     if Template.parentData(1).editOk
-      #console.log('check mark click', @record._id, e)
+      console.log('check mark click', @record._id, e)
       tmpl.active.set(true)
 
   "mouseenter .check-mark": (e, tmpl) ->
