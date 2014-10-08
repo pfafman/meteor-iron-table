@@ -527,7 +527,10 @@ class @IronTableController extends RouteController
 
 
   newRecord: ->
-    CoffeeModal.form(@formTemplate, @formData('insert'), @insertRecord, 'New ' + @_recordName().capitalize())
+    if @newRecordPath?
+      Router.go(@newRecordPath)
+    else
+      CoffeeModal.form(@formTemplate, @formData('insert'), @insertRecord, 'New ' + @_recordName().capitalize())
 
 
   insertRecord: (yesNo, rec) =>
