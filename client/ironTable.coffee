@@ -204,6 +204,9 @@ Template.ironTableNav.helpers
   recordsName: ->
     getCurrentIronTableController()?.getRecordsName()
 
+  showPager: ->
+    getCurrentIronTableController()?.recordCount() > getCurrentIronTableController()?.increment
+
 
 Template.ironTableNav.events
 

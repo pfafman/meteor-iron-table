@@ -168,6 +168,7 @@
 
 
 <template name="ironTableNav">
+  {{#if showPager}}
     <div class="iron-table-pager-display">
         <strong>Displaying {{recordDisplayStart}} - {{recordDisplayStop}} out of {{recordCount}} {{recordsName}}</strong>
     </div>
@@ -182,6 +183,7 @@
             <i class="fa fa-chevron-right"></i>
         </button>
     </div>
+  {{/if}}
 </template>
 
 
