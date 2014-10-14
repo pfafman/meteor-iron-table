@@ -23,17 +23,20 @@
           {{#if haveData}}
 
             {{> ironTableNav}}
-            <table class="table table-striped table-hover table-condensed">
-                <thead>
-                    <tr>
-                        {{> ironTableHeaders}}
-                    </tr>
-                </thead>
+            <div class="clearfix"></div>
+            <div class="table-div">
+              <table class="table table-striped table-hover table-condensed">
+                  <thead>
+                      <tr>
+                          {{> ironTableHeaders}}
+                      </tr>
+                  </thead>
 
-                <tbody class="{{rowLink}}" data-link="{{dataLink}}">
-                    {{> ironTableRecords}}
-                </tbody>
-            </table>
+                  <tbody class="{{rowLink}}" data-link="{{dataLink}}">
+                      {{> ironTableRecords}}
+                  </tbody>
+              </table>
+            </div>
 
           {{else}}
               <div class="well well-sm"><i>No {{recordsName}}!</i></div>
@@ -61,17 +64,20 @@
             {{#if haveData}}
 
                 {{> ironTableNav}}
-                <table class="table table-striped table-hover table-condensed clearfix">
-                    <thead>
-                        <tr>
-                            {{> ironTableHeaders}}
-                        </tr>
-                    </thead>
+                <div class="clearfix"></div>
+                <div class="table-div">
+                  <table class="table table-striped table-hover table-condensed clearfix">
+                      <thead>
+                          <tr>
+                              {{> ironTableHeaders}}
+                          </tr>
+                      </thead>
 
-                    <tbody  class="{{rowLink}}" data-link="{{dataLink}}">
-                        {{> ironTableRecords}}
-                    </tbody>
-                </table>
+                      <tbody  class="{{rowLink}}" data-link="{{dataLink}}">
+                          {{> ironTableRecords}}
+                      </tbody>
+                  </table>
+                </div>
 
             {{else}}
                 <div class="well well-sm"><i>No {{recordsName}}!</i></div>
