@@ -284,7 +284,7 @@ class @IronTableController extends RouteController
     @cursor = @collection()?.find @_select(),
       sort: @sort()
       limit: @limit()
-    @afterCursor?()
+    @afterCursor?(@cursor)
     @cursor.fetch()
 
 
