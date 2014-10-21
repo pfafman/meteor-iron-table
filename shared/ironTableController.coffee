@@ -24,8 +24,9 @@ class @IronTableController extends RouteController
   defaultSelect   : {}
   showFilter      : false
   errorMessage    : ''
-
-  _subscriptionComplete = false
+  cursor          : null
+  
+  _subscriptionComplete: false
 
 
   constructor: ->
@@ -280,10 +281,11 @@ class @IronTableController extends RouteController
 
 
   records: ->
-    @collection()?.find @_select(),
+    @cursor = @collection()?.find @_select(),
       sort: @sort()
       limit: @limit()
-    .fetch()
+    @afterCursor?()
+    @cursor.fetch()
 
 
   recordsData: ->
@@ -499,7 +501,7 @@ class @IronTableController extends RouteController
 
   updateRecord: (yesNo, rec) =>
     @errorMessage = ''
-    if yesNo and @collection().editOk(rec) 
+    if yesNo and @collection().editOk(rec)
       @updateThisRecord(@_sess("currentRecordId"), rec)
 
 
