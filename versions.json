@@ -138,11 +138,15 @@
     ],
     [
       "pfafman:coffee-alerts",
-      "0.3.1"
+      "0.4.0"
     ],
     [
       "pfafman:coffee-modal",
       "0.3.8"
+    ],
+    [
+      "pfafman:font-awesome-4",
+      "4.2.0_1"
     ],
     [
       "random",
