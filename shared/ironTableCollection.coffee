@@ -1,6 +1,6 @@
 
 
-class @IronTableCollection extends Mongo.Collection
+class @IronTableCollection extends Meteor.Collection
   classID: 'IronTableCollection'
   
   recordName: 'record'

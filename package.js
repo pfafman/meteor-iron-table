@@ -12,6 +12,7 @@ Package.on_use(function (api, where) {
     [
     'deps',
     'minimongo',
+    'mongo',
     'mongo-livedata',
     'templating',
     'handlebars',
