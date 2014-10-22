@@ -1,6 +1,6 @@
 
 
-class @IronTableCollection extends Meteor.Collection
+class @IronTableCollection extends Mongo.Collection
   classID: 'IronTableCollection'
   
   recordName: 'record'
@@ -29,9 +29,9 @@ class @IronTableCollection extends Meteor.Collection
           
           if countName
             publishCount @, countName, collection.find(select),
-              noReady: true 
+              noReady: true
 
-          collection.find select, 
+          collection.find select,
             sort: sort
             limit: limit
             skip: skip
@@ -73,11 +73,11 @@ class @IronTableCollection extends Meteor.Collection
     false
 
 
-  deleteOk: (record) -> 
+  deleteOk: (record) ->
     false
 
 
-  editOk: (record) -> 
+  editOk: (record) ->
     false
 
 
