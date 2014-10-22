@@ -234,6 +234,8 @@ Template.ironTableRow.rendered = ->
 Template.ironTableRow.destroyed = ->
   $('[rel="tooltip"]').tooltip('destroy')
   $('[rel="popover"]').popover('destroy')
+  $('[rel="tooltip"]').tooltip()
+  $('[rel="popover"]').popover()
 
 
 Template.ironTableRow.helpers
@@ -263,7 +265,7 @@ Template.ironTableRow.helpers
 
 
   ironPopupTemplate: ->
-    """ 
+    """
     <div class="popover iron-table-popover" role="tooltip">
     <div class="arrow"></div>
     <h3 class="popover-title"></h3>
