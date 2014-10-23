@@ -1,6 +1,6 @@
 
 capitalize = (string) ->
-   string.charAt(0).toUpperCase() + string.substring(1).toLowerCase()
+  string.charAt(0).toUpperCase() + string.substring(1).toLowerCase()
   
 
 Template.ironTableFormItem.rendered = ->
@@ -16,7 +16,7 @@ Template.ironTableFormItem.helpers
   inputTemplate: ->
     rtn = 'ironTableFormInput'
     switch @displayType
-      when 'textarea', 'select'
+      when 'textarea', 'select', 'checkbox'
         type = capitalize(@displayType)
         rtn = "ironTableForm#{type}"
       else
