@@ -5,7 +5,7 @@ Package.describe({
 });
 
 Package.on_use(function (api, where) {
-  api.versionsFrom("METEOR@0.9.0");
+  api.versionsFrom("METEOR@1.0");
 
   // Client
   api.use(
