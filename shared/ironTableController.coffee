@@ -36,12 +36,13 @@ class @IronTableController extends RouteController
 
   reset: ->
     #console.log("reset")
-    @_sess("recordCount", "...")
-    @_sessDefault('skip', 0)
-    @_sessDefault('sortColumn', @sortColumn)
-    @_sessDefault('sortDirection', @sortDirection)
-    @_sessDefault('filterColumn', null)
-    @_sessDefault('filterValue', '')
+    if Meteor.isClient
+      @_sess("recordCount", "...")
+      @_sessDefault('skip', 0)
+      @_sessDefault('sortColumn', @sortColumn)
+      @_sessDefault('sortDirection', @sortDirection)
+      @_sessDefault('filterColumn', null)
+      @_sessDefault('filterValue', '')
     @fetchingCount = null
     @errorMessage = ''
 
@@ -123,6 +124,7 @@ class @IronTableController extends RouteController
   onRun: ->
     #console.log("onRun", @_collectionName())
     @reset()
+    @next()
 
 
   onStop: ->
@@ -231,8 +233,8 @@ class @IronTableController extends RouteController
     rtn
 
 
-  waitOn: ->
-    #console.log('waitOn')
+  subscriptions: ->   # was waitOn
+    #console.log('subscriptions')
     @subscribe()
 
 
