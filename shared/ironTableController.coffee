@@ -81,7 +81,7 @@ class @IronTableController extends RouteController
     Router.map ->
       @route editRouteName,
         path: editRoutePath
-        wait: ->
+        waitOn: ->
           Meteor.subscribe(@collection()._name + 'OneRecord', @params._id)
         data: ->
           data = @collection()?.findOne
