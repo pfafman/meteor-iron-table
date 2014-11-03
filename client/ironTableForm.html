@@ -23,26 +23,32 @@
 
 
 <template name="ironTableFormInput">
-  <input 
-    type="{{displayType}}" 
-    class="form-control" 
-    name="{{key}}"
-    value="{{value}}"
-    required="{{required}}"
-    autofocus="{{autofocus}}"
-    placeholder="{{placeholder}}"
-    checked="{{checked}}"
-    title="{{tooltip}}" 
-    rel='{{#if tooltip}}tooltip{{/if}}' 
-    data-placement="{{#if tooltip}}right{{/if}}"
-    disabled="{{static}}" />
-    {{#if static}}
+  {{#if static}}
+    <label class="form-control" disabled=true>
+      {{value}}
+    </label>
+  {{else}}
     <input 
-      type="hidden" 
+      type="{{displayType}}" 
+      class="form-control" 
       name="{{key}}"
       value="{{value}}"
-    />
-    {{/if}}
+      required="{{required}}"
+      autofocus="{{autofocus}}"
+      placeholder="{{placeholder}}"
+      checked="{{checked}}"
+      title="{{tooltip}}" 
+      rel='{{#if tooltip}}tooltip{{/if}}' 
+      data-placement="{{#if tooltip}}right{{/if}}"
+      disabled="{{static}}" />
+      {{#if static}}
+        <input 
+          type="hidden" 
+          name="{{key}}"
+          value="{{value}}"
+        />
+      {{/if}}
+  {{/if}}
 </template>
 
 <template name="ironTableFormCheckbox">

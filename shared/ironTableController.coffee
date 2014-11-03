@@ -477,10 +477,14 @@ class @IronTableController extends RouteController
           if col["staticOn_#{type}"]
             localCol.static = true
             localCol.value = value
+            if col?.valueFunc?
+              localCol.realValue = record[key]
 
           if col["hiddenOn_#{type}"]
             localCol.hidden = true
             localCol.value = value
+            if col?.valueFunc?
+              localCol.realValue = record[key]
 
           localCol.header = (col.header || key).capitalize()
           localCol.key = key
