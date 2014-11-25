@@ -3,6 +3,7 @@
 # Iron Table Controller
 #
 
+DEBUG = false
 
 # Capitalize first letter in string
 String::capitalize = ->
@@ -77,7 +78,7 @@ class @IronTableController extends RouteController
     editRoutePath = @route.originalPath.replace(/\/[^\/]+$/ , '') + "/edit/:_id"
     editRouteName = 'edit' + @collection()._name.capitalize()
     @editRouteName = editRouteName
-    console.log("setup edit route", @editRouteName)
+    console.log("setup edit route", @editRouteName) if DEBUG
     Router.map ->
       @route editRouteName,
         path: editRoutePath
@@ -256,11 +257,18 @@ class @IronTableController extends RouteController
     filterColumn = @_sess('filterColumn')
     filterValue = @_sess('filterValue')
     col = @_cols()[filterColumn]
-    if filterColumn and filterColumn isnt "_none_" and filterValue and col and filterValue isnt ''
+    if filterColumn and filterColumn isnt "_none_"
       dataKey = col.dataKey or col.sortKey or filterColumn
-      select[dataKey] =
-        $regex: ".*#{filterValue}.*"
-        $options: 'i'
+      if col.type is 'boolean'
+        if filterValue
+          select[dataKey] = filterValue
+        else
+          select[dataKey] =
+            $ne: true
+      else if filterValue and col and filterValue isnt ''
+        select[dataKey] =
+          $regex: ".*#{filterValue}.*"
+          $options: 'i'
     select
 
 
@@ -578,6 +586,8 @@ class @IronTableController extends RouteController
 
 
   setFilterValue: (value) ->
+    console.log("setFilterValue", value) if DEBUG
+    
     if @_sess('filterValue') isnt value
       @_sess('filterValue', value)
       @_sess('skip', 0)
@@ -586,3 +596,19 @@ class @IronTableController extends RouteController
 
   getFilterValue: ->
     @_sess('filterValue')
+
+
+  getSelectedFilterType: ->
+    filterColumn = @_sess('filterColumn')
+    if filterColumn?
+      switch (@_cols()?[filterColumn]?.type)
+        when 'boolean'
+          'checkbox'
+        else
+          'text'
+    else
+      'text'
+
+
+
+

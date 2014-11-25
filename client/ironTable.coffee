@@ -136,7 +136,7 @@ Template.ironTableHeading.events
         CoffeeAlerts.error("Error getting CSV to download")
         console.log("Error getting CSV", error)
       else if csv
-        console.log("Doing saveAs for CSV")
+        console.log("Doing saveAs for CSV") if DEBUG
         blob = new Blob [csv],
           type: "text/csv"
         saveAs?(blob, filename)
@@ -160,6 +160,10 @@ Template.ironTableFilter.helpers
   filterValue: ->
     getCurrentIronTableController()?.getFilterValue()
 
+  filterType: ->
+    getCurrentIronTableController()?.getSelectedFilterType()
+      
+
 
 Template.ironTableFilter.events
 
@@ -173,12 +177,16 @@ Template.ironTableFilter.events
 
   "keyup, change #filter-value": (e, tmpl) ->
     #e.preventDefault()
-    #console.log("filter-value", e.target.value, $("#filter-value").val())
+    console.log("filter-value", $(e.target).is(':checked'), e.target.value) if DEBUG
     if not currentController = getCurrentIronTableController()
       CoffeeAlerts.error("Internal Error: Could not get controller")
       return false
+    value = e.target.value
+    if getCurrentIronTableController()?.getSelectedFilterType() is 'checkbox'
+      value = $(e.target).is(':checked')
+
     Meteor.defer ->
-      currentController.setFilterValue(e.target.value)
+      currentController.setFilterValue(value)
 
   "submit form": (e) ->
     e.preventDefault()
@@ -221,8 +229,7 @@ Template.ironTableNav.events
 
 Template.ironTableRecords.events
   'mouseleave, mouseexit tr': ->
-    if DEBUG
-      console.log('mouse left row')
+    console.log('mouse left row') if DEBUG
     Session.set("ironTableActiveRecordId", null)
 
 
@@ -276,15 +283,12 @@ Template.ironTableRow.helpers
 Template.ironTableRow.events
 
   "click .iron-table-value": (e, tmpl) ->
-    if DEBUG
-      console.log("Click", @, e.target)
+    console.log("Click", @, e.target) if DEBUG
 
   "input .iron-table-value": (e) ->
-    if DEBUG
-      console.log("html:'#{$(e.target).html()}'")
+    console.log("html:'#{$(e.target).html()}'") if DEBUG
     newValue = $(e.target).html().trim()
-    if DEBUG
-      console.log("input value", newValue)
+    console.log("input value", newValue) if DEBUG
     if @column.type is 'number' and isNaN(newValue)
       console.log("input Nan")
       $(e.target).css('outline-color', 'red')
@@ -299,8 +303,7 @@ Template.ironTableRow.events
       newValue = $(e.target).html().trim()
       if @column.type is 'number'
         newValue = Number(newValue)
-        if DEBUG
-          console.log('number', newValue)
+        console.log('number', newValue) if DEBUG
         if isNaN(newValue)
           console.log("bad number")
           $(e.target).html(@value)
@@ -311,7 +314,7 @@ Template.ironTableRow.events
           CoffeeAlerts.error("Internal Error: Could not get controller")
         else
           $(e.target).html('')
-          console.log("Submit Value Change", @dataKey, @value, '->', newValue)
+          console.log("Submit Value Change", @dataKey, @value, '->', newValue) if DEBUG
           data = {}
           data[@dataKey] = newValue
           currentController.updateThisRecord(@record._id, data, 'inlineUpdate')
@@ -335,3 +338,4 @@ Template.ironTableHeader.events
 Template.ironTableRecords.helpers
   records: ->
     getCurrentIronTableController()?.recordsData()
+
