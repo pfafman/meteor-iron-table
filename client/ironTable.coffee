@@ -162,7 +162,10 @@ Template.ironTableFilter.helpers
 
   filterType: ->
     getCurrentIronTableController()?.getSelectedFilterType()
-      
+
+  checked: ->
+    if getCurrentIronTableController()?.getSelectedFilterType() and getCurrentIronTableController()?.getFilterValue()
+      'checked'
 
 
 Template.ironTableFilter.events
