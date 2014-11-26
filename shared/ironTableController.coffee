@@ -339,6 +339,11 @@ class @IronTableController extends RouteController
   haveData: ->
     @recordCount() > 0 or (not @collection().publishCounts and @records().length > 0)
 
+  docsReady: ->
+    if @collection().publishCounts
+      @recordCount()?
+    else
+      @ready()
 
   recordDisplayStop: ->
     @skip() + @records().length

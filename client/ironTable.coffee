@@ -32,7 +32,7 @@ Template.ironTable.helpers
     getCurrentIronTableController()?.tableClass
 
   loading: ->
-    not getCurrentIronTableController()?.ready() and not getCurrentIronTableController()?.haveData()
+    not getCurrentIronTableController()?.docsReady() and not getCurrentIronTableController()?.haveData()
 
   haveData: ->
     getCurrentIronTableController()?.haveData()
