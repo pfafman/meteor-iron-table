@@ -520,6 +520,8 @@ class @IronTableController extends RouteController
 
   updateRecord: (yesNo, rec) =>
     @errorMessage = ''
+    if not rec._id?
+      rec._id = @_sess("currentRecordId")
     if yesNo and @collection().editOk(rec)
       @updateThisRecord(@_sess("currentRecordId"), rec)
 
