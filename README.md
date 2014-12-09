@@ -37,7 +37,7 @@ TODO:  Currently needs some TLC to get to work and I have not documented all the
 
 ## Demo
 
-    http://iron-table-test.meteor.com
+http://iron-table-test.meteor.com
 
 
 ## License
