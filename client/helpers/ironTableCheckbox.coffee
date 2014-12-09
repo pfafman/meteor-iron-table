@@ -1,6 +1,6 @@
 
 
-Template.ironTableCheckbox.rendered = ->
+Template.ironTableCheckbox.created = ->
   @active = new ReactiveVar(false)
 
 
@@ -22,7 +22,6 @@ Template.ironTableCheckbox.events
     if Template.parentData(1).editOk
       tmpl.active.set(true)
       #console.log('check mark click', @record._id, e, tmpl.active.get())
-      
 
   "mouseenter .check-mark": (e, tmpl) ->
     #console.log('mouseenter')
