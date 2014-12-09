@@ -50,3 +50,5 @@ Template.ironTableCheckbox.events
         data = {}
         data[@dataKey] = newValue
         Router.current().updateThisRecord?(@record._id, data, 'inlineUpdate')
+
+        
