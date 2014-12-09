@@ -1,6 +1,6 @@
 
 <template name="ironTableCheckbox">
-  <div class="check-mark">
+  <div class="check-mark {{#if column.contenteditable}}pointer{{/if}}">
     {{#if doEdit}}
       <input class="check-mark-checkbox" type="checkbox" checked="{{value}}">
     {{else}}
