@@ -11,7 +11,7 @@ Paging Table for IronRouter and Meteor.  Only downloads the current page to the 
     [sudo] npm install -g meteorite
 ```
 
-Note this is not on Atmosphere yet due to alpha nature.  I really want to re-write the whole thing to use more of Meteor and Iron Router 1.0+ featrue set.
+Note this is not on Atmosphere yet due to alpha nature.  I really want to re-write the whole thing to use more of Meteor and Iron Router 1.0+ feature set.
 
 You can add it if you want by editing/creating a meteor upper level smart.json file with a "git" entry:
 
