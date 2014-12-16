@@ -33,7 +33,7 @@ and then run meteorite to install.
 
 ##Usage
 
-TODO:  Currently needs some TLC to get to work and I have not documented all the steps.
+TODO:  Currently needs some TLC to get to work and I have not documented all the steps.  Look at the [test site code]() to get an idea of what this can do.
 
 ## Demo
 
