@@ -1,6 +1,6 @@
 Package.describe({
   summary: 'Paging Table for IronRouter and Meteor',
-  version: "0.7.3",
+  version: "0.7.5",
   git: "https://github.com/pfafman/meteor-iron-table.git"
 });
 
@@ -12,7 +12,6 @@ Package.on_use(function (api, where) {
     [
     'deps',
     'minimongo',
-    'mongo',
     'mongo-livedata',
     'templating',
     'handlebars',
@@ -52,6 +51,7 @@ Package.on_use(function (api, where) {
   api.use([
     'underscore',
     'coffeescript',
+    'mongo',
     'iron:router'
     ], ['client', 'server']);
 
