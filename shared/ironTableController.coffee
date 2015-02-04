@@ -537,6 +537,7 @@ class @IronTableController extends RouteController
             CoffeeAlerts.success(@_recordName() + " saved")
             @fetchRecordCount()
       else
+        delete rec._id
         @collection().update recId,
           $set: rec
         , (error, effectedCount) =>
