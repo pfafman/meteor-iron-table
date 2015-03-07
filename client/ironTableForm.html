@@ -27,6 +27,7 @@
     <label class="control-label" disabled=true>
       {{value}}
     </label>
+    <input type="hidden" name="{{key}}" value="{{value}}" />
   {{else}}
     <input 
       type="{{displayType}}" 
@@ -41,13 +42,6 @@
       rel='{{#if tooltip}}tooltip{{/if}}' 
       data-placement="{{#if tooltip}}right{{/if}}"
       disabled="{{static}}" />
-      {{#if static}}
-        <input 
-          type="hidden" 
-          name="{{key}}"
-          value="{{value}}"
-        />
-      {{/if}}
   {{/if}}
 </template>
 
