@@ -3,9 +3,13 @@ Template.ironTableSelect.created = ->
   @active = new ReactiveVar(false)
 
 
+Template.ironTableSelectSelect.rendered = ->
+  $('select').material_select()
+
+
 Template.ironTableSelect.helpers
   doEdit: ->
-    @column?.contenteditable and Template.instance().active?.get()
+    @column?.contenteditable #and Template.instance().active?.get()
 
   getValue: ->
     @select?[@value] or @value

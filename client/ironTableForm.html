@@ -9,14 +9,12 @@
   {{#if hidden}}
     <input type="hidden" name="{{key}}" value="{{value}}" />
   {{else}}
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="{{key}}">{{header}}</label>
-      <div class="col-sm-10">
-        {{> UI.dynamic template=inputTemplate }}
-        {{#if helpText}}
-          <span class="help-block">{{helpText}}</span>
-        {{/if}}
-      </div>
+    <div class="input-field">
+      <label for="{{key}}">{{header}}</label>
+      {{> UI.dynamic template=inputTemplate }}
+      {{#if helpText}}
+        <span class="help-block">{{helpText}}</span>
+      {{/if}}
     </div>
   {{/if}}
 </template>
@@ -31,16 +29,17 @@
   {{else}}
     <input 
       type="{{displayType}}" 
-      class="form-control" 
+      class="form-control {{#if tooltip}}tooltipped{{/if}}" 
       name="{{key}}"
+      id="{{key}}"
       value="{{value}}"
       required="{{required}}"
       autofocus="{{autofocus}}"
-      placeholder="{{placeholder}}"
+      placeholder="{{placeholderNOT}}"
       checked="{{checked}}"
-      title="{{tooltip}}" 
+      data-tooltip="{{tooltip}}" 
       rel='{{#if tooltip}}tooltip{{/if}}' 
-      data-placement="{{#if tooltip}}right{{/if}}"
+      data-position="{{#if tooltip}}right{{/if}}"
       disabled="{{static}}" />
   {{/if}}
 </template>
@@ -49,17 +48,18 @@
   <div class="checkbox">
     <label>
       <input 
-        class="iron-table-checkbox"
+        class="iron-table-checkbox {{#if tooltip}}tooltipped{{/if}}" 
         type="checkbox" 
         name="{{key}}"
+        id="{{key}}"
         value="{{value}}"
         required="{{required}}"
         autofocus="{{autofocus}}"
         placeholder="{{placeholder}}"
         checked="{{checked}}"
-        title="{{tooltip}}" 
+        data-tooltip="{{tooltip}}" 
         rel='{{#if tooltip}}tooltip{{/if}}' 
-        data-placement="{{#if tooltip}}right{{/if}}"
+        data-position="{{#if tooltip}}right{{/if}}"
         disabled="{{static}}" />
         {{#if static}}
         <input 
@@ -75,29 +75,31 @@
 
 <template name="ironTableFormTextarea">
   <textarea 
-    class="form-control" 
+    class="form-control {{#if tooltip}}tooltipped{{/if}}" 
     name="{{key}}" 
+    id="{{key}}"
     rows="5"
     required="{{required}}"
     autofocus="{{autofocus}}"
     placeholder="{{placeholder}}"
-    title="{{tooltip}}" 
+    data-tooltip="{{tooltip}}" 
     rel='{{#if tooltip}}tooltip{{/if}}'
-    data-placement="{{#if tooltip}}right{{/if}}"
+    data-position="{{#if tooltip}}right{{/if}}"
     disabled="{{static}}">{{{value}}}</textarea>
 </template>
 
 
 <template name="ironTableFormSelect">
   <select 
-    class="form-control input-sm" 
+    class="form-control input-sm {{#if tooltip}}tooltipped{{/if}}" 
     name="{{key}}"
+    id="{{key}}"
     required="{{required}}"
     autofocus="{{autofocus}}"
     placeholder="{{placeholder}}"
-    title="{{tooltip}}" 
+    data-tooltip="{{tooltip}}" 
     rel='{{#if tooltip}}tooltip{{/if}}'
-    data-placement="{{#if tooltip}}right{{/if}}"
+    data-position="{{#if tooltip}}right{{/if}}"
     disabled="{{static}}" >
     {{> ironTableOptions}}
   </select>

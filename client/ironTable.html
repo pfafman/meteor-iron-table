@@ -2,50 +2,51 @@
 <template name="ironTable">
     <div class="iron-table-container {{tableClass}}">
 
-    {{#if inabox}}
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          {{> ironTableHeading}}
-        </div>
+      {{#if inabox}}
 
-        <div class="panel-body">
+        <div class="box">
+          
+          {{> ironTableHeading}}
+          
           {{#if showFilter}}
             {{> ironTableFilter}}
           {{/if}}
-        </div>
 
-        {{#if loading}}
-          <div class="loading">
-            {{> spinner}}
-          </div>
-        {{else}}
+          {{#if loading}}
+            <div class="loading">
+              {{> spinner}}
+            </div>
+          {{else}}
 
-          {{#if haveData}}
+            {{#if haveData}}
 
-            {{> ironTableNav}}
-            <div class="clearfix"></div>
-            <div class="table-responsive">
-              <table class="table table-striped table-hover table-condensed">
+              {{> ironTableNav}}
+              
+              <div class="table-container">
+                <table class="centered striped hoverable">
                   <thead>
-                      <tr>
-                          {{> ironTableHeaders}}
-                      </tr>
+                    <tr>
+                      {{> ironTableHeaders}}
+                    </tr>
                   </thead>
 
                   <tbody class="{{rowLink}}" data-link="{{dataLink}}">
                       {{> ironTableRecords}}
                   </tbody>
-              </table>
-            </div>
+                </table>
+              </div>
+              
+            {{else}}
+                <div class="card-panel">
+                  <i>No {{recordsName}}!</i>
+                </div>
+            {{/if}}
 
-          {{else}}
-              <div class="well well-sm"><i>No {{recordsName}}!</i></div>
           {{/if}}
+          
+        </div>
 
-        {{/if}}
-      </div>
-
-    {{else}}
+      {{else}}
 
         {{> ironTableHeading}}
 
@@ -54,9 +55,9 @@
         {{/if}}
 
         {{#if loading}}
-            <div class="loading">
-                {{> spinner}}
-            </div>
+          <div class="loading">
+            {{> spinner}}
+          </div>
         {{else}}
 
              <div class="clearfix"></div>
@@ -64,9 +65,9 @@
             {{#if haveData}}
 
                 {{> ironTableNav}}
-                <div class="clearfix"></div>
-                <div class="table-responsive">
-                  <table class="table table-striped table-hover table-condensed clearfix">
+               
+                <div class="table-container">
+                  <table class="centered striped hoverable">
                       <thead>
                           <tr>
                               {{> ironTableHeaders}}
@@ -91,38 +92,34 @@
 
 <template name="ironTableHeading">
   <div class="iron-table-heading">
-    <h3>
-        {{#if showBackButton}}
-            <a class="btn btn-link" onclick="window.history.back()">
-                <i class="fa fa-chevron-circle-left fa-lg"></i>
-            </a>
-        {{/if}}
+    <h3 class="truncate">
+      {{#if showBackButton}}
+          <a class="btn-flat waves-effect waves-light back-btn" onclick="window.history.back()"><i class="mdi-navigation-chevron-left"></i></a>
+      {{/if}}
 
-        {{{tableTitle}}}
-        {{#if subTitle}}
-          <small>{{{subTitle}}}</small>
-        {{/if}}
+      {{{tableTitle}}}
+      {{#if subTitle}}
+        <small>{{{subTitle}}}</small>
+      {{/if}}
     </h3>
 
     <span class="links">
         {{#if doDownloadLink}}
-            <button id="download-link" class="btn btn-primary btn-sm"
-                title="Download CSV of {{tableTitle}}" rel='tooltip' data-placement="bottom">
-                <i class="fa fa-cloud-download fa-lg"></i> Download
-            </button>
+          <button id="download-link" class="btn btn-sm blue waves-effect waves-light">
+            <i class="mdi-file-cloud-download left"></i> Download
+          </button>
         {{/if}}
 
         {{#if newRecordRoute}}
-            <a class="btn btn-success btn-sm" title="{{newRecordTooltip}}" rel='tooltip' data-placement="bottom"
-                href="{{pathFor newRecordRoute}}">
-                {{newRecordTitle}} <i class="fa fa-plus-square fa-lg"></i>
+            <a class="btn btn-sm green waves-effect waves-light" href="{{pathFor newRecordRoute}}">
+              {{newRecordTitle}} <i class="mdi-file-cloud-download right"></i>
             </a>
         {{else}}
-            {{#if showNewButton}}
-                <button id="iron-table-new-record" class="btn btn-success btn-sm" title="{{newRecordTooltip}}" rel='tooltip' data-placement="bottom">
-                {{newRecordTitle}} <i class="fa fa-plus-square fa-lg"></i>
-                </button>
-            {{/if}}
+          {{#if showNewButton}}
+            <button id="iron-table-new-record" class="btn btn-sm green waves-effect waves-light">
+              {{newRecordTitle}} <i class="mdi-file-cloud-download right"></i>
+            </button>
+          {{/if}}
         {{/if}}
     </span>
   </div>
@@ -148,68 +145,69 @@
 </template>
 
 <template name="ironTableFilter">
-  <div class="iron-table-filter">
-      <span class="filter">
-          <form class="form-inline" role="form">
-              <div class="form-group">
-                  <select class="form-control" id="filter-column">
-                      <option value="_none_">No Filter</option>
-                      {{#each headers}}
-                          {{#if canFilterOn}}
-                              <option value="{{key}}" selected="{{#if filterOnThisCol}}selected{{/if}}">
-                                  {{capitalize colName}}
-                              </option>
-                          {{/if}}
-                      {{/each}}
-                  </select>
-              </div>
-              <div class="form-group">
-                  <input type="{{filterType}}" id="filter-value" class="form-control"
-                      placeholder="Text to filter on" value="{{filterValue}}" checked="{{checked}}" />
-              </div>
-          </form>
-      </span>
-  </div>
+  <div class="iron-table-filter row">
+    
+    <div class="offset-s4 col s4">
+      <select id="filter-column">
+        <option value="_none_">No Filter</option>
+        {{#each headers}}
+          {{#if canFilterOn}}
+            <option value="{{key}}" selected="{{#if filterOnThisCol}}selected{{/if}}">{{capitalize colName}}</option>
+          {{/if}}
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="col s4 filter-value-col">
+      <input type="{{filterType}}" id="filter-value" class="form-control"
+          placeholder="Text to filter on" value="{{filterValue}}" checked="{{checked}}" />
+    </div>
+     
+  </div> 
+    
+ 
 </template>
 
 
 <template name="ironTableNav">
-  {{#if showPager}}
-    <div class="iron-table-pager-display">
-        <strong>Displaying {{recordDisplayStart}} - {{recordDisplayStop}} out of {{recordCount}} {{recordsName}}</strong>
-    </div>
+  <div class="row valign-wrapper iron-table-nav">
+    {{#if showPager}}
+      <div class="iron-table-pager-display col s8 left-align valign">
+        <b>
+          Displaying {{recordDisplayStart}} - {{recordDisplayStop}} out of {{recordCount}} {{recordsName}}
+        </b>
+      </div>
 
-    <div class="iron-table-pager">
-        <button id="previous" class="btn btn-default btn-sm {{previousPathClass}}"
-            title="previous record set" rel='tooltip' data-placement="left">
-            <i class="fa fa-chevron-left"></i>
-        </button>
-        <button id="next" class="btn btn-default btn-sm {{nextPathClass}}"
-            title="next record set" rel='tooltip' data-placement="left">
-            <i class="fa fa-chevron-right"></i>
-        </button>
-    </div>
-  {{else}}
-    <div class="iron-table-pager-display">
-      <strong>{{recordCount}} {{recordsName}}</strong>
-    </div>
-  {{/if}}
+      <div class="col s4 iron-table-pager right-align valign">
+        <a href="" id="previous" class="btn-flat waves-effect {{previousPathClass}}">
+            <i class="mdi-navigation-chevron-left"></i>
+        </a>
+        <a href="" id="next" class="btn-flat waves-effect {{nextPathClass}}">
+            <i class="mdi-navigation-chevron-right"></i>
+        </a>
+      </div>
+    {{else}}
+      <div class="col s8 iron-table-pager-display left-align valign">
+        <strong>{{recordCount}} {{recordsName}}</strong>
+      </div>
+    {{/if}}
+  </div>
 </template>
 
 
 <template name="ironTableHeader">
     <th class="{{column.class}}">
         {{#if noSort}}
-            <button class="btn btn-link table-col-head" disabled="disabled">
+            <button class="btn-flat waves-effect table-col-head" disabled="disabled">
                 {{capitalize colName}}
             </button>
         {{else}}
-        <button class="btn btn-link table-col-head"
-            title="{{#if sort}}Reverse sort order{{else}}Sort on {{capitalize colName}}{{/if}}"
+        <button class="btn-flat waves-effect table-col-head tooltipped"
+            data-tooltip="{{#if sort}}Reverse sort order{{else}}Sort on {{capitalize colName}}{{/if}}"
             rel='tooltip'>
             {{capitalize colName}}
             {{#if sort}}
-                <i class="fa fa-chevron-circle-{{#if desc}}down{{else}}up{{/if}}"></i>
+                <i class="mdi-navigation-arrow-drop-{{#if desc}}down{{else}}up{{/if}}"></i>
             {{/if}}
         </button>
         {{/if}}
@@ -221,7 +219,7 @@
   {{#each colData}}
     <td class="{{column.class}} {{rowLinkSkip}}">
         {{#if aLink}}
-            <a href="{{aLink}}" title="{{#if title}}{{title}}{{/if}}" rel='tooltip' target="{{column.target}}">
+            <a href="{{aLink}}" class="{{#if title}}tooltipped{{/if}}" data-tooltip="{{#if title}}{{title}}{{/if}}" rel='{{#if title}}tooltip{{/if}}' target="{{column.target}}">
                 {{#if template}}
                     {{> templateRow}}
                 {{else}}
@@ -242,33 +240,33 @@
   <td class="controls rowlink-skip">
 
     {{#if showJSON}}
-      <button type="button" class="btn btn-link" 
+      <button type="button" class="btn-flat waves-effect tooltipped" 
         style="white-space: nowrap;" 
         rel="popover"
-        title="Record Object"
+        data-tooltip="Record Object"
         data-container="body"
         data-html=true
         data-toggle="popover" 
-        data-placement="left" 
+        data-position="left" 
         data-content="{{json}}"
         data-template="{{ironPopupTemplate}}"
         >
-        <i class="fa fa-code" title="Show Record" rel="tooltip"></i>
+        <i class="fmdi-action-description" data-tooltip="Show Record" rel="tooltip"></i>
       </button>
     {{/if}}
 
     {{#if extraControls}}{{> extraControls }}{{/if}}
 
     {{#if editOk}}
-        <a href="{{editRoute}}" class="btn btn-link iron-table-edit-record"
-          title='Edit Record' rel='tooltip'>
-          <i class="fa fa-pencil-square-o"></i>
+        <a href="{{editRoute}}" class="btn-flat waves-effect iron-table-edit-record tooltipped"
+          data-tooltip='Edit Record' rel='tooltip'>
+          <i class="mdi-editor-mode-edit"></i>
         </a>
     {{/if}}
 
     {{#if deleteOk}}
-        <a class="btn btn-link iron-table-delete-record" title='Delete Record' rel='tooltip'>
-            <i class="fa fa-trash-o"></i>
+        <a class="btn-flat waves-effect iron-table-delete-record" data-tooltip='Delete Record' rel='tooltip'>
+            <i class="mdi-action-delete"></i>
         </a>
     {{/if}}
 

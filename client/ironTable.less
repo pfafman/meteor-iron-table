@@ -11,21 +11,47 @@
         }
     }
 
-    .well {
-        margin: 15px;
+    .table-container {
+      width: 100%;
+      overflow: auto;
     }
-    .panel-heading {
-        padding-top: 5px;
-        padding-bottom: 5px;
+
+    .table-col-head {
+      i {
+        line-height: 1em;
+      }
+    }
+
+    .box {
+      color: #333;
+      position: relative;
+      overflow: hidden;
+      margin: 0.5rem 0 1rem 0;
+      background-color: #fff;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-border-radius: 2px;
+      -moz-border-radius: 2px;
+      border-radius: 2px;
+      background-clip: padding-box;
     }
 
     .iron-table-heading {
-        position: relative;
-        .links {
-            position: absolute;
-            top: 2px;
-            right: 7px;
+      position: relative;
+      padding: 0.5em;
+      width: 100%;
+      .links {
+          position: absolute;
+          top: 0.5em;
+          right: 0.5em;
+      }
+      .back-btn {
+        padding: 0;
+        i {
+          font-size: 1.4em;
         }
+      }
     }
 
     .panel-body {
@@ -33,15 +59,14 @@
     }
     
     .iron-table-filter {
-        float: right !important;
-        //padding: 7px;
-        margin: 7px;
-        #filter-value {
-            width: 200px;
-        }
-        .form-control {
-            height: 24px;
-        }
+      margin: 0 1em !important;
+      #filter-value {
+        //width: 15em;
+      }
+      .filter-value-col {
+        padding: 0 !important;
+        line-height: 6.3em;
+      }
     }
 
     h3 {
@@ -103,16 +128,18 @@
     }
 
     .iron-table-pager-display {
-        float: left !important;
-        padding-top: 3px;
-        padding-left: 7px;
+      font-size: 1.3em;
+      //padding-top: 0.3em;
+      margin-left: 1.2em !important;
     }
 
     .iron-table-pager {
-        float: right !important;
-        padding-top: 3px;
-        padding-right: 7px;
-        padding-bottom: 3px;
+        padding-top: .3em;
+        padding-right: 2em !important;
+        padding-bottom: .3em;
+        a {
+          padding: 1em;
+        }
     }
 
     .select {

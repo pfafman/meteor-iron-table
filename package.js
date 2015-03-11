@@ -1,7 +1,9 @@
+
 Package.describe({
-  summary: 'Paging Table for IronRouter and Meteor',
-  version: "0.7.5_3",
-  git: "https://github.com/pfafman/meteor-iron-table.git"
+  //name: 'pfafman:meteor-iron-table-materialize',
+  summary: "Paging Table for IronRouter and Meteor with Materialize styling",
+  version: "0.1.0",
+  git: "https://github.com/pfafman/meteor-iron-table-materialize.git",
 });
 
 Package.on_use(function (api, where) {
@@ -10,21 +12,18 @@ Package.on_use(function (api, where) {
   // Client
   api.use(
     [
-    'deps',
-    'minimongo',
-    'mongo-livedata',
     'templating',
-    'handlebars',
     'jquery',
     'session',
     'sacha:spin',
     'less',
-    'pfafman:coffee-alerts',
-    'pfafman:coffee-modal',
+    'pfafman:materialize-modal',
     'reactive-var',
-    'mrt:filesaver'
+    'pfafman:filesaver'
     ]
     , 'client');
+
+  api.imply('pfafman:materialize-modal');
 
   api.add_files(
     [

@@ -4,10 +4,14 @@ Template.ironTableCheckbox.created = ->
   @active = new ReactiveVar(false)
 
 
+#Template.ironTableCheckboxCheckbox.rendered = ->
+  
+
+
 Template.ironTableCheckbox.helpers
   doEdit: ->
     #console.log('doEdit', @column?.contenteditable, Template.instance().active?.get())
-    @column?.contenteditable and Template.instance().active?.get()
+    @column?.contenteditable #and Template.instance().active?.get()
 
   checkedMark: ->
     @column?.checkedMark or 'fa-check-square-o'
