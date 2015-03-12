@@ -368,21 +368,6 @@ class @IronTableController extends RouteController
     theData =
       increment: @increment
 
-      # NOTE: Iron Router 7.1 and Meteor 8.2+ not playing well together !?!?!?
-      #       Moved from gettting in data to getting from controller in helpers
-
-      #tableTitle: @getTableTitle()
-      #newRecordPath: @newRecordPath
-      #newRecordTitle: @newRecordTitle
-      #newRecordTooltip: @newRecordTooltip
-      #showBackButton: @showBackButton
-      #showFilter: @showFilter
-      #recordName: @_recordName()
-      #recordsName: @_recordsName()
-      #doDownloadLink: @doDownloadLink
-      #headers: @headers()
-      #records: @recordsData()
-      #@fetchRecordCount()
     _.extend(theData, @params)
 
 

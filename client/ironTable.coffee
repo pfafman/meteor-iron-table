@@ -27,8 +27,8 @@ Template.ironTable.helpers
   inabox: ->
     getCurrentIronTableController()?.inabox
 
-  tableClass: ->
-    getCurrentIronTableController()?.tableClass
+  classes: ->
+    getCurrentIronTableController()?.templateClasses
 
   loading: ->
     not getCurrentIronTableController()?.docsReady() and not getCurrentIronTableController()?.haveData()

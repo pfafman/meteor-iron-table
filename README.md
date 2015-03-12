@@ -19,7 +19,7 @@ You can add it if you want by editing/creating a meteor upper level smart.json f
 {
     "packages": {
         "pfafman:iron-table": {
-            "git": "https://github.com/pfafman/meteor-iron-table.git"
+            "git": "https://github.com/pfafman/meteor-iron-table-materialize.git"
         },
         ....
     }
@@ -28,7 +28,7 @@ You can add it if you want by editing/creating a meteor upper level smart.json f
 and then run meteorite to install.
 
 ```
-    mrt add pfafman:iron-table
+    mrt add pfafman:iron-table-materialize
 ```
 
 ##Usage

@@ -1,6 +1,6 @@
 
 <template name="ironTable">
-    <div class="iron-table-container {{tableClass}} z-depth-3">
+    <div class="iron-table-container {{classes.container}}">
       {{#if loading}}
         <div class="loading">
           {{> spinner}}
@@ -9,7 +9,7 @@
 
         {{#if inabox}}
 
-          <div class="box">
+          <div class="box {{classes.box}}">
             
             {{> ironTableHeading}}
             
@@ -22,7 +22,7 @@
               {{> ironTableNav}}
               
               <div class="table-container">
-                <table class="centered striped hoverable">
+                <table class="{{classes.table}}">
                   <thead>
                     <tr>
                       {{> ironTableHeaders}}
@@ -36,7 +36,7 @@
               </div>
               
             {{else}}
-                <div class="card-panel">
+                <div class="no-records">
                   <i>No {{recordsName}}!</i>
                 </div>
             {{/if}}
@@ -57,7 +57,7 @@
               {{> ironTableNav}}
              
               <div class="table-container">
-                <table class="centered striped hoverable">
+                <table class="{{classes.table}}">
                     <thead>
                         <tr>
                             {{> ironTableHeaders}}
@@ -71,7 +71,7 @@
               </div>
 
           {{else}}
-              <div class="well well-sm"><i>No {{recordsName}}!</i></div>
+              <div class="no-records"><i>No {{recordsName}}!</i></div>
           {{/if}}
 
         {{/if}}
