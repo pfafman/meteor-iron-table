@@ -15,7 +15,6 @@ Package.on_use(function (api, where) {
     'templating',
     'jquery',
     'session',
-    'sacha:spin',
     'less',
     'pfafman:materialize-modal',
     'reactive-var',

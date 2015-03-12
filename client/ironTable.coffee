@@ -64,7 +64,7 @@ Template.ironTable.events
     $('.iron-table-delete-record').tooltip('hide')
 
     if not currentController = getCurrentIronTableController()
-      toast("Internal Error: Could not get controller", 300, 'red')
+      toast("Internal Error: Could not get controller", 3000, 'red')
       return false
 
     MaterializeModal.confirm
@@ -83,7 +83,7 @@ Template.ironTable.events
       $('.iron-table-edit-record').tooltip('hide')
 
       if not currentController
-        toast("Internal Error: Could not get controller", 300, 'red')
+        toast("Internal Error: Could not get controller", 3000, 'red')
         false
       else
         currentController.editRecord(@_id)
@@ -121,7 +121,7 @@ Template.ironTableHeading.events
     e.preventDefault()
     #e.stopImmediatePropagation()
     if not currentController = getCurrentIronTableController()
-      toast("Internal Error: Could not get controller", 300, 'red')
+      toast("Internal Error: Could not get controller", 3000, 'red')
       false
     else
       currentController.newRecord()
@@ -129,22 +129,22 @@ Template.ironTableHeading.events
 
   "click #download-link": (e, tmpl) ->
     if not currentController = getCurrentIronTableController()
-      toast("Internal Error: Could not get controller", 300, 'red')
+      toast("Internal Error: Could not get controller", 3000, 'red')
       return false
 
     filename = @tableTitle + '.csv'
     currentController.downloadRecords (error, csv) ->
       if error
-        toast("Error getting CSV to download", 300, 'red')
+        toast("Error getting CSV to download", 3000, 'red')
         console.log("Error getting CSV", error)
       else if csv
         console.log("Doing saveAs for CSV") if DEBUG
         blob = new Blob [csv],
           type: "text/csv"
         saveAs?(blob, filename)
-        toast("Records Downloaded", 300, 'green')
+        toast("Records Downloaded", 3000, 'green')
       else
-        toast("No data to download", 300, 'red')
+        toast("No data to download", 3000, 'red')
 
 
 #Template.ironTableFilter.created = ->
@@ -175,7 +175,7 @@ Template.ironTableFilter.events
   "change #filter-column": (e, tmpl) ->
     #e.preventDefault()
     if not currentController = getCurrentIronTableController()
-      toast("Internal Error: Could not get controller", 300, 'red')
+      toast("Internal Error: Could not get controller", 3000, 'red')
       return false
 
     currentController.setFilterColumn(e.target.value)
@@ -184,7 +184,7 @@ Template.ironTableFilter.events
     #e.preventDefault()
     console.log("filter-value", $(e.target).is(':checked'), e.target.value) if DEBUG
     if not currentController = getCurrentIronTableController()
-      toast("Internal Error: Could not get controller", 300, 'red')
+      toast("Internal Error: Could not get controller", 3000, 'red')
       return false
     value = e.target.value
     if getCurrentIronTableController()?.getSelectedFilterType() is 'checkbox'
@@ -242,6 +242,7 @@ Template.ironTableRow.rendered = ->
   $('[rel="tooltip"]')?.tooltip()
   #$('[rel="popover"]')?.popover()
   $('select').material_select()
+  $('.modal-trigger').leanModal()
 
 
 Template.ironTableRow.destroyed = ->
@@ -317,7 +318,7 @@ Template.ironTableRow.events
         #$(e.target).empty().html(newValue)
       if @value isnt newValue
         if not currentController = getCurrentIronTableController()
-          toast("Internal Error: Could not get controller", 300, 'red')
+          toast("Internal Error: Could not get controller", 3000, 'red')
         else
           $(e.target).html('')
           console.log("Submit Value Change", @dataKey, @value, '->', newValue) if DEBUG

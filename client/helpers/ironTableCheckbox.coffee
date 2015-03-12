@@ -20,6 +20,7 @@ Template.ironTableCheckbox.helpers
     if not @column?.blankOnNotChecked
       @column?.notCheckMark or 'fa-square-o'
 
+
 Template.ironTableCheckbox.events
 
   "click .check-mark": (e, tmpl) ->

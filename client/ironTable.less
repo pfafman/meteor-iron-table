@@ -11,6 +11,25 @@
         }
     }
 
+    tr {
+      //margin-right: 1em;
+      //margin-left:  1em;
+    }
+
+    th, td {
+      padding: 0em 0.5em;
+      //line-height: 1em;
+      .btn, .btn-flat, .btn-large {
+        margin-bottom: 0;
+      }
+      .select-wrapper {
+        margin-top: 0.5em;
+        input.select-dropdown {
+          margin: 0 0 0.5em 0;
+        }
+      }
+    }
+
     .table-container {
       width: 100%;
       overflow: auto;
@@ -109,22 +128,22 @@
     }
 
     .loading {
-        position: relative;
-        text-align: center;
-        margin-top: 40px;
-        margin-left: auto;
-        margin-right: auto;
-        width: 40px;
-        height: 40px;
-        z-index: 1000;
-        //background-color: #ddd;
-        //opacity: 0.8;
-     
-        #spinner {
-            position: relative;
-            margin: auto;
-            top: 45%;
-        }
+      position: relative;
+      text-align: center;
+      margin-top: 30%;
+      margin-left: auto;
+      margin-right: auto;
+      width: 60px;
+      height: 60px;
+      z-index: 1000;
+      //background-color: #ddd;
+      //opacity: 0.8;
+   
+      #spinner {
+          position: relative;
+          margin: auto;
+          top: 45%;
+      }
     }
 
     .iron-table-pager-display {
@@ -178,6 +197,40 @@
     max-width: 600px;
 }
 
-input.iron-table-checkbox {
-    position: relative !important;
+.iron-table-form {
+
+
+  input.iron-table-checkbox {
+      position: relative !important;
+  }
+
+  .iron-table-help-block {
+    position: relative;
+    top: -10px;
+    color: rgba(55, 55, 55, 0.8);
+    font-size: 0.9em;
+    font-style: italic;
+  }
+
+  .static-input-field {
+    label {
+      position: relative;
+      left: 0.75rem;
+      font-size: 1rem;
+    }
+  }
+  
+  .iron-table-select-label {
+    position: relative;
+    left: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .iron-table-input-field {
+    margin-top: 1rem;
+  }
+
+  .input-field label.textarea-label {
+    top: 0.3rem;
+  }
 }

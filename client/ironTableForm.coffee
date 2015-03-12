@@ -7,11 +7,15 @@ Template.ironTableFormItem.rendered = ->
   #console.log("ironTableFormItem rendered")
   $('[rel="tooltip"]').tooltip()
   $('select').material_select()
-  
+
 
 Template.ironTableFormItem.helpers
   textArea: ->
     @displayType is 'textarea'
+
+  forKey: ->
+    if @displayType isnt 'select'
+      @key
 
 
   inputTemplate: ->
@@ -23,3 +27,6 @@ Template.ironTableFormItem.helpers
       else
         rtn = 'ironTableFormInput'
     rtn
+
+  showHelpText: ->
+    @helpText? and not @static?

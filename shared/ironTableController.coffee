@@ -416,17 +416,17 @@ class @IronTableController extends RouteController
       Meteor.call @collection().methodOnRemove, rec._id, (error) =>
         if error
           console.log("Error deleting #{name}", error)
-          toast("Error deleting #{name}: #{error.reason}", 300, 'red')
+          toast("Error deleting #{name}: #{error.reason}", 3000, 'red')
         else
-          toast("Deleted #{name}", 300, 'green')
+          toast("Deleted #{name}", 3000, 'green')
         @fetchRecordCount()
     else
       @collection().remove rec._id, (error) =>
         if error
           console.log("Error deleting #{name}", error)
-          toast("Error deleting #{name}: #{error.reason}", 300, 'red')
+          toast("Error deleting #{name}: #{error.reason}", 3000, 'red')
         else
-          toast("Deleted #{name}", 300, 'green')
+          toast("Deleted #{name}", 3000, 'green')
         @fetchRecordCount()
 
 
@@ -487,6 +487,8 @@ class @IronTableController extends RouteController
           else if col.default?
             localCol.value = col.default
 
+          localCol.realValue = value
+
           if col["staticOn_#{type}"]
             localCol.static = true
             localCol.value = value
@@ -536,9 +538,9 @@ class @IronTableController extends RouteController
         Meteor.call @collection().methodOnUpdate, recId, rec, (error) =>
           if error
             console.log("Error updating " + @_recordName(), error)
-            toast("Error updating " + @_recordName() + " : #{error.reason}", 300, 'red')
+            toast("Error updating " + @_recordName() + " : #{error.reason}", 3000, 'red')
           else if type isnt "inlineUpdate"
-            toast(@_recordName() + " saved", 300, 'green')
+            toast(@_recordName() + " saved", 3000, 'green')
             @fetchRecordCount()
       else
         delete rec._id
@@ -547,13 +549,13 @@ class @IronTableController extends RouteController
         , (error, effectedCount) =>
           if error
             console.log("Error updating " + @_recordName(), error)
-            toast("Error updating " + @_recordName() + " : #{error.reason}", 300, 'red')
+            toast("Error updating " + @_recordName() + " : #{error.reason}", 3000, 'red')
           else
             if type isnt "inlineUpdate"
-              toast(@_recordName() + " updated", 300, 'green')
+              toast(@_recordName() + " updated", 3000, 'green')
             @fetchRecordCount()
     else
-      toast("Error could not update " + @_recordName() + " " + @errorMessage, 300, 'red')
+      toast("Error could not update " + @_recordName() + " " + @errorMessage, 3000, 'red')
 
 
   newRecord: ->
@@ -575,22 +577,22 @@ class @IronTableController extends RouteController
           Meteor.call @collection().methodOnInsert, rec, (error) =>
             if error
               console.log("Error saving " + @_recordName(), error)
-              toast("Error saving " + @_recordName() + " : #{error.reason}", 300, 'red')
+              toast("Error saving " + @_recordName() + " : #{error.reason}", 3000, 'red')
             else
-              toast(@_recordName() + " created", 300, 'green')
+              toast(@_recordName() + " created", 3000, 'green')
               @fetchRecordCount()
               @newRecordCallback?(rec)
         else
           @collection().insert rec, (error, effectedCount) =>
             if error
               console.log("Error saving " + @_recordName(), error)
-              toast("Error saving " + @_recordName() + " : #{error.reason}", 300, 'red')
+              toast("Error saving " + @_recordName() + " : #{error.reason}", 3000, 'red')
             else
-              toast(@_recordName() + " created", 300, 'green')
+              toast(@_recordName() + " created", 3000, 'green')
               @fetchRecordCount()
               @newRecordCallback?(effectedCount)
       else
-        toast("Error could not save " + @_recordName() + " " + @errorMessage, 300, 'red')
+        toast("Error could not save " + @_recordName() + " " + @errorMessage, 3000, 'red')
 
 
   setFilterColumn: (col) ->

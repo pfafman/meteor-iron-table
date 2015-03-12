@@ -1,22 +1,21 @@
 
 <template name="ironTable">
     <div class="iron-table-container {{tableClass}}">
+      {{#if loading}}
+        <div class="loading">
+          {{> spinner}}
+        </div>
+      {{else}}
 
-      {{#if inabox}}
+        {{#if inabox}}
 
-        <div class="box">
-          
-          {{> ironTableHeading}}
-          
-          {{#if showFilter}}
-            {{> ironTableFilter}}
-          {{/if}}
-
-          {{#if loading}}
-            <div class="loading">
-              {{> spinner}}
-            </div>
-          {{else}}
+          <div class="box">
+            
+            {{> ironTableHeading}}
+            
+            {{#if showFilter}}
+              {{> ironTableFilter}}
+            {{/if}}
 
             {{#if haveData}}
 
@@ -41,57 +40,48 @@
                   <i>No {{recordsName}}!</i>
                 </div>
             {{/if}}
-
-          {{/if}}
-          
-        </div>
-
-      {{else}}
-
-        {{> ironTableHeading}}
-
-        {{#if showFilter}}
-          {{> ironTableFilter}}
-        {{/if}}
-
-        {{#if loading}}
-          <div class="loading">
-            {{> spinner}}
+            
           </div>
+
         {{else}}
 
-             <div class="clearfix"></div>
+          {{> ironTableHeading}}
 
-            {{#if haveData}}
+          {{#if showFilter}}
+            {{> ironTableFilter}}
+          {{/if}}
 
-                {{> ironTableNav}}
-               
-                <div class="table-container">
-                  <table class="centered striped hoverable">
-                      <thead>
-                          <tr>
-                              {{> ironTableHeaders}}
-                          </tr>
-                      </thead>
+          <div class="clearfix"></div>
+          {{#if haveData}}
 
-                      <tbody  class="{{rowLink}}" data-link="{{dataLink}}">
-                          {{> ironTableRecords}}
-                      </tbody>
-                  </table>
-                </div>
+              {{> ironTableNav}}
+             
+              <div class="table-container">
+                <table class="centered striped hoverable">
+                    <thead>
+                        <tr>
+                            {{> ironTableHeaders}}
+                        </tr>
+                    </thead>
 
-            {{else}}
-                <div class="well well-sm"><i>No {{recordsName}}!</i></div>
-            {{/if}}
+                    <tbody  class="{{rowLink}}" data-link="{{dataLink}}">
+                        {{> ironTableRecords}}
+                    </tbody>
+                </table>
+              </div>
+
+          {{else}}
+              <div class="well well-sm"><i>No {{recordsName}}!</i></div>
+          {{/if}}
+
         {{/if}}
-
       {{/if}}
     </div>
 </template>
 
 
 <template name="ironTableHeading">
-  <div class="iron-table-heading">
+  <div class="iron-table-heading z-depth-1">
     <h3 class="truncate">
       {{#if showBackButton}}
           <a class="btn-flat waves-effect waves-light back-btn" onclick="window.history.back()"><i class="mdi-navigation-chevron-left"></i></a>
@@ -240,19 +230,13 @@
   <td class="controls rowlink-skip">
 
     {{#if showJSON}}
-      <button type="button" class="btn-flat waves-effect tooltipped" 
-        style="white-space: nowrap;" 
-        rel="popover"
-        data-tooltip="Record Object"
-        data-container="body"
-        data-html=true
-        data-toggle="popover" 
-        data-position="left" 
-        data-content="{{json}}"
-        data-template="{{ironPopupTemplate}}"
-        >
-        <i class="fmdi-action-description" data-tooltip="Show Record" rel="tooltip"></i>
-      </button>
+      <a 
+        class="btn-flat waves-effect waves-light tooltipped modal-trigger" 
+        href="#modal-json-{{_id}}"
+        data-tooltip="Show Record Object"
+        data-position="left"
+        rel='tooltip'
+      ><i class="mdi-action-description"></i></a>
     {{/if}}
 
     {{#if extraControls}}{{> extraControls }}{{/if}}
@@ -271,18 +255,38 @@
     {{/if}}
 
   </td>
+  {{#if showJSON}}
+    <div id="modal-json-{{_id}}" class="modal">
+      <div class="modal-content">
+        <h4>Record</h4>
+        <p>
+          {{{json}}}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="waves-effect waves-light btn-flat modal-action modal-close">Close</a>
+      </div>
+    </div>
+  {{/if}}
 </template>
 
-<template name="ironPopup">
-  <div class="popover iron-table-popover" role="tooltip">
-    <div class="arrow"></div>
-    <h3 class="popover-title"></h3>
-    <div class="popover-content"></div>
+
+<template name="ironTableLoading">
+  <div class="ironTableLoading">
+    {{> spinner}}
   </div>
 </template>
 
-<template name="ironTableLoading">
-    <div class="ironTableLoading">
-        {{>spinner}}
+<template name="spinner">
+  <div class="preloader-wrapper big active">
+    <div class="spinner-layer spinner-blue-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+      </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
     </div>
+  </div>
 </template>

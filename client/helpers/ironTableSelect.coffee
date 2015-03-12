@@ -19,6 +19,12 @@ Template.ironTableOptions.helpers
   options: ->
     if @select?
       rtn = []
+      if @placeholder
+        rtn.push
+          key: ''
+          val: @placeholder
+          disabled: 'disabled'
+          
       if _.isArray(@select)
         for elm in @select
           rtn.push
