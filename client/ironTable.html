@@ -1,6 +1,6 @@
 
 <template name="ironTable">
-    <div class="iron-table-container {{tableClass}}">
+    <div class="iron-table-container {{tableClass}} z-depth-3">
       {{#if loading}}
         <div class="loading">
           {{> spinner}}
@@ -84,7 +84,7 @@
   <div class="iron-table-heading z-depth-1">
     <h3 class="truncate">
       {{#if showBackButton}}
-          <a class="btn-flat waves-effect waves-light back-btn" onclick="window.history.back()"><i class="mdi-navigation-chevron-left"></i></a>
+        <a class="btn-flat waves-effect waves-light back-btn" onclick="window.history.back()"><i class="mdi-navigation-chevron-left"></i></a>
       {{/if}}
 
       {{{tableTitle}}}
