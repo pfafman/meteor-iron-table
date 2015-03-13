@@ -36,7 +36,6 @@ Template.ironTable.helpers
   haveData: ->
     getCurrentIronTableController()?.haveData()
 
-
   # NOTE: Iron Router 7.1 and Meteor 8.2 not playing well together !?!?!?
   #       Moved from gettting in data to getting from controller in helpers
   #       TODO: Check if this is better in Meteor 0.9
@@ -114,6 +113,12 @@ Template.ironTableHeading.helpers
 
   newRecordTooltip: ->
     getCurrentIronTableController()?.newRecordTooltip
+
+  newButtonColor: ->
+    getCurrentIronTableController()?.layoutOptions?.newButtonColor or 'green'
+
+  downloadButtonColor: ->
+    getCurrentIronTableController()?.layoutOptions?.downloadButtonColor or 'blue'
 
 
 Template.ironTableHeading.events

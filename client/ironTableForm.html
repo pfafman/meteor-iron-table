@@ -23,11 +23,12 @@
 
 <template name="ironTableFormInput">
   <div class="{{#if static}}static-{{/if}}input-field">
-    {{#if static}}
+    
+    {{#if DO_NOT_DO_static}}
       <input type="hidden" name="{{key}}" value="{{realValue}}" />
     {{/if}}
     
-    <label for="{{#unless static}}{{key}}{{/unless}}">{{header}}</label>
+    <label for="{{#unless static}}{{key}}{{/unless}}" class="{{#if value}}active{{/if}}">{{header}}</label>
     <input 
       type="{{displayType}}" 
       class="form-control {{#if tooltip}}tooltipped{{/if}}" 
@@ -76,7 +77,7 @@
 
 <template name="ironTableFormTextarea">
   <div class="input-field">
-    <label class="textarea-label" for="{{key}}">{{header}}</label>
+    <label class="textarea-label {{#if value}}active{{/if}}" for="{{key}}">{{header}}</label>
     <textarea 
       class="materialize-textarea {{#if tooltip}}tooltipped{{/if}}" 
       name="{{key}}" 
