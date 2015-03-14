@@ -380,11 +380,15 @@ class @IronTableController extends RouteController
 
 
   getNext: ->
-    @_sess('skip', @skip() + @increment)
+    if (@skip() + @increment < @recordCount()) 
+      @_sess('skip', @skip() + @increment)
 
 
   nextPathClass: ->
-    if (@skip() + @increment >= @recordCount()) then "disabled" else ""
+    if (@skip() + @increment >= @recordCount()) 
+      "disabled" 
+    else 
+      "waves-effect "
 
 
   getPrevious: ->
@@ -392,7 +396,10 @@ class @IronTableController extends RouteController
 
 
   previousPathClass: ->
-    if (@skip() <= 0) then "disabled" else ""
+    if (@skip() <= 0)
+      "disabled" 
+    else 
+      "waves-effect"
 
 
   removeRecord: (rec) ->

@@ -80,6 +80,9 @@
           position: absolute;
           top: 1em;
           right: 1em;
+          a {
+            color: #fff;
+          }
       }
       .back-btn {
         padding: 0;
@@ -122,9 +125,24 @@
     }
 
     a:hover {
-        text-decoration: none;
-        cursor: pointer;
-        color: #111;
+      text-decoration: none;
+      cursor: pointer;
+      color: #111;
+    }
+
+    li.disabled {
+      a {
+        color: #b3b3b3;
+        cursor: default;
+      }
+      a:hover {
+        color: #b3b3b3;
+        cursor: default;
+      }
+    }
+    a.disabled:hover {
+      color: #b3b3b3;
+      cursor: default;
     }
     
     th {
@@ -138,7 +156,7 @@
         
         a {
             //color: #000;
-            padding: 1px;
+            //padding: 1px;
         }
         a:hover {
             //color: @link-hover-color;
@@ -178,12 +196,31 @@
     }
 
     .iron-table-pager {
-        padding-top: .3em;
-        padding-right: 2em !important;
-        padding-bottom: .3em;
-        a {
-          padding: 1em;
-        }
+      padding-top: .3em;
+      padding-right: 2em !important;
+      padding-bottom: .3em;
+      li {
+        font-size: 2em;
+      }
+      li.disabled {
+        //width: 0.2em;
+        position: relative;
+        //cursor: pointer;
+        display: inline-block;
+        overflow: hidden;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        z-index: 1;
+        will-change: opacity, transform;
+        -webkit-transition: all .3s ease-out;
+        -moz-transition: all .3s ease-out;
+        -o-transition: all .3s ease-out;
+        -ms-transition: all .3s ease-out;
+        transition: all .3s ease-out;
+      }
     }
 
     .select {
