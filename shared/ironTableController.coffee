@@ -515,6 +515,7 @@ class @IronTableController extends RouteController
       title: @editRecordTitle()
       columns: @formData('edit', _id).columns
       callback: @updateRecord
+      fullScreen: Meteor.isCordova
       
 
   updateRecord: (yesNo, rec) =>
@@ -562,6 +563,7 @@ class @IronTableController extends RouteController
         title: 'New ' + @_recordName().capitalize()
         columns: @formData('insert').columns
         callback: @insertRecord
+        fullScreen: true
         
 
   insertRecord: (yesNo, rec) =>

@@ -63,7 +63,7 @@ Template.ironTable.helpers
     if getCurrentIronTableController()?.inabox and getCurrentIronTableController().fullScreenOnSmall
       classes = getCurrentIronTableController().templateClasses
       classes.box += " no-box-on-small"
-      classes.container = "full-screen-on-small"
+      classes.container += " full-screen-on-small"
       classes
     else
       getCurrentIronTableController()?.templateClasses

@@ -21,15 +21,6 @@
     padding: 0 1rem;
   }
 
-  // I think I am doing what table-responsive
-  /*
-  .table-div {
-      overflow-x: auto;
-      table {
-          margin: 0px;
-      }
-  }
-  */
 
   tr {
     //margin-right: 1em;
@@ -83,6 +74,9 @@
     .table-container {
       margin: auto;
       width: 98%;
+      @media only screen and (max-width : 600px) {
+        height: 100%;
+      }
       //height: auto;
       //height: calc(100% - 200px);
       //height: 300px; //calc( 99% - 200px ); //80%; 
