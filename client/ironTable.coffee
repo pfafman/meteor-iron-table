@@ -134,6 +134,9 @@ Template.ironTableHeading.helpers
   tableTitle: ->
     getCurrentIronTableController()?.getTableTitle()
 
+  showTitleLargeOnly: ->
+    getCurrentIronTableController()?.showTitleLargeOnly
+
   subTitle: ->
     getCurrentIronTableController()?.getSubTitle()
 

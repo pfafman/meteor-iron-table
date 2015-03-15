@@ -135,7 +135,7 @@ class @IronTableController extends RouteController
     @reset()
 
   getTableTitle: ->
-    if not @doNotShowTitle
+    if not @doNotShowTitle or @showTitleLargeOnly
       @tableTitle or @_collectionName()
 
   getSubTitle: ->

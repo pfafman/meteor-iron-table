@@ -83,7 +83,7 @@
 <template name="ironTableHeading">
   <div class="row iron-table-heading {{classes.heading}}">
     {{#if tableTitle}}
-      <h3 class="truncate col m4 s12">
+      <h3 class="truncate col l4 m4 s12 {{#if showTitleLargeOnly}}hide-on-med-and-down{{/if}}">
         {{#if showBackButton}}
           <a class="btn-flat waves-effect waves-light back-btn" onclick="window.history.back()"><i class="mdi-navigation-chevron-left"></i></a>
         {{/if}}
@@ -95,7 +95,7 @@
       </h3>
     {{/if}}
 
-    <span class="links-col col {{#if tableTitle}}m8{{/if}} s12 right-align">
+    <span class="links-col col {{#if showTitleLargeOnly}}l8{{else}}{{#if tableTitle}}m8{{/if}}{{/if}} s12 right-align">
       {{#if extraLinkTemplate}}
         {{> Template.dynamic template=extraLinkTemplate}}
       {{/if}}
