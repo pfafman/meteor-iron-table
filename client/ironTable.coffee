@@ -12,15 +12,47 @@ getCurrentIronTableController = ->
 #Template.ironTable.created = ->
 #  console.log("ironTable created")
 
+sizeCalc = ->
+
+  if getCurrentIronTableController()?.inabox
+    outerSelector = '.iron-table-container .box'
+    box = 'box'
+  else
+    outerSelector = '.iron-table-container'
+    box = ''
+
+  h  = $(outerSelector).innerHeight()  
+  h1 = $('.iron-table-heading')?.outerHeight()
+  h2 = $('.iron-table-filter')?.outerHeight()
+  h3 = $('.iron-table-nav')?.outerHeight()
+  ht = $('.iron-table-container table').outerHeight()
+
+  hSet = h - h1 - h2 - h3 - 20
+  if hSet <= ht
+    $('.iron-table-container .table-container').height(hSet)
+    $(outerSelector).height('')
+  else
+    $('.iron-table-container .table-container').height(ht)
+    if h >= ht + h1 + h2 + h3 + 30
+      #console.log('sizeCalc set outer', ht + h1 + h2 + h3 + 30)
+      #$(outerSelector).height(ht + h1 + h2 + h3 + 30)
+    else
+      $(outerSelector).height('')
+
+  ha = $('.iron-table-container .table-container').height()
+  console.log("sizeCalc #{box}", h, h1, h2, h3, hSet, ha, ht)
+  
 
 Template.ironTable.rendered = ->
   $('[rel="tooltip"]')?.tooltip('destroy')
   $('[rel="tooltip"]')?.tooltip()
+  
+  $( window ).on('resize', sizeCalc)
 
 
 Template.ironTable.destroyed = ->
   $('[rel="tooltip"]')?.tooltip('destroy')
-
+  $( window ).off('resize')
 
 Template.ironTable.helpers
 
@@ -28,7 +60,13 @@ Template.ironTable.helpers
     getCurrentIronTableController()?.inabox
 
   classes: ->
-    getCurrentIronTableController()?.templateClasses
+    if getCurrentIronTableController()?.inabox and getCurrentIronTableController().fullScreenOnSmall
+      classes = getCurrentIronTableController().templateClasses
+      classes.box += " no-box-on-small"
+      classes.container = "full-screen-on-small"
+      classes
+    else
+      getCurrentIronTableController()?.templateClasses
 
   loading: ->
     not getCurrentIronTableController()?.docsReady() and not getCurrentIronTableController()?.haveData()
@@ -87,6 +125,9 @@ Template.ironTable.events
       else
         currentController.editRecord(@_id)
 
+  "click .show-record": (e, tmpl) ->
+    e.preventDefault()
+    $("#modal-json-#{@_id}").openModal()
 
 Template.ironTableHeading.helpers
 
@@ -335,10 +376,6 @@ Template.ironTableRow.events
           currentController.updateThisRecord(@record._id, data, 'inlineUpdate')
 
 
-Template.ironTableHeader.rendered = ->
-  $('[rel="tooltip"]').tooltip()
-
-
 Template.ironTableHeaders.helpers
   headers: ->
     getCurrentIronTableController()?.headers()
@@ -350,7 +387,17 @@ Template.ironTableHeader.events
     getCurrentIronTableController()?.setSort(@dataKey)
 
 
+Template.ironTableRecords.rendered = ->
+  # ...
+
+
 Template.ironTableRecords.helpers
   records: ->
     getCurrentIronTableController()?.recordsData()
+
+
+Template.ironTableRow.rendered = ->
+  $('[rel="tooltip"]').tooltip()
+  #sizeCalc()
+
 

@@ -135,7 +135,8 @@ class @IronTableController extends RouteController
     @reset()
 
   getTableTitle: ->
-    @tableTitle or @_collectionName()
+    if not @doNotShowTitle
+      @tableTitle or @_collectionName()
 
   getSubTitle: ->
     @subTitle
@@ -387,8 +388,8 @@ class @IronTableController extends RouteController
   nextPathClass: ->
     if (@skip() + @increment >= @recordCount()) 
       "disabled" 
-    else 
-      "waves-effect "
+    #else 
+    #  "waves-effect "
 
 
   getPrevious: ->
@@ -398,8 +399,8 @@ class @IronTableController extends RouteController
   previousPathClass: ->
     if (@skip() <= 0)
       "disabled" 
-    else 
-      "waves-effect"
+    #else 
+    #  "waves-effect"
 
 
   removeRecord: (rec) ->
