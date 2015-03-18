@@ -21,7 +21,7 @@ sizeCalc = ->
     outerSelector = '.iron-table-container'
     box = ''
 
-  h  = $(outerSelector).innerHeight()  
+  h  = $(outerSelector).innerHeight()
   h1 = $('.iron-table-heading')?.outerHeight()
   h2 = $('.iron-table-filter')?.outerHeight()
   h3 = $('.iron-table-nav')?.outerHeight()

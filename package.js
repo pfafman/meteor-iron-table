@@ -2,12 +2,12 @@
 Package.describe({
   //name: 'pfafman:meteor-iron-table-materialize',
   summary: "Paging Table for IronRouter and Meteor with Materialize styling",
-  version: "0.1.2",
+  version: "0.2.0",
   git: "https://github.com/pfafman/meteor-iron-table-materialize.git",
 });
 
 Package.on_use(function (api, where) {
-  api.versionsFrom("METEOR@1.0");
+  api.versionsFrom("METEOR@1.0.4");
 
   // Client
   api.use(

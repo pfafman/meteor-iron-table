@@ -381,13 +381,13 @@ class @IronTableController extends RouteController
 
 
   getNext: ->
-    if (@skip() + @increment < @recordCount()) 
+    if (@skip() + @increment < @recordCount())
       @_sess('skip', @skip() + @increment)
 
 
   nextPathClass: ->
-    if (@skip() + @increment >= @recordCount()) 
-      "disabled" 
+    if (@skip() + @increment >= @recordCount())
+      "disabled"
     #else 
     #  "waves-effect "
 
@@ -398,7 +398,7 @@ class @IronTableController extends RouteController
 
   previousPathClass: ->
     if (@skip() <= 0)
-      "disabled" 
+      "disabled"
     #else 
     #  "waves-effect"
 
@@ -515,12 +515,13 @@ class @IronTableController extends RouteController
       title: @editRecordTitle()
       columns: @formData('edit', _id).columns
       callback: @updateRecord
-      fullScreen: Meteor.isCordova
+      fullscreen: Meteor.isCordova
+      fixedFooter: true
       
 
   updateRecord: (yesNo, rec) =>
     @errorMessage = ''
-    if yesNo 
+    if yesNo
       rec = {} unless rec
       rec._id = @_sess("currentRecordId") unless rec._id?
       if @collection().editOk(rec)
@@ -563,8 +564,8 @@ class @IronTableController extends RouteController
         title: 'New ' + @_recordName().capitalize()
         columns: @formData('insert').columns
         callback: @insertRecord
-        fullScreen: Meteor.isCordova
-        
+        fullscreen: Meteor.isCordova
+        fixedFooter: true
 
   insertRecord: (yesNo, rec) =>
     @errorMessage = ''
