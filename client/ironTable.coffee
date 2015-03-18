@@ -9,7 +9,7 @@ getCurrentIronTableController = ->
   #    null
 
 
-#Template.ironTable.created = ->
+#Template.ironTable.onCreated ->
 #  console.log("ironTable created")
 
 sizeCalc = ->
@@ -43,16 +43,17 @@ sizeCalc = ->
   console.log("sizeCalc #{box}", h, h1, h2, h3, hSet, ha, ht)
   
 
-Template.ironTable.rendered = ->
+Template.ironTable.onRendered ->
   $('[rel="tooltip"]')?.tooltip('destroy')
   $('[rel="tooltip"]')?.tooltip()
   
   $( window ).on('resize', sizeCalc)
 
 
-Template.ironTable.destroyed = ->
+Template.ironTable.onDestroyed ->
   $('[rel="tooltip"]')?.tooltip('destroy')
   $( window ).off('resize')
+
 
 Template.ironTable.helpers
 
@@ -199,11 +200,11 @@ Template.ironTableHeading.events
         toast("No data to download", 3000, 'red')
 
 
-#Template.ironTableFilter.created = ->
+#Template.ironTableFilter.onCreated ->
 #  console.log("ironTableFilter created")
 
 
-Template.ironTableFilter.rendered = ->
+Template.ironTableFilter.onRendered ->
   $('select').material_select()
 
 
@@ -290,7 +291,7 @@ Template.ironTableRecords.events
     Session.set("ironTableActiveRecordId", null)
 
 
-Template.ironTableRow.rendered = ->
+Template.ironTableRow.onRendered ->
   $('[rel="tooltip"]')?.tooltip()
   #$('[rel="popover"]')?.popover()
   $('select').material_select()
@@ -390,7 +391,7 @@ Template.ironTableHeader.events
     getCurrentIronTableController()?.setSort(@dataKey)
 
 
-Template.ironTableRecords.rendered = ->
+Template.ironTableRecords.onRendered ->
   # ...
 
 
@@ -399,7 +400,7 @@ Template.ironTableRecords.helpers
     getCurrentIronTableController()?.recordsData()
 
 
-Template.ironTableRow.rendered = ->
+Template.ironTableRow.onRendered ->
   $('[rel="tooltip"]').tooltip()
   #sizeCalc()
 

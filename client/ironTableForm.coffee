@@ -3,7 +3,7 @@ capitalize = (string) ->
   string.charAt(0).toUpperCase() + string.substring(1).toLowerCase()
   
 
-Template.ironTableFormItem.rendered = ->
+Template.ironTableFormItem.onRendered ->
   #console.log("ironTableFormItem rendered")
   $('[rel="tooltip"]').tooltip()
   $('select').material_select()
