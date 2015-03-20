@@ -31,7 +31,10 @@
     <label for="{{#unless static}}{{key}}{{/unless}}" class="{{#if value}}active{{/if}}">{{header}}</label>
     <input 
       type="{{displayType}}" 
-      class="form-control {{#if tooltip}}tooltipped{{/if}} validate {{#if hasError}}invalid{{/if}} {{#if hasSuccess}}valid{{/if}}" 
+      class="form-control 
+        {{#if tooltip}}tooltipped{{/if}} validate 
+        {{#if hasError}}invalid{{/if}} 
+        {{#if hasSuccess}}valid{{/if}}" 
       name="{{key}}"
       id="{{key}}"
       value="{{value}}"
@@ -39,6 +42,32 @@
       autofocus="{{autofocus}}"
       placeholder="{{placeholderNOT}}"
       checked="{{checked}}"
+      data-tooltip="{{tooltip}}" 
+      rel='{{#if tooltip}}tooltip{{/if}}' 
+      data-position="{{#if tooltip}}right{{/if}}"
+      disabled="{{static}}" />
+    {{#if hasIcon}}
+        <span class="{{iconClass}}"></span>
+    {{/if}}
+    {{#if hasError}}
+      <span class='red-text'>{{errorText}}</span>
+    {{/if}}
+   
+  </div>
+</template>
+
+<template name="ironTableFormDate">
+  <div class="iron-table-input-field">
+    
+    <label class="iron-table-select-label">{{header}}</label>
+    <input 
+      type="date" 
+      class="datepicker" 
+      name="{{key}}"
+      id="{{key}}"
+      value="{{value}}"
+      required="{{required}}"
+      autofocus="{{autofocus}}"
       data-tooltip="{{tooltip}}" 
       rel='{{#if tooltip}}tooltip{{/if}}' 
       data-position="{{#if tooltip}}right{{/if}}"

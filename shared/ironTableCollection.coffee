@@ -15,6 +15,9 @@ class @IronTableCollection extends Mongo.Collection
   countName: ->
     @_name + 'Count'
 
+  name: ->
+    @_name
+
   constructor: (name, options = null) ->
     super
 

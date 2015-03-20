@@ -7,6 +7,9 @@ Template.ironTableFormItem.onRendered ->
   #console.log("ironTableFormItem rendered")
   $('[rel="tooltip"]').tooltip()
   $('select').material_select()
+  $('.datepicker').pickadate
+    selectMonths: false
+    selectYears: false
 
 
 Template.ironTableFormItem.helpers
@@ -21,7 +24,7 @@ Template.ironTableFormItem.helpers
   inputTemplate: ->
     rtn = 'ironTableFormInput'
     switch @displayType
-      when 'textarea', 'select', 'checkbox'
+      when 'textarea', 'select', 'checkbox', 'date'
         type = capitalize(@displayType)
         rtn = "ironTableForm#{type}"
       else
