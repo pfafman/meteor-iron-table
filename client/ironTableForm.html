@@ -78,7 +78,31 @@
     {{#if hasError}}
       <span class='red-text'>{{errorText}}</span>
     {{/if}}
-   
+  </div>
+</template>
+
+<template name="ironTableFormTime">
+  <div class="iron-table-input-field">
+    
+    <label class="iron-table-select-label">{{header}}</label>
+    <input 
+      type="time" 
+      class="timepicker" 
+      name="{{key}}"
+      id="{{key}}"
+      value="{{value}}"
+      required="{{required}}"
+      autofocus="{{autofocus}}"
+      data-tooltip="{{tooltip}}" 
+      rel='{{#if tooltip}}tooltip{{/if}}' 
+      data-position="{{#if tooltip}}right{{/if}}"
+      disabled="{{static}}" />
+    {{#if hasIcon}}
+        <span class="{{iconClass}}"></span>
+    {{/if}}
+    {{#if hasError}}
+      <span class='red-text'>{{errorText}}</span>
+    {{/if}} 
   </div>
 </template>
 

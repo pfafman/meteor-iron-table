@@ -12,7 +12,10 @@ Template.ironTableSelect.helpers
     @column?.contenteditable #and Template.instance().active?.get()
 
   getValue: ->
-    @select?[@value] or @value
+    if _.isObject(@select?[@value])
+      @select[@value].value
+    else
+      @select?[@value] or @value
 
 
 Template.ironTableOptions.helpers
@@ -33,9 +36,15 @@ Template.ironTableOptions.helpers
             selected: if @value is elm then 'selected'
       else if _.isObject(@select)
         for key, val of @select
+          if _.isObject(val)
+            value = val.value
+            disabled = val.disabled
+          else
+            value = val
           rtn.push
             key: key
-            val: val
+            val: value
+            disabled: if val.disabled then 'disabled'
             selected: if @value is key then 'selected'
       rtn
 

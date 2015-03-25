@@ -494,7 +494,7 @@ class @IronTableController extends RouteController
             if col?.valueFunc?
               localCol.realValue = record[key]
 
-          localCol.header = (col.header || key).capitalize()
+          localCol.header = (col.header or key).capitalize()
           localCol.key = key
           localCol.dataKey = dataKey
 
