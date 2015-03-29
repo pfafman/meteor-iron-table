@@ -12,7 +12,7 @@
     <input type="hidden" name="{{key}}" value="{{value}}" />
   {{else}}
     
-      {{> UI.dynamic template=inputTemplate }}
+      {{> Template.dynamic template=inputTemplate }}
       {{#if showHelpText}}
         <div class="iron-table-help-block">{{helpText}}</div>
       {{/if}}

@@ -91,9 +91,11 @@ class @IronTableController extends RouteController
 
 
   getEditRoute: (id) =>
-    if @editRecordRoute?
-      Router.routes[@editRecordRoute].path
-        _id: id
+    @editRecordRoute
+    #console.log("getEditRoute", @editRecordRoute, id)
+    #if @editRecordRoute? and Router.routes[@editRecordRoute]?
+    #  Router.go
+    #    _id: id
 
 
   _sess: (id, value) ->
