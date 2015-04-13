@@ -1,4 +1,5 @@
 
+DEBUG = false
 
 class @IronTableCollection extends Mongo.Collection
   classID: 'IronTableCollection'

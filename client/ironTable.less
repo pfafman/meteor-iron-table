@@ -94,6 +94,17 @@
           // overflow-y: auto; // Does not work
         }
       }
+
+      table.rowlink {
+        tbody {
+          tr {
+            cursor: pointer;
+            td.rowlink-skip {
+              cursor: default;
+            }
+          }
+        }
+      }
     }
   }
 
@@ -240,6 +251,9 @@
     a {
       //color: #000;
       padding: 1px;
+      i {
+        font-size: 1em;
+      }
     }
     a:hover {
       //color: @link-hover-color;

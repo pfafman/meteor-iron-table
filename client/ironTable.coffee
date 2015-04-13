@@ -9,6 +9,12 @@ getCurrentIronTableController = ->
   #    null
 
 
+t9nIt = (string) ->
+  T9n?.get?(string) or string
+  
+Template.registerHelper 'irtblT9nit', (string) ->
+  t9nIt(string)
+
 #Template.ironTable.onCreated ->
 #  console.log("ironTable created")
 
@@ -43,6 +49,8 @@ sizeCalc = ->
   console.log("sizeCalc #{box}", h, h1, h2, h3, hSet, ha, ht)
   
 
+
+
 Template.ironTable.onRendered ->
   $('[rel="tooltip"]')?.tooltip('destroy')
   $('[rel="tooltip"]')?.tooltip()
@@ -69,6 +77,10 @@ Template.ironTable.helpers
     else
       getCurrentIronTableController()?.templateClasses
 
+  moreTableClasses: ->
+    if getCurrentIronTableController()?.rowLink?
+      "hoverable rowlink"
+
   loading: ->
     not getCurrentIronTableController()?.docsReady() and not getCurrentIronTableController()?.haveData()
 
@@ -83,19 +95,17 @@ Template.ironTable.helpers
     getCurrentIronTableController()?.showFilter
 
   recordsName: ->
-    getCurrentIronTableController()?.getRecordsName()
+    t9nIt getCurrentIronTableController()?.getRecordsName()
 
-  rowLink: ->
-    if getCurrentIronTableController()?.doRowLink()
-      "rowlink"
-
-  dataLink: ->
-    if getCurrentIronTableController()?.doRowLink()
-      "row"
 
 
 Template.ironTable.events
 
+  "click td": (event, tmpl) ->
+    if getCurrentIronTableController().rowLink? and not $(event.currentTarget).hasClass('rowlink-skip')
+      getCurrentIronTableController().rowLink(@.record)
+
+  
   "click .iron-table-delete-record": (e, tmpl) ->
     e.preventDefault()
     #e.stopImmediatePropagation()
@@ -106,8 +116,8 @@ Template.ironTable.events
       return false
 
     MaterializeModal.confirm
-      title: "Delete Record"
-      message: "Are you sure you want to delete #{@recordDisplayName}?"
+      title: t9nIt "Delete Record"
+      message: t9nIt("Are you sure you want to delete #{@recordDisplayName}?")
       callback: (yesNo) =>
         if yesNo
           currentController.removeRecord(@)
@@ -121,7 +131,7 @@ Template.ironTable.events
       $('.iron-table-edit-record').tooltip('hide')
 
       if not currentController
-        Materialize.toast("Internal Error: Could not get controller", 3000, 'red')
+        Materialize.toast(t9nIt "Internal Error: Could not get controller", 3000, 'red')
         false
       else
         currentController.editRecord(@_id)
@@ -133,13 +143,13 @@ Template.ironTable.events
 Template.ironTableHeading.helpers
 
   tableTitle: ->
-    getCurrentIronTableController()?.getTableTitle()
+    t9nIt getCurrentIronTableController()?.getTableTitle()
 
   showTitleLargeOnly: ->
     getCurrentIronTableController()?.showTitleLargeOnly
 
   subTitle: ->
-    getCurrentIronTableController()?.getSubTitle()
+    t9nIt getCurrentIronTableController()?.getSubTitle()
 
   extraLinkTemplate: ->
     getCurrentIronTableController()?.extraLinkTemplate

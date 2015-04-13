@@ -178,10 +178,13 @@ class @IronTableController extends RouteController
         canFilterOn = col.canFilterOn
       else
         canFilterOn = false
+      colName = col.header or key
+      if T9n?
+        colName = T9n.get(colName)
       rtn.push
         key: key
         dataKey: dataKey
-        colName: col.header or key
+        colName: colName
         column: col
         filterOnThisCol: dataKey is @_sess('filterColumn')
         canFilterOn: canFilterOn
@@ -198,10 +201,13 @@ class @IronTableController extends RouteController
         canFilterOn = col.canFilterOn
       else
         canFilterOn = false
+      colName = col.header or key
+      if T9n?
+        colName = T9n.get(colName)
       rtn.push
         key: key
         dataKey: dataKey
-        colName: col.header or key
+        colName: colName
         column: col
         noSort: col.noSort
         sort: dataKey is @_sess('sortColumn')
