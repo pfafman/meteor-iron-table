@@ -2,7 +2,7 @@
 Package.describe({
   //name: 'pfafman:meteor-iron-table-materialize',
   summary: "Paging Table for IronRouter and Meteor with Materialize styling",
-  version: "0.2.3",
+  version: "0.3.0",
   git: "https://github.com/pfafman/meteor-iron-table-materialize.git",
 });
 
@@ -18,7 +18,7 @@ Package.on_use(function (api, where) {
     'less',
     'pfafman:materialize-modal',
     'reactive-var',
-    'pfafman:filesaver'
+    'pfafman:filesaver',
     ]
     , 'client');
 
@@ -41,7 +41,8 @@ Package.on_use(function (api, where) {
   api.add_files(
     [
     'shared/ironTableController.coffee',
-    'shared/ironTableCollection.coffee'
+    'shared/ironTableCollection.coffee',
+    'shared/t9n.coffee'
     ]
     , ['client','server']);
 
@@ -50,8 +51,10 @@ Package.on_use(function (api, where) {
     'underscore',
     'coffeescript',
     'mongo',
-    'iron:router'
+    'iron:router',
+    'softwarerero:accounts-t9n',
     ], ['client', 'server']);
+
 
   if (api.export) {
     //api.export('IronTableController', ['client','server']);

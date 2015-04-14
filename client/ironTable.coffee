@@ -95,7 +95,7 @@ Template.ironTable.helpers
     getCurrentIronTableController()?.showFilter
 
   recordsName: ->
-    t9nIt getCurrentIronTableController()?.getRecordsName()
+    getCurrentIronTableController()?.getRecordsName()
 
 
 
@@ -112,12 +112,12 @@ Template.ironTable.events
     $('.iron-table-delete-record').tooltip('hide')
 
     if not currentController = getCurrentIronTableController()
-      Materialize.toast("Internal Error: Could not get controller", 3000, 'red')
+      Materialize.toast(t9nIt "Internal Error: Could not get controller", 3000, 'red')
       return false
 
     MaterializeModal.confirm
       title: t9nIt "Delete Record"
-      message: t9nIt("Are you sure you want to delete #{@recordDisplayName}?")
+      message: t9nIt("Are you sure you want to delete") + " #{@recordDisplayName}?"
       callback: (yesNo) =>
         if yesNo
           currentController.removeRecord(@)
