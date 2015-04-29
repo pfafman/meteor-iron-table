@@ -9,34 +9,83 @@ getCurrentIronTableController = ->
   #    null
 
 
-#Template.ironTable.created = ->
+t9nIt = (string) ->
+  T9n?.get?(string) or string
+  
+Template.registerHelper 'irtblT9nit', (string) ->
+  t9nIt(string)
+
+#Template.ironTable.onCreated ->
 #  console.log("ironTable created")
 
+sizeCalc = ->
 
-Template.ironTable.rendered = ->
+  if getCurrentIronTableController()?.inabox
+    outerSelector = '.iron-table-container .box'
+    box = 'box'
+  else
+    outerSelector = '.iron-table-container'
+    box = ''
+
+  h  = $(outerSelector).innerHeight()
+  h1 = $('.iron-table-heading')?.outerHeight()
+  h2 = $('.iron-table-filter')?.outerHeight()
+  h3 = $('.iron-table-nav')?.outerHeight()
+  ht = $('.iron-table-container table').outerHeight()
+
+  hSet = h - h1 - h2 - h3 - 20
+  if hSet <= ht
+    $('.iron-table-container .table-container').height(hSet)
+    $(outerSelector).height('')
+  else
+    $('.iron-table-container .table-container').height(ht)
+    if h >= ht + h1 + h2 + h3 + 30
+      #console.log('sizeCalc set outer', ht + h1 + h2 + h3 + 30)
+      #$(outerSelector).height(ht + h1 + h2 + h3 + 30)
+    else
+      $(outerSelector).height('')
+
+  ha = $('.iron-table-container .table-container').height()
+  console.log("sizeCalc #{box}", h, h1, h2, h3, hSet, ha, ht)
+  
+
+
+
+Template.ironTable.onRendered ->
   $('[rel="tooltip"]')?.tooltip('destroy')
-  $('[rel="popover"]')?.popover('destroy')
   $('[rel="tooltip"]')?.tooltip()
-  $('[rel="popover"]')?.popover()
+  
+  $( window ).on('resize', sizeCalc)
 
-Template.ironTable.destroyed = ->
+
+Template.ironTable.onDestroyed ->
   $('[rel="tooltip"]')?.tooltip('destroy')
-  $('[rel="popover"]')?.popover('destroy')
+  $( window ).off('resize')
+
 
 Template.ironTable.helpers
 
   inabox: ->
     getCurrentIronTableController()?.inabox
 
-  tableClass: ->
-    getCurrentIronTableController()?.tableClass
+  classes: ->
+    if getCurrentIronTableController()?.inabox and getCurrentIronTableController().fullScreenOnSmall
+      classes = getCurrentIronTableController().templateClasses
+      classes.box += " no-box-on-small"
+      classes.container += " full-screen-on-small"
+      classes
+    else
+      getCurrentIronTableController()?.templateClasses
+
+  moreTableClasses: ->
+    if getCurrentIronTableController()?.rowLink?
+      "hoverable rowlink"
 
   loading: ->
     not getCurrentIronTableController()?.docsReady() and not getCurrentIronTableController()?.haveData()
 
   haveData: ->
     getCurrentIronTableController()?.haveData()
-
 
   # NOTE: Iron Router 7.1 and Meteor 8.2 not playing well together !?!?!?
   #       Moved from gettting in data to getting from controller in helpers
@@ -48,30 +97,31 @@ Template.ironTable.helpers
   recordsName: ->
     getCurrentIronTableController()?.getRecordsName()
 
-  rowLink: ->
-    if getCurrentIronTableController()?.doRowLink()
-      "rowlink"
-
-  dataLink: ->
-    if getCurrentIronTableController()?.doRowLink()
-      "row"
 
 
 Template.ironTable.events
 
+  "click td": (event, tmpl) ->
+    if getCurrentIronTableController().rowLink? and not $(event.currentTarget).hasClass('rowlink-skip')
+      getCurrentIronTableController().rowLink(@.record)
+
+  
   "click .iron-table-delete-record": (e, tmpl) ->
     e.preventDefault()
     #e.stopImmediatePropagation()
     $('.iron-table-delete-record').tooltip('hide')
 
     if not currentController = getCurrentIronTableController()
-      CoffeeAlerts.error("Internal Error: Could not get controller")
+      Materialize.toast(t9nIt "Internal Error: Could not get controller", 3000, 'red')
       return false
 
-    CoffeeModal.confirm "Are you sure you want to delete #{@recordDisplayName}?", (yesNo) =>
-      if yesNo
-        currentController.removeRecord(@)
-    , "Delete"
+    MaterializeModal.confirm
+      title: t9nIt "Delete Record"
+      message: t9nIt("Are you sure you want to delete") + " #{@recordDisplayName}?"
+      callback: (yesNo) =>
+        if yesNo
+          currentController.removeRecord(@)
+    
 
   "click .iron-table-edit-record": (e, tmpl) ->
     currentController = getCurrentIronTableController()
@@ -81,20 +131,29 @@ Template.ironTable.events
       $('.iron-table-edit-record').tooltip('hide')
 
       if not currentController
-        CoffeeAlerts.error("Internal Error: Could not get controller")
+        Materialize.toast(t9nIt "Internal Error: Could not get controller", 3000, 'red')
         false
       else
         currentController.editRecord(@_id)
 
+  "click .show-record": (e, tmpl) ->
+    e.preventDefault()
+    $("#modal-json-#{@_id}").openModal()
 
 Template.ironTableHeading.helpers
 
   tableTitle: ->
-    getCurrentIronTableController()?.getTableTitle()
+    t9nIt getCurrentIronTableController()?.getTableTitle()
+
+  showTitleLargeOnly: ->
+    getCurrentIronTableController()?.showTitleLargeOnly
 
   subTitle: ->
-    getCurrentIronTableController()?.getSubTitle()
+    t9nIt getCurrentIronTableController()?.getSubTitle()
 
+  extraLinkTemplate: ->
+    getCurrentIronTableController()?.extraLinkTemplate
+    
   doDownloadLink: ->
     getCurrentIronTableController()?.doDownloadLink
 
@@ -113,13 +172,19 @@ Template.ironTableHeading.helpers
   newRecordTooltip: ->
     getCurrentIronTableController()?.newRecordTooltip
 
+  newButtonColor: ->
+    getCurrentIronTableController()?.layoutOptions?.newButtonColor or 'green'
+
+  downloadButtonColor: ->
+    getCurrentIronTableController()?.layoutOptions?.downloadButtonColor or 'blue'
+
 
 Template.ironTableHeading.events
   "click #iron-table-new-record": (e, tmpl) ->
     e.preventDefault()
     #e.stopImmediatePropagation()
     if not currentController = getCurrentIronTableController()
-      CoffeeAlerts.error("Internal Error: Could not get controller")
+      Materialize.toast("Internal Error: Could not get controller", 3000, 'red')
       false
     else
       currentController.newRecord()
@@ -127,30 +192,30 @@ Template.ironTableHeading.events
 
   "click #download-link": (e, tmpl) ->
     if not currentController = getCurrentIronTableController()
-      CoffeeAlerts.error("Internal Error: Could not get controller")
+      Materialize.toast("Internal Error: Could not get controller", 3000, 'red')
       return false
 
     filename = @tableTitle + '.csv'
     currentController.downloadRecords (error, csv) ->
       if error
-        CoffeeAlerts.error("Error getting CSV to download")
+        Materialize.toast("Error getting CSV to download", 3000, 'red')
         console.log("Error getting CSV", error)
       else if csv
         console.log("Doing saveAs for CSV") if DEBUG
         blob = new Blob [csv],
           type: "text/csv"
         saveAs?(blob, filename)
-        CoffeeAlerts.success("Records Downloaded")
+        Materialize.toast("Records Downloaded", 3000, 'green')
       else
-        CoffeeAlerts.alert("No data to download")
+        Materialize.toast("No data to download", 3000, 'red')
 
 
-#Template.ironTableFilter.created = ->
+#Template.ironTableFilter.onCreated ->
 #  console.log("ironTableFilter created")
 
 
-#Template.ironTableFilter.rendered = ->
-#  console.log("ironTableFilter rendered")
+Template.ironTableFilter.onRendered ->
+  $('select').material_select()
 
 
 Template.ironTableFilter.helpers
@@ -173,7 +238,7 @@ Template.ironTableFilter.events
   "change #filter-column": (e, tmpl) ->
     #e.preventDefault()
     if not currentController = getCurrentIronTableController()
-      CoffeeAlerts.error("Internal Error: Could not get controller")
+      Materialize.toast("Internal Error: Could not get controller", 3000, 'red')
       return false
 
     currentController.setFilterColumn(e.target.value)
@@ -182,7 +247,7 @@ Template.ironTableFilter.events
     #e.preventDefault()
     console.log("filter-value", $(e.target).is(':checked'), e.target.value) if DEBUG
     if not currentController = getCurrentIronTableController()
-      CoffeeAlerts.error("Internal Error: Could not get controller")
+      Materialize.toast("Internal Error: Could not get controller", 3000, 'red')
       return false
     value = e.target.value
     if getCurrentIronTableController()?.getSelectedFilterType() is 'checkbox'
@@ -236,16 +301,19 @@ Template.ironTableRecords.events
     Session.set("ironTableActiveRecordId", null)
 
 
-Template.ironTableRow.rendered = ->
+
+Template.ironTableRow.onRendered ->
   $('[rel="tooltip"]')?.tooltip()
-  $('[rel="popover"]')?.popover()
+  #$('[rel="popover"]')?.popover()
+  $('select').material_select()
+  $('.modal-trigger').leanModal()
 
 
-Template.ironTableRow.destroyed = ->
+Template.ironTableRow.onDestroyed ->
   $('[rel="tooltip"]')?.tooltip('destroy')
-  $('[rel="popover"]')?.popover('destroy')
+  #$('[rel="popover"]')?.popover('destroy')
   $('[rel="tooltip"]')?.tooltip()
-  $('[rel="popover"]')?.popover()
+  #$('[rel="popover"]')?.popover()
 
 
 Template.ironTableRow.helpers
@@ -314,17 +382,13 @@ Template.ironTableRow.events
         #$(e.target).empty().html(newValue)
       if @value isnt newValue
         if not currentController = getCurrentIronTableController()
-          CoffeeAlerts.error("Internal Error: Could not get controller")
+          Materialize.toast("Internal Error: Could not get controller", 3000, 'red')
         else
           $(e.target).html('')
           console.log("Submit Value Change", @dataKey, @value, '->', newValue) if DEBUG
           data = {}
           data[@dataKey] = newValue
           currentController.updateThisRecord(@record._id, data, 'inlineUpdate')
-
-
-Template.ironTableHeader.rendered = ->
-  $('[rel="tooltip"]').tooltip()
 
 
 Template.ironTableHeaders.helpers
@@ -338,7 +402,17 @@ Template.ironTableHeader.events
     getCurrentIronTableController()?.setSort(@dataKey)
 
 
+Template.ironTableRecords.onRendered ->
+  # ...
+
+
 Template.ironTableRecords.helpers
   records: ->
     getCurrentIronTableController()?.recordsData()
+
+
+Template.ironTableRow.onRendered ->
+  $('[rel="tooltip"]').tooltip()
+  #sizeCalc()
+
 

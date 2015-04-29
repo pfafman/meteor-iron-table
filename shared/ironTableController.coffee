@@ -91,9 +91,11 @@ class @IronTableController extends RouteController
 
 
   getEditRoute: (id) =>
-    if @editRecordRoute?
-      Router.routes[@editRecordRoute].path
-        _id: id
+    @editRecordRoute
+    #console.log("getEditRoute", @editRecordRoute, id)
+    #if @editRecordRoute? and Router.routes[@editRecordRoute]?
+    #  Router.go
+    #    _id: id
 
 
   _sess: (id, value) ->
@@ -135,7 +137,8 @@ class @IronTableController extends RouteController
     @reset()
 
   getTableTitle: ->
-    @tableTitle or @_collectionName()
+    if not @doNotShowTitle or @showTitleLargeOnly
+      @tableTitle or @_collectionName()
 
   getSubTitle: ->
     @subTitle
@@ -175,10 +178,13 @@ class @IronTableController extends RouteController
         canFilterOn = col.canFilterOn
       else
         canFilterOn = false
+      colName = col.header or key
+      if T9n?
+        colName = T9n.get(colName)
       rtn.push
         key: key
         dataKey: dataKey
-        colName: col.header or key
+        colName: colName
         column: col
         filterOnThisCol: dataKey is @_sess('filterColumn')
         canFilterOn: canFilterOn
@@ -195,10 +201,13 @@ class @IronTableController extends RouteController
         canFilterOn = col.canFilterOn
       else
         canFilterOn = false
+      colName = col.header or key
+      if T9n?
+        colName = T9n.get(colName)
       rtn.push
         key: key
         dataKey: dataKey
-        colName: col.header or key
+        colName: colName
         column: col
         noSort: col.noSort
         sort: dataKey is @_sess('sortColumn')
@@ -368,21 +377,6 @@ class @IronTableController extends RouteController
     theData =
       increment: @increment
 
-      # NOTE: Iron Router 7.1 and Meteor 8.2+ not playing well together !?!?!?
-      #       Moved from gettting in data to getting from controller in helpers
-
-      #tableTitle: @getTableTitle()
-      #newRecordPath: @newRecordPath
-      #newRecordTitle: @newRecordTitle
-      #newRecordTooltip: @newRecordTooltip
-      #showBackButton: @showBackButton
-      #showFilter: @showFilter
-      #recordName: @_recordName()
-      #recordsName: @_recordsName()
-      #doDownloadLink: @doDownloadLink
-      #headers: @headers()
-      #records: @recordsData()
-      #@fetchRecordCount()
     _.extend(theData, @params)
 
 
@@ -395,11 +389,15 @@ class @IronTableController extends RouteController
 
 
   getNext: ->
-    @_sess('skip', @skip() + @increment)
+    if (@skip() + @increment < @recordCount())
+      @_sess('skip', @skip() + @increment)
 
 
   nextPathClass: ->
-    if (@skip() + @increment >= @recordCount()) then "disabled" else ""
+    if (@skip() + @increment >= @recordCount())
+      "disabled"
+    #else 
+    #  "waves-effect "
 
 
   getPrevious: ->
@@ -407,7 +405,10 @@ class @IronTableController extends RouteController
 
 
   previousPathClass: ->
-    if (@skip() <= 0) then "disabled" else ""
+    if (@skip() <= 0)
+      "disabled"
+    #else 
+    #  "waves-effect"
 
 
   removeRecord: (rec) ->
@@ -416,17 +417,17 @@ class @IronTableController extends RouteController
       Meteor.call @collection().methodOnRemove, rec._id, (error) =>
         if error
           console.log("Error deleting #{name}", error)
-          CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
+          Materialize.toast("Error deleting #{name}: #{error.reason}", 3000, 'red')
         else
-          CoffeeAlerts.success("Deleted #{name}")
+          Materialize.toast("Deleted #{name}", 3000, 'green')
         @fetchRecordCount()
     else
       @collection().remove rec._id, (error) =>
         if error
           console.log("Error deleting #{name}", error)
-          CoffeeAlerts.error("Error deleting #{name}: #{error.reason}")
+          Materialize.toast("Error deleting #{name}: #{error.reason}", 3000, 'red')
         else
-          CoffeeAlerts.success("Deleted #{name}")
+          Materialize.toast("Deleted #{name}", 3000, 'green')
         @fetchRecordCount()
 
 
@@ -487,6 +488,8 @@ class @IronTableController extends RouteController
           else if col.default?
             localCol.value = col.default
 
+          localCol.realValue = value
+
           if col["staticOn_#{type}"]
             localCol.static = true
             localCol.value = value
@@ -499,7 +502,7 @@ class @IronTableController extends RouteController
             if col?.valueFunc?
               localCol.realValue = record[key]
 
-          localCol.header = (col.header || key).capitalize()
+          localCol.header = (col.header or key).capitalize()
           localCol.key = key
           localCol.dataKey = dataKey
 
@@ -515,26 +518,34 @@ class @IronTableController extends RouteController
 
   editRecord: (_id) ->
     @_sess("currentRecordId", _id)
-    CoffeeModal.form(@formTemplate, @formData('edit', _id), @updateRecord, @editRecordTitle())
-
+    MaterializeModal.form
+      bodyTemplate: @formTemplate
+      title: @editRecordTitle()
+      columns: @formData('edit', _id).columns
+      callback: @updateRecord
+      fullscreen: Meteor.isCordova
+      fixedFooter: true
+      
 
   updateRecord: (yesNo, rec) =>
     @errorMessage = ''
-    if not rec._id?
-      rec._id = @_sess("currentRecordId")
-    if yesNo and @collection().editOk(rec)
-      @updateThisRecord(@_sess("currentRecordId"), rec)
+    if yesNo
+      rec = {} unless rec
+      rec._id = @_sess("currentRecordId") unless rec._id?
+      if @collection().editOk(rec)
+        @updateThisRecord(@_sess("currentRecordId"), rec)
 
 
   updateThisRecord: (recId, rec, type="update") =>
+    console.log("updateThisRecord", recId, rec)
     if @checkFields(rec, type)
       if @collection().methodOnUpdate
         Meteor.call @collection().methodOnUpdate, recId, rec, (error) =>
           if error
             console.log("Error updating " + @_recordName(), error)
-            CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
+            Materialize.toast("Error updating " + @_recordName() + " : #{error.reason}", 3000, 'red')
           else if type isnt "inlineUpdate"
-            CoffeeAlerts.success(@_recordName() + " saved")
+            Materialize.toast(@_recordName() + " saved", 3000, 'green')
             @fetchRecordCount()
       else
         delete rec._id
@@ -543,21 +554,26 @@ class @IronTableController extends RouteController
         , (error, effectedCount) =>
           if error
             console.log("Error updating " + @_recordName(), error)
-            CoffeeAlerts.error("Error updating " + @_recordName() + " : #{error.reason}")
+            Materialize.toast("Error updating " + @_recordName() + " : #{error.reason}", 3000, 'red')
           else
             if type isnt "inlineUpdate"
-              CoffeeAlerts.success(@_recordName() + " updated")
+              Materialize.toast(@_recordName() + " updated", 3000, 'green')
             @fetchRecordCount()
     else
-      CoffeeAlerts.error("Error could not update " + @_recordName() + " " + @errorMessage)
+      Materialize.toast("Error could not update " + @_recordName() + " " + @errorMessage, 3000, 'red')
 
 
   newRecord: ->
     if @newRecordPath?
       Router.go(@newRecordPath)
     else
-      CoffeeModal.form(@formTemplate, @formData('insert'), @insertRecord, 'New ' + @_recordName().capitalize())
-
+      MaterializeModal.form
+        bodyTemplate: @formTemplate
+        title: 'New ' + @_recordName().capitalize()
+        columns: @formData('insert').columns
+        callback: @insertRecord
+        fullscreen: Meteor.isCordova
+        fixedFooter: true
 
   insertRecord: (yesNo, rec) =>
     @errorMessage = ''
@@ -567,22 +583,22 @@ class @IronTableController extends RouteController
           Meteor.call @collection().methodOnInsert, rec, (error) =>
             if error
               console.log("Error saving " + @_recordName(), error)
-              CoffeeAlerts.error("Error saving " + @_recordName() + " : #{error.reason}")
+              Materialize.toast("Error saving " + @_recordName() + " : #{error.reason}", 3000, 'red')
             else
-              CoffeeAlerts.success(@_recordName() + " created")
+              Materialize.toast(@_recordName() + " created", 3000, 'green')
               @fetchRecordCount()
               @newRecordCallback?(rec)
         else
           @collection().insert rec, (error, effectedCount) =>
             if error
               console.log("Error saving " + @_recordName(), error)
-              CoffeeAlerts.error("Error saving " + @_recordName() + " : #{error.reason}")
+              Materialize.toast("Error saving " + @_recordName() + " : #{error.reason}", 3000, 'red')
             else
-              CoffeeAlerts.success(@_recordName() + " created")
+              Materialize.toast(@_recordName() + " created", 3000, 'green')
               @fetchRecordCount()
               @newRecordCallback?(effectedCount)
       else
-        CoffeeAlerts.error("Error could not save " + @_recordName() + " " + @errorMessage)
+        Materialize.toast("Error could not save " + @_recordName() + " " + @errorMessage, 3000, 'red')
 
 
   setFilterColumn: (col) ->

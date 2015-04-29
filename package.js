@@ -1,30 +1,28 @@
+
 Package.describe({
-  summary: 'Paging Table for IronRouter and Meteor',
-  version: "0.7.5_3",
-  git: "https://github.com/pfafman/meteor-iron-table.git"
+  //name: 'pfafman:meteor-iron-table-materialize',
+  summary: "Paging Table for IronRouter and Meteor with Materialize styling",
+  version: "0.3.0",
+  git: "https://github.com/pfafman/meteor-iron-table-materialize.git",
 });
 
 Package.on_use(function (api, where) {
-  api.versionsFrom("METEOR@1.0");
+  api.versionsFrom("METEOR@1.0.4");
 
   // Client
   api.use(
     [
-    'deps',
-    'minimongo',
-    'mongo-livedata',
     'templating',
-    'handlebars',
     'jquery',
     'session',
-    'sacha:spin',
     'less',
-    'pfafman:coffee-alerts',
-    'pfafman:coffee-modal',
+    'pfafman:materialize-modal',
     'reactive-var',
-    'pfafman:filesaver'
+    'pfafman:filesaver',
     ]
     , 'client');
+
+  api.imply('pfafman:materialize-modal');
 
   api.add_files(
     [
@@ -43,7 +41,8 @@ Package.on_use(function (api, where) {
   api.add_files(
     [
     'shared/ironTableController.coffee',
-    'shared/ironTableCollection.coffee'
+    'shared/ironTableCollection.coffee',
+    'shared/t9n.coffee'
     ]
     , ['client','server']);
 
@@ -52,8 +51,10 @@ Package.on_use(function (api, where) {
     'underscore',
     'coffeescript',
     'mongo',
-    'iron:router'
+    'iron:router',
+    'softwarerero:accounts-t9n',
     ], ['client', 'server']);
+
 
   if (api.export) {
     //api.export('IronTableController', ['client','server']);
