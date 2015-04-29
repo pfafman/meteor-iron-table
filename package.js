@@ -22,7 +22,7 @@ Package.on_use(function (api, where) {
     'pfafman:coffee-alerts',
     'pfafman:coffee-modal',
     'reactive-var',
-    'mrt:filesaver'
+    'pfafman:filesaver'
     ]
     , 'client');
 

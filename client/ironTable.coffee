@@ -14,14 +14,14 @@ getCurrentIronTableController = ->
 
 
 Template.ironTable.rendered = ->
-  $('[rel="tooltip"]').tooltip('destroy')
-  $('[rel="popover"]').popover('destroy')
-  $('[rel="tooltip"]').tooltip()
-  $('[rel="popover"]').popover()
+  $('[rel="tooltip"]')?.tooltip('destroy')
+  $('[rel="popover"]')?.popover('destroy')
+  $('[rel="tooltip"]')?.tooltip()
+  $('[rel="popover"]')?.popover()
 
 Template.ironTable.destroyed = ->
-  $('[rel="tooltip"]').tooltip('destroy')
-  $('[rel="popover"]').popover('destroy')
+  $('[rel="tooltip"]')?.tooltip('destroy')
+  $('[rel="popover"]')?.popover('destroy')
 
 Template.ironTable.helpers
 
@@ -237,15 +237,15 @@ Template.ironTableRecords.events
 
 
 Template.ironTableRow.rendered = ->
-  $('[rel="tooltip"]').tooltip()
-  $('[rel="popover"]').popover()
+  $('[rel="tooltip"]')?.tooltip()
+  $('[rel="popover"]')?.popover()
 
 
 Template.ironTableRow.destroyed = ->
-  $('[rel="tooltip"]').tooltip('destroy')
-  $('[rel="popover"]').popover('destroy')
-  $('[rel="tooltip"]').tooltip()
-  $('[rel="popover"]').popover()
+  $('[rel="tooltip"]')?.tooltip('destroy')
+  $('[rel="popover"]')?.popover('destroy')
+  $('[rel="tooltip"]')?.tooltip()
+  $('[rel="popover"]')?.popover()
 
 
 Template.ironTableRow.helpers
