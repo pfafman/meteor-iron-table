@@ -1,140 +1,279 @@
 
-.iron-table-container {
-    position: relative;
-    padding: 10px;
+@box-padding: 0.6em;
 
-    // I think I am doing what table-responsive
-    .table-div {
-        overflow-x: auto;
-        table {
-            margin: 0px;
-        }
-    }
-
-    .well {
-        margin: 15px;
-    }
-    .panel-heading {
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
-
-    .iron-table-heading {
-        position: relative;
-        .links {
-            position: absolute;
-            top: 2px;
-            right: 7px;
-        }
-    }
-
-    .panel-body {
-        padding: 0px;
-    }
-    
-    .iron-table-filter {
-        float: right !important;
-        //padding: 7px;
-        margin: 7px;
-        #filter-value {
-            width: 200px;
-        }
-        .form-control {
-            height: 24px;
-        }
-    }
-
-    h3 {
-        margin: 0px;
-        min-height: 35px;
-
-        small {
-            font-size: 55%;
-            margin-left: 10px;
-        }
-    }
-
-    a:hover {
-        text-decoration: none;
-        cursor: pointer;
-    }
-    
-    th {
-        white-space: nowrap;
-    }
-
-    .controls {
-        white-space: nowrap;
-        text-align:right;
-        
-        a {
-            //color: #000;
-            padding: 1px;
-        }
-        a:hover {
-            //color: @link-hover-color;
-        }
-
-    }
-
-    .back-button {
-        position: absolute;
-        top: 15px;
-        left: -23px;
-    }
-
-    .loading {
-        position: relative;
-        text-align: center;
-        margin-top: 40px;
-        margin-left: auto;
-        margin-right: auto;
-        width: 40px;
-        height: 40px;
-        z-index: 1000;
-        //background-color: #ddd;
-        //opacity: 0.8;
-     
-        #spinner {
-            position: relative;
-            margin: auto;
-            top: 45%;
-        }
-    }
-
-    .iron-table-pager-display {
-        float: left !important;
-        padding-top: 3px;
-        padding-left: 7px;
-    }
-
-    .iron-table-pager {
-        float: right !important;
-        padding-top: 3px;
-        padding-right: 7px;
-        padding-bottom: 3px;
-    }
-
-    .select {
-        select.input-sm {
-            height: 24px;
-            line-height: 24px;
-        }
-    }
-
-    .pointer {
-        cursor: pointer;
-    }
+.iron-table-container.full-screen-on-small {
+  @media only screen and (max-width : 600px) {
+    padding: 0;
+    margin-bottom: 0;
+    height: 100%;
+    background: #eee;
+  }
 }
 
-.ironTableLoading {
+.iron-table-container {
+  //overflow: hidden;
+  //height: 99%;
+  position: relative;
+  padding: 0.7em;
+  margin-bottom: 1em;
+
+  .btn-sm {
+    padding: 0 1rem;
+  }
+
+  tr {
+    //margin-right: 1em;
+    //margin-left:  1em;
+  }
+
+  th, td {
+    padding: 0em 0.5em;
+    //line-height: 1em;
+    .btn, .btn-flat, .btn-large {
+      margin-bottom: 0;
+    }
+    .select-wrapper {
+      margin-top: 0.5em;
+      input.select-dropdown {
+        margin: 0 0 0.5em 0;
+      }
+    }
+  }
+
+
+  .table-col-head {
+    i {
+      line-height: 1em;
+    }
+  }
+
+  .box {
+    
+    //overflow: hidden;
+    //height: 100%;
+
+    color: #333;
+    position: relative;
+    margin: 0.5rem 0 0.5rem 0;
+    padding: @box-padding;
+    background-color: #fff;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-clip: padding-box;
+    
+    .iron-table-heading {
+      margin: 0em -@box-padding;
+      .col {
+        padding: 0.2em 0.75em;
+      }
+      
+    }
+
+    .table-container {
+      margin: auto;
+      width: 98%;
+      @media only screen and (max-width : 600px) {
+        height: 100%;
+      }
+      //height: auto;
+      //height: calc(100% - 200px);
+      //height: 300px; //calc( 99% - 200px ); //80%; 
+      overflow-x: auto;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+
+      table {
+        //height: 100%; //calc( 99% - 200px ); //80%; 
+        //overflow: hidden;
+        tbody {
+          // height: 300px; // Does not work
+          // overflow-y: auto; // Does not work
+        }
+      }
+
+      table.rowlink {
+        tbody {
+          tr {
+            cursor: pointer;
+            td.rowlink-skip {
+              cursor: default;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .box.no-box-on-small {
+    @media only screen and (max-width : 600px) {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      -webkit-border-radius: 0px;
+      -moz-border-radius: 0px;
+      border-radius: 0px;
+      .iron-table-heading {
+        margin: 0;
+      }
+      .table-container {
+        margin: auto;
+        width: 100%;
+        height: 100%;
+        //height: auto;
+        //height: calc(100% - 200px);
+        //height: 300px; //calc( 99% - 200px ); //80%; 
+        overflow-x: auto;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+  }
+
+  .no-records {
+    margin:2em;
+    font-size: 1.6em;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .iron-table-heading {
+    position: relative;
+    padding: 1em 1em 0.5em 1em;
+    margin: -1em;
+    //width: 100%;
+    .subtitle {
+      position: absolute;
+      bottom: -0.3em;
+      left: 6em;
+      font-size: 0.5em;
+      line-height: 1em;
+      //margin-left: 5em;
+      font-style: italic;
+    }
+    .links {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        a {
+          //color: #fff;
+        }
+    }
+    .links-col, .links {
+      .btn, .btn-flat {
+        padding: 0 1em;
+      } 
+    }
+    .back-btn {
+      //padding: 0;
+      i {
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  .panel-body {
+      padding: 0px;
+  }
+  
+  .iron-table-filter {
+    margin: 0 1em !important;
+    .col {
+      //height: 6em;
+      .select-wrapper {
+        margin: 0;
+      }
+    }
+    .filter-value-col {
+      padding: 0 !important;
+      //line-height: 6.4em;
+      input {
+        //margin: 0;
+        //padding: 0;
+        //border: 0;
+      }
+    }
+    #filter-value {
+      //width: 15em;
+    }
+  }
+
+  h3 {
+    margin: 0px;
+    min-height: 35px;
+    font-weight: 300;
+
+    small {
+      font-style: italic;
+      font-weight: 300;
+      font-size: 55%;
+      margin-left: 10px;
+    }
+  }
+
+  a {
+    //color: #666;
+  }
+
+  a:hover {
+    text-decoration: none;
+    cursor: pointer;
+    //color: #111;
+  }
+
+  li.disabled {
+    a {
+      //color: #b3b3b3;
+      cursor: default;
+    }
+    a:hover {
+      //color: #b3b3b3;
+      cursor: default;
+    }
+  }
+  a.disabled:hover {
+    //color: #b3b3b3;
+    cursor: default;
+  }
+  
+  th {
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .controls {
+    white-space: nowrap;
+    text-align:right;
+    
+    a {
+      //color: #000;
+      padding: 1px;
+      i {
+        font-size: 1em;
+      }
+    }
+    a:hover {
+      //color: @link-hover-color;
+    }
+  }
+
+  .back-button {
+      position: absolute;
+      top: 15px;
+      left: -23px;
+  }
+
+  .loading {
     position: relative;
     text-align: center;
-    margin-top: 40px;
+    margin-top: 30%;
     margin-left: auto;
     margin-right: auto;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     z-index: 1000;
     //background-color: #ddd;
     //opacity: 0.8;
@@ -144,6 +283,84 @@
         margin: auto;
         top: 45%;
     }
+  }
+
+  .iron-table-pager-display {
+    font-size: 1.3em;
+    //padding-top: 0.3em;
+    margin-left: 1.2em !important;
+  }
+
+  .iron-table-pager {
+    padding-top: .3em;
+    padding-right: 2em !important;
+    padding-bottom: .3em;
+    button {
+      font-size: 2em;
+      padding: 0;
+      margin: 0;
+      i {
+        font-size: 1em !important;
+      }
+    }
+    ul {
+      width: 6em;
+      margin-left: auto;
+      li {
+        font-size: 2em;
+        margin: 0 0em;
+      }
+      li.disabled {
+        //width: 0.2em;
+        position: relative;
+        //cursor: pointer;
+        display: inline-block;
+        //overflow: hidden;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        z-index: 1;
+        will-change: opacity, transform;
+        -webkit-transition: all .3s ease-out;
+        -moz-transition: all .3s ease-out;
+        -o-transition: all .3s ease-out;
+        -ms-transition: all .3s ease-out;
+        transition: all .3s ease-out;
+      }
+    }
+  }
+
+  .select {
+      select.input-sm {
+          height: 24px;
+          line-height: 24px;
+      }
+  }
+
+  .pointer {
+      cursor: pointer;
+  }
+}
+
+.ironTableLoading {
+  position: relative;
+  text-align: center;
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40px;
+  height: 40px;
+  z-index: 1000;
+  //background-color: #ddd;
+  //opacity: 0.8;
+
+  #spinner {
+      position: relative;
+      margin: auto;
+      top: 45%;
+  }
 }
 
 
@@ -151,6 +368,53 @@
     max-width: 600px;
 }
 
-input.iron-table-checkbox {
-    position: relative !important;
+.iron-table-form {
+
+  .input-field {
+    label {
+      color: #333;
+    }
+
+    label.textarea-label {
+      //top: 0.3rem;
+    }
+  }
+
+  input.iron-table-checkbox {
+      position: relative !important;
+  }
+
+  .iron-table-help-block {
+    position: relative;
+    top: -10px;
+    color: rgba(55, 55, 55, 0.8);
+    font-size: 0.9em;
+    font-style: italic;
+  }
+
+  .static-input-field {
+    label {
+      position: relative;
+      left: 0.75rem;
+      font-size: 1rem;
+    }
+  }
+  
+  .iron-table-select-label {
+    position: relative;
+    left: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .iron-table-input-field {
+    margin-top: 1rem;
+    .picker {
+      top:  0;
+      left: 0;
+      .picker__frame {
+        top: 1%;
+      }
+    }
+  }
+
 }
